@@ -1,0 +1,17 @@
+id: charge
+layer: brick
+name: Charge
+description: Single-step authorization and capture of a tokenized card
+capabilities: [payments]
+depends_on: [token-helper]
+config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
+entry_points: [charge]
+files: [bricks/payments.js]
+inserts:
+  bricks/fragments/charge-route.js: ROUTE_HANDLERS
+  bricks/fragments/charge-frontend.js: FRONTEND_CONFIG
+test_fragments:
+  - bricks/tests/charge.test.js
+  - bricks/tests/fixtures/sandbox.js
+source_repo: online-card-payments
+extraction_difficulty: low

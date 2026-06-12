@@ -1,0 +1,17 @@
+id: authorize
+layer: brick
+name: Authorize
+description: Places a hold on funds for later capture
+capabilities: [payments]
+depends_on: [token-helper]
+config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
+entry_points: [authorize]
+files: [bricks/payments.js]
+inserts:
+  bricks/fragments/authorize-route.js: ROUTE_HANDLERS
+  bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
+test_fragments:
+  - bricks/tests/authorize.test.js
+  - bricks/tests/fixtures/sandbox.js
+source_repo: online-payments-auth-and-delayed-capture
+extraction_difficulty: low

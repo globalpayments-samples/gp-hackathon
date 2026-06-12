@@ -1,0 +1,588 @@
+/*
+ * Global Payments brand system — gpbrandguide.com
+ * Primary: White #FFFFFF, Global Blue #262AFF
+ * Secondary: Deep Blue #1B1EC6 (never for typography), Black #0C0C0C
+ * Tertiary accents (5-15%, never type or backgrounds): Pulse Blue #1CABFF,
+ *   Sunshine #FFCC00, Creamsicle #FDA052, Raspberry #F4364C (negative only),
+ *   Grape #87179D
+ * Neutrals: Charcoal #595959, Smoke #C4C4C4, Fog #EEEEEE, Haze #F4F4F4, Mist #F8F8F8
+ * Type: DM Sans (approved GP Commerce substitute) — 400 body, 700/900 headlines,
+ *   left aligned, sentence case, 150% line height. No gradients anywhere.
+ */
+
+:root {
+  --gp-white: #ffffff;
+  --gp-global-blue: #262aff;
+  --gp-deep-blue: #1b1ec6;
+  --gp-black: #0c0c0c;
+  --gp-pulse-blue: #1cabff;
+  --gp-sunshine: #ffcc00;
+  --gp-creamsicle: #fda052;
+  --gp-raspberry: #f4364c;
+  --gp-grape: #87179d;
+  --gp-charcoal: #595959;
+  --gp-smoke: #c4c4c4;
+  --gp-fog: #eeeeee;
+  --gp-haze: #f4f4f4;
+  --gp-mist: #f8f8f8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'DM Sans', 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--gp-black);
+  background: var(--gp-white);
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- header ---------------------------------------------------------------- */
+
+.gp-header {
+  background: var(--gp-global-blue);
+  color: var(--gp-white);
+  padding: 24px clamp(24px, 6vw, 64px);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* The logo asset shares the header's Global Blue background, so it blends in
+   seamlessly; the negative margin compensates for the baked-in padding. */
+.gp-logo {
+  display: block;
+  width: auto;
+  height: 56px;
+  margin: -12px 0 -12px -18px;
+}
+
+.gp-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.gp-env-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gp-white);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+.gp-rallycry {
+  margin: 0;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 0.9375rem;
+  color: var(--gp-white);
+}
+
+/* --- main ------------------------------------------------------------------ */
+
+.gp-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: clamp(40px, 7vh, 64px) 24px 72px;
+}
+
+.gp-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 28px;
+  align-items: start;
+  margin-top: 36px;
+}
+
+.gp-layout-aside {
+  display: grid;
+  gap: 20px;
+}
+
+.gp-eyebrow {
+  margin: 0 0 10px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gp-charcoal);
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 2.625rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--gp-black);
+}
+
+h2 {
+  margin: 0;
+  font-weight: 900;
+  font-size: 1.375rem;
+  color: var(--gp-black);
+}
+
+.gp-lede {
+  margin: 0;
+  max-width: 54ch;
+  color: var(--gp-charcoal);
+}
+
+/* --- payment card ------------------------------------------------------------ */
+
+.gp-card {
+  background: var(--gp-white);
+  border: 1px solid var(--gp-fog);
+  border-radius: 16px;
+  padding: clamp(24px, 5vw, 40px);
+  box-shadow: 0 1px 2px rgba(12, 12, 12, 0.04), 0 12px 32px rgba(12, 12, 12, 0.06);
+}
+
+.gp-card-head {
+  margin-bottom: 28px;
+}
+
+.gp-card-head .gp-eyebrow {
+  color: var(--gp-global-blue);
+}
+
+.gp-card-note {
+  margin: 8px 0 0;
+  font-size: 0.875rem;
+  color: var(--gp-charcoal);
+}
+
+/* --- field grid -------------------------------------------------------------- */
+
+.gp-hf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
+  row-gap: 20px;
+}
+
+.gp-hf,
+.gp-field {
+  display: block;
+  margin: 0;
+  min-width: 0;
+}
+
+.gp-hf--full {
+  grid-column: 1 / -1;
+}
+
+.gp-hf-label,
+.gp-field span {
+  display: block;
+  margin: 0 0 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--gp-black);
+}
+
+.gp-field input {
+  width: 100%;
+  height: 48px;
+  padding: 12px 14px;
+  font: inherit;
+  color: var(--gp-black);
+  background: var(--gp-white);
+  border: 1px solid var(--gp-smoke);
+  border-radius: 8px;
+}
+
+.gp-field input:focus {
+  border-color: var(--gp-global-blue);
+  box-shadow: 0 0 0 1px var(--gp-global-blue);
+  outline: none;
+}
+
+/* hosted-field iframes are sized by their containers — exact, no drift */
+.gp-hf-target {
+  height: 48px;
+}
+
+.gp-hf-target iframe {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gp-hf-target--submit {
+  height: 52px;
+  margin-top: 8px;
+}
+
+/* --- buttons (page-level, e.g. Capture) -------------------------------------- */
+
+.gp-button {
+  width: 100%;
+  height: 52px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--gp-white);
+  background: var(--gp-global-blue);
+  border: none;
+  border-radius: 8px;
+  padding: 0 28px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.gp-button:hover,
+.gp-button:focus-visible {
+  background: var(--gp-deep-blue);
+}
+
+.gp-button:disabled {
+  background: var(--gp-smoke);
+  cursor: default;
+}
+
+/* --- status / result ---------------------------------------------------------- */
+
+.gp-status {
+  margin: 24px 0 0;
+  padding: 12px 16px;
+  background: var(--gp-haze);
+  border-left: 4px solid var(--gp-smoke);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.9375rem;
+  color: var(--gp-black);
+}
+
+.gp-status--success {
+  border-left-color: var(--gp-pulse-blue);
+}
+
+.gp-status--error {
+  border-left-color: var(--gp-raspberry);
+}
+
+.gp-result[hidden] {
+  display: none;
+}
+
+.gp-result {
+  margin: 16px 0 0;
+  padding: 16px 20px;
+  background: var(--gp-mist);
+  border: 1px solid var(--gp-fog);
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 24px;
+}
+
+.gp-result dt {
+  font-size: 0.875rem;
+  color: var(--gp-charcoal);
+}
+
+.gp-result dd {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--gp-black);
+  overflow-wrap: anywhere;
+}
+
+.gp-actions {
+  margin: 16px 0 0;
+}
+
+.gp-actions:empty {
+  margin: 0;
+}
+
+.gp-card-legal {
+  margin: 24px 0 0;
+  font-size: 0.8125rem;
+  color: var(--gp-charcoal);
+}
+
+/* --- aside rail ----------------------------------------------------------------- */
+
+.gp-aside-card {
+  background: var(--gp-white);
+  border: 1px solid var(--gp-fog);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 2px rgba(12, 12, 12, 0.04), 0 8px 24px rgba(12, 12, 12, 0.05);
+}
+
+.gp-aside-title {
+  margin: 0 0 16px;
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--gp-black);
+}
+
+.gp-aside-note {
+  margin: 16px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--gp-charcoal);
+}
+
+.gp-aside-note a {
+  color: var(--gp-global-blue);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.gp-aside-note a:hover,
+.gp-aside-note a:focus-visible {
+  text-decoration: underline;
+}
+
+/* architecture flow animation */
+
+.gp-flow {
+  margin: -4px 0 16px;
+  border-radius: 12px;
+  background: var(--gp-mist);
+  border: 1px solid var(--gp-fog);
+  overflow: hidden;
+}
+
+.gp-flow canvas {
+  display: block;
+  width: 100%;
+  height: 220px;
+}
+
+.gp-flow-caption {
+  margin: 0;
+  min-height: 60px;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--gp-fog);
+  background: var(--gp-white);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--gp-charcoal);
+}
+
+.gp-flow-caption strong {
+  color: var(--gp-global-blue);
+}
+
+/* component chips */
+
+.gp-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.gp-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--gp-mist);
+  border: 1px solid var(--gp-fog);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: border-color 200ms ease, background 200ms ease, transform 200ms ease;
+}
+
+.gp-chip--active {
+  border-color: var(--gp-pulse-blue);
+  background: var(--gp-white);
+  transform: translateX(4px);
+}
+
+.gp-chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.gp-chip-dot--baseplate { background: var(--gp-charcoal); }
+.gp-chip-dot--stud { background: var(--gp-pulse-blue); }
+.gp-chip-dot--brick { background: var(--gp-global-blue); }
+.gp-chip-dot--tile { background: var(--gp-creamsicle); }
+
+.gp-chip-name {
+  font-weight: 700;
+  color: var(--gp-black);
+  flex: 1;
+  min-width: 0;
+}
+
+.gp-chip-layer {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gp-charcoal);
+}
+
+/* sandbox test card visual */
+
+.gp-testcard {
+  background: var(--gp-global-blue);
+  color: var(--gp-white);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(38, 42, 255, 0.25);
+}
+
+.gp-testcard-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.gp-testcard-chip {
+  display: block;
+  width: 34px;
+  height: 24px;
+  border-radius: 5px;
+  background: var(--gp-sunshine);
+}
+
+.gp-testcard-brand {
+  font-weight: 900;
+  font-style: italic;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--gp-white);
+}
+
+.gp-testcard-number {
+  margin: 0 0 18px;
+  font-size: clamp(1rem, 1.6vw, 1.1875rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--gp-white);
+  white-space: nowrap;
+}
+
+.gp-testcard-meta {
+  margin: 0;
+  display: flex;
+  gap: 24px;
+}
+
+.gp-testcard-meta div {
+  margin: 0;
+}
+
+.gp-testcard-meta dt {
+  font-size: 0.625rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gp-white);
+  opacity: 0.75;
+  margin-bottom: 2px;
+}
+
+.gp-testcard-meta dd {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--gp-white);
+}
+
+/* ghost button (copy) */
+
+.gp-button--ghost {
+  margin-top: 16px;
+  height: 44px;
+  background: var(--gp-white);
+  color: var(--gp-global-blue);
+  border: 1px solid var(--gp-global-blue);
+}
+
+.gp-button--ghost:hover,
+.gp-button--ghost:focus-visible {
+  background: var(--gp-haze);
+  color: var(--gp-deep-blue);
+  border-color: var(--gp-deep-blue);
+}
+
+.gp-button--copied,
+.gp-button--ghost.gp-button--copied {
+  background: var(--gp-haze);
+  color: var(--gp-black);
+  border-color: var(--gp-smoke);
+}
+
+/* --- footer -------------------------------------------------------------------- */
+
+.gp-footer {
+  border-top: 1px solid var(--gp-fog);
+  padding: 24px clamp(24px, 6vw, 64px);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+}
+
+.gp-footer p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--gp-charcoal);
+}
+
+.gp-footer-links {
+  display: flex;
+  gap: 24px;
+}
+
+.gp-footer-links a {
+  color: var(--gp-global-blue);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.gp-footer-links a:hover,
+.gp-footer-links a:focus-visible {
+  text-decoration: underline;
+}
+
+/* --- small screens --------------------------------------------------------------- */
+
+@media (max-width: 920px) {
+  .gp-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .gp-hf-grid {
+    grid-template-columns: 1fr;
+  }
+}

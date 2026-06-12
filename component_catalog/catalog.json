@@ -1,0 +1,3496 @@
+{
+  "description": "Cross-repo component inventory for the Global Payments sample ecosystem, classified into baseplate/stud/brick/tile layers with extraction difficulty ratings. This is the Phase 3 porting backlog.",
+  "repos_covered": 25,
+  "component_count": 138,
+  "repos": [
+    "basic-refund-tool",
+    "donation-form-one-time-recurring-payments",
+    "embedded-payments-fee-splitting",
+    "google-pay-payments",
+    "gpecom-3ds2",
+    "integrated-partner-online-payments-with-hosted-fields-api",
+    "localized-checkout-experience",
+    "network-tokenization",
+    "online-card-payments",
+    "online-check-payments",
+    "online-payments-auth-and-delayed-capture",
+    "online-recurring-payments",
+    "pay-by-link",
+    "php-payments-and-reporting",
+    "portico-donation-form-one-time-recurring-payments",
+    "portico-embedded-payments-fee-splitting",
+    "portico-google-pay-payments",
+    "portico-online-card-payments",
+    "portico-online-check-payments",
+    "portico-online-recurring-payments",
+    "portico-save-and-reuse-payment-methods",
+    "reporting-service",
+    "save-and-reuse-payment-methods",
+    "starter-template",
+    "wallet-management"
+  ],
+  "components": [
+    {
+      "id": "basic-refund-tool-env-config",
+      "layer": "baseplate",
+      "name": "Refund configuration loader",
+      "description": "Loads the credentials and environment settings used to perform refund operations.",
+      "capabilities": [
+        "dotenv loading",
+        "SDK config",
+        "environment selection"
+      ],
+      "files": [
+        "basic-refund-tool/dotnet/**/*",
+        "basic-refund-tool/java/**/*",
+        "basic-refund-tool/nodejs/**/*",
+        "basic-refund-tool/php/**/*"
+      ],
+      "depends_on": [
+        "basic-refund-tool-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "basic-refund-tool",
+      "extraction_difficulty": "medium: inferred from the repository description and neighboring sample conventions"
+    },
+    {
+      "id": "basic-refund-tool-refund",
+      "layer": "brick",
+      "name": "Refund processor",
+      "description": "Submits a refund request against a prior payment or reference transaction.",
+      "capabilities": [
+        "refund",
+        "transaction id lookup",
+        "refund response mapping"
+      ],
+      "files": [
+        "basic-refund-tool/dotnet/**/*",
+        "basic-refund-tool/java/**/*",
+        "basic-refund-tool/nodejs/**/*",
+        "basic-refund-tool/php/**/*"
+      ],
+      "depends_on": [
+        "basic-refund-tool-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "basic-refund-tool",
+      "extraction_difficulty": "low: the repo description identifies refund processing as its primary function"
+    },
+    {
+      "id": "basic-refund-tool-refund-form",
+      "layer": "tile",
+      "name": "Refund request form",
+      "description": "Renders the UI for entering transaction and amount details for a refund request.",
+      "capabilities": [
+        "refund form",
+        "transaction reference input",
+        "status display"
+      ],
+      "files": [
+        "basic-refund-tool/index.html"
+      ],
+      "depends_on": [
+        "basic-refund-tool-refund"
+      ],
+      "config_required": [],
+      "source_repo": "basic-refund-tool",
+      "extraction_difficulty": "medium: the exact frontend file was not opened but the standard sample layout strongly implies it"
+    },
+    {
+      "id": "basic-refund-tool-server-shell",
+      "layer": "baseplate",
+      "name": "Refund tool server shell",
+      "description": "Bootstraps the refund-processing sample and consistent error responses.",
+      "capabilities": [
+        "server startup",
+        "routing",
+        "JSON errors"
+      ],
+      "files": [
+        "basic-refund-tool/dotnet/**/*",
+        "basic-refund-tool/java/**/*",
+        "basic-refund-tool/nodejs/**/*",
+        "basic-refund-tool/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "basic-refund-tool",
+      "extraction_difficulty": "medium: repo page itself was not opened, but topic metadata shows a standard multi-language layout"
+    },
+    {
+      "id": "donation-form-one-time-recurring-payments-donation-form-ui",
+      "layer": "tile",
+      "name": "Donation form UI",
+      "description": "Renders the unified one-time/recurring donation form and schedule controls.",
+      "capabilities": [
+        "drop-in UI mount",
+        "amount options",
+        "frequency controls",
+        "duration controls"
+      ],
+      "files": [
+        "donation-form-one-time-recurring-payments/index.html"
+      ],
+      "depends_on": [
+        "donation-form-one-time-recurring-payments-drop-in-access-token"
+      ],
+      "config_required": [],
+      "source_repo": "donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: the shared root HTML implements the frontend"
+    },
+    {
+      "id": "donation-form-one-time-recurring-payments-drop-in-access-token",
+      "layer": "stud",
+      "name": "Donation Drop-In access token generator",
+      "description": "Supplies the scoped token required to initialize the Drop-In UI for donation checkout.",
+      "capabilities": [
+        "frontend token generation",
+        "Drop-In UI bootstrap",
+        "safe client initialization"
+      ],
+      "files": [
+        "donation-form-one-time-recurring-payments/dotnet/**/*",
+        "donation-form-one-time-recurring-payments/java/**/*",
+        "donation-form-one-time-recurring-payments/nodejs/**/*",
+        "donation-form-one-time-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "donation-form-one-time-recurring-payments-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: access token generation is explicitly described in the README"
+    },
+    {
+      "id": "donation-form-one-time-recurring-payments-env-config",
+      "layer": "baseplate",
+      "name": "Donation flow configuration loader",
+      "description": "Loads GP API credentials and recurring-billing defaults for donation processing.",
+      "capabilities": [
+        "dotenv loading",
+        "SDK config",
+        "recurring setting defaults"
+      ],
+      "files": [
+        "donation-form-one-time-recurring-payments/dotnet/**/*",
+        "donation-form-one-time-recurring-payments/java/**/*",
+        "donation-form-one-time-recurring-payments/nodejs/**/*",
+        "donation-form-one-time-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "donation-form-one-time-recurring-payments-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: repository README documents the common environment-based configuration"
+    },
+    {
+      "id": "donation-form-one-time-recurring-payments-one-time-donation",
+      "layer": "brick",
+      "name": "One-time donation processor",
+      "description": "Executes a single donation charge from tokenized card data.",
+      "capabilities": [
+        "one-time charge",
+        "donation amount handling",
+        "transaction response mapping"
+      ],
+      "files": [
+        "donation-form-one-time-recurring-payments/dotnet/**/*",
+        "donation-form-one-time-recurring-payments/java/**/*",
+        "donation-form-one-time-recurring-payments/nodejs/**/*",
+        "donation-form-one-time-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "donation-form-one-time-recurring-payments-env-config",
+        "donation-form-one-time-recurring-payments-drop-in-access-token"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: the README names one-time donations as a core capability"
+    },
+    {
+      "id": "donation-form-one-time-recurring-payments-recurring-donation",
+      "layer": "brick",
+      "name": "Recurring donation setup",
+      "description": "Creates the first recurring donation transaction and stores the credential metadata needed for future billing.",
+      "capabilities": [
+        "stored credential setup",
+        "recurring billing metadata",
+        "schedule creation"
+      ],
+      "files": [
+        "donation-form-one-time-recurring-payments/dotnet/**/*",
+        "donation-form-one-time-recurring-payments/java/**/*",
+        "donation-form-one-time-recurring-payments/nodejs/**/*",
+        "donation-form-one-time-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "donation-form-one-time-recurring-payments-env-config",
+        "donation-form-one-time-recurring-payments-drop-in-access-token"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: recurring donation setup is a first-class feature described in the repo"
+    },
+    {
+      "id": "donation-form-one-time-recurring-payments-server-shell",
+      "layer": "baseplate",
+      "name": "Donation app server shell",
+      "description": "Bootstraps the donation-flow backends with standard JSON error responses.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "error handling"
+      ],
+      "files": [
+        "donation-form-one-time-recurring-payments/dotnet/**/*",
+        "donation-form-one-time-recurring-payments/java/**/*",
+        "donation-form-one-time-recurring-payments/nodejs/**/*",
+        "donation-form-one-time-recurring-payments/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "medium: functionality is mirrored across four language folders"
+    },
+    {
+      "id": "embedded-payments-fee-splitting-embedded-marketplace-ui",
+      "layer": "tile",
+      "name": "Embedded marketplace checkout UI",
+      "description": "Renders the seller-aware checkout form and fee-splitting payment experience.",
+      "capabilities": [
+        "embedded payment form",
+        "seller selector",
+        "checkout confirmation"
+      ],
+      "files": [
+        "embedded-payments-fee-splitting/index.html"
+      ],
+      "depends_on": [
+        "embedded-payments-fee-splitting-embedded-token-bridge"
+      ],
+      "config_required": [],
+      "source_repo": "embedded-payments-fee-splitting",
+      "extraction_difficulty": "medium: shared HTML is assumed, but component-level files were not enumerated"
+    },
+    {
+      "id": "embedded-payments-fee-splitting-embedded-token-bridge",
+      "layer": "stud",
+      "name": "Embedded payment token bridge",
+      "description": "Accepts tokenized customer payment data from the embedded frontend checkout.",
+      "capabilities": [
+        "token handoff",
+        "embedded checkout contract",
+        "merchant context transport"
+      ],
+      "files": [
+        "embedded-payments-fee-splitting/dotnet/**/*",
+        "embedded-payments-fee-splitting/java/**/*",
+        "embedded-payments-fee-splitting/nodejs/**/*",
+        "embedded-payments-fee-splitting/php/**/*"
+      ],
+      "depends_on": [
+        "embedded-payments-fee-splitting-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "embedded-payments-fee-splitting",
+      "extraction_difficulty": "medium: inferred from the repo theme and common hosted-fields sample structure"
+    },
+    {
+      "id": "embedded-payments-fee-splitting-env-config",
+      "layer": "baseplate",
+      "name": "Marketplace configuration loader",
+      "description": "Loads GP API credentials and fee-splitting settings for embedded marketplace flows.",
+      "capabilities": [
+        "dotenv loading",
+        "merchant credential binding",
+        "fee config"
+      ],
+      "files": [
+        "embedded-payments-fee-splitting/dotnet/**/*",
+        "embedded-payments-fee-splitting/java/**/*",
+        "embedded-payments-fee-splitting/nodejs/**/*",
+        "embedded-payments-fee-splitting/php/**/*"
+      ],
+      "depends_on": [
+        "embedded-payments-fee-splitting-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT",
+        "PLATFORM_FEE_PERCENT"
+      ],
+      "source_repo": "embedded-payments-fee-splitting",
+      "extraction_difficulty": "medium: repository metadata is descriptive, but file-level config code was not inspected"
+    },
+    {
+      "id": "embedded-payments-fee-splitting-fee-split",
+      "layer": "brick",
+      "name": "Fee-splitting processor",
+      "description": "Applies the configured fee split across the platform and sub-merchant parties.",
+      "capabilities": [
+        "fee splitting",
+        "sub-merchant allocation",
+        "revenue sharing"
+      ],
+      "files": [
+        "embedded-payments-fee-splitting/dotnet/**/*",
+        "embedded-payments-fee-splitting/java/**/*",
+        "embedded-payments-fee-splitting/nodejs/**/*",
+        "embedded-payments-fee-splitting/php/**/*"
+      ],
+      "depends_on": [
+        "embedded-payments-fee-splitting-marketplace-charge"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT",
+        "PLATFORM_FEE_PERCENT"
+      ],
+      "source_repo": "embedded-payments-fee-splitting",
+      "extraction_difficulty": "medium: implementation details are repo-specific and not visible in the search snippet"
+    },
+    {
+      "id": "embedded-payments-fee-splitting-marketplace-charge",
+      "layer": "brick",
+      "name": "Marketplace payment charge",
+      "description": "Processes the primary customer payment for the platform transaction.",
+      "capabilities": [
+        "charge",
+        "marketplace payment processing",
+        "seller context"
+      ],
+      "files": [
+        "embedded-payments-fee-splitting/dotnet/**/*",
+        "embedded-payments-fee-splitting/java/**/*",
+        "embedded-payments-fee-splitting/nodejs/**/*",
+        "embedded-payments-fee-splitting/php/**/*"
+      ],
+      "depends_on": [
+        "embedded-payments-fee-splitting-env-config",
+        "embedded-payments-fee-splitting-embedded-token-bridge"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "embedded-payments-fee-splitting",
+      "extraction_difficulty": "medium: capability is explicit in topic metadata but exact endpoint files were not opened"
+    },
+    {
+      "id": "embedded-payments-fee-splitting-server-shell",
+      "layer": "baseplate",
+      "name": "Embedded marketplace server shell",
+      "description": "Bootstraps the marketplace payment sample and standard API error handling.",
+      "capabilities": [
+        "server startup",
+        "routing",
+        "error responses"
+      ],
+      "files": [
+        "embedded-payments-fee-splitting/dotnet/**/*",
+        "embedded-payments-fee-splitting/java/**/*",
+        "embedded-payments-fee-splitting/nodejs/**/*",
+        "embedded-payments-fee-splitting/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "embedded-payments-fee-splitting",
+      "extraction_difficulty": "medium: based on topic metadata rather than a fully expanded file tree"
+    },
+    {
+      "id": "google-pay-payments-env-config",
+      "layer": "baseplate",
+      "name": "Google Pay configuration loader",
+      "description": "Loads API credentials and wallet configuration needed to process encrypted Google Pay payloads.",
+      "capabilities": [
+        "credential loading",
+        "wallet config binding",
+        "SDK/bootstrap config"
+      ],
+      "files": [
+        "google-pay-payments/dotnet/**/*",
+        "google-pay-payments/java/**/*",
+        "google-pay-payments/php/**/*"
+      ],
+      "depends_on": [
+        "google-pay-payments-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT",
+        "GOOGLE_PAY_MERCHANT_ID"
+      ],
+      "source_repo": "google-pay-payments",
+      "extraction_difficulty": "medium: inferred from repo description and naming, not a fully opened tree"
+    },
+    {
+      "id": "google-pay-payments-google-pay-button",
+      "layer": "tile",
+      "name": "Google Pay button UI",
+      "description": "Renders the wallet button and client-side request configuration for Google Pay checkout.",
+      "capabilities": [
+        "Google Pay button",
+        "wallet readiness check",
+        "checkout initiation"
+      ],
+      "files": [
+        "google-pay-payments/index.html"
+      ],
+      "depends_on": [
+        "google-pay-payments-google-pay-token-bridge"
+      ],
+      "config_required": [],
+      "source_repo": "google-pay-payments",
+      "extraction_difficulty": "medium: inferred from the sample type and shared repo layout"
+    },
+    {
+      "id": "google-pay-payments-google-pay-charge",
+      "layer": "brick",
+      "name": "Google Pay payment processor",
+      "description": "Processes an encrypted Google Pay token through the GP API platform.",
+      "capabilities": [
+        "Google Pay charge",
+        "wallet token processing",
+        "transaction response mapping"
+      ],
+      "files": [
+        "google-pay-payments/dotnet/**/*",
+        "google-pay-payments/java/**/*",
+        "google-pay-payments/php/**/*"
+      ],
+      "depends_on": [
+        "google-pay-payments-env-config",
+        "google-pay-payments-google-pay-token-bridge"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT",
+        "GOOGLE_PAY_MERCHANT_ID"
+      ],
+      "source_repo": "google-pay-payments",
+      "extraction_difficulty": "medium: operation is explicit in repo metadata but not in per-file snippets"
+    },
+    {
+      "id": "google-pay-payments-google-pay-token-bridge",
+      "layer": "stud",
+      "name": "Encrypted wallet payload bridge",
+      "description": "Accepts the Google Pay payment payload from the browser and prepares it for server-side processing.",
+      "capabilities": [
+        "wallet payload handoff",
+        "frontend/backend contract",
+        "token normalization"
+      ],
+      "files": [
+        "google-pay-payments/dotnet/**/*",
+        "google-pay-payments/java/**/*",
+        "google-pay-payments/php/**/*"
+      ],
+      "depends_on": [
+        "google-pay-payments-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT",
+        "GOOGLE_PAY_MERCHANT_ID"
+      ],
+      "source_repo": "google-pay-payments",
+      "extraction_difficulty": "medium: the repo description confirms token handling, but file-level routes were not inspected"
+    },
+    {
+      "id": "google-pay-payments-server-shell",
+      "layer": "baseplate",
+      "name": "Google Pay demo server shell",
+      "description": "Bootstraps the language-specific Google Pay sample backends and default error handling.",
+      "capabilities": [
+        "server startup",
+        "routing",
+        "JSON responses"
+      ],
+      "files": [
+        "google-pay-payments/dotnet/**/*",
+        "google-pay-payments/java/**/*",
+        "google-pay-payments/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "google-pay-payments",
+      "extraction_difficulty": "medium: repo metadata shows multiple language trees but the exact entry files were not expanded"
+    },
+    {
+      "id": "gpecom-3ds2-authentication",
+      "layer": "brick",
+      "name": "3DS2 authentication and challenge initiation",
+      "description": "Initiates authentication and challenge handling with device fingerprinting and issuer redirects as needed.",
+      "capabilities": [
+        "authenticate",
+        "device fingerprinting",
+        "challenge initiation"
+      ],
+      "files": [
+        "gpecom-3ds2/php/api/**/*",
+        "gpecom-3ds2/nodejs/**/*",
+        "gpecom-3ds2/dotnet/**/*",
+        "gpecom-3ds2/java/**/*"
+      ],
+      "depends_on": [
+        "gpecom-3ds2-enrollment-check",
+        "gpecom-3ds2-method-and-challenge-webhooks"
+      ],
+      "config_required": [
+        "MERCHANT_ID",
+        "ACCOUNT_ID",
+        "SHARED_SECRET",
+        "SERVICE_URL"
+      ],
+      "source_repo": "gpecom-3ds2",
+      "extraction_difficulty": "low: the README explicitly documents authentication, method URL, and challenge steps"
+    },
+    {
+      "id": "gpecom-3ds2-enrollment-check",
+      "layer": "brick",
+      "name": "3DS2 enrollment check",
+      "description": "Checks protocol versions and card enrollment before continuing the flow.",
+      "capabilities": [
+        "protocol version check",
+        "card enrollment lookup",
+        "pre-auth decisioning"
+      ],
+      "files": [
+        "gpecom-3ds2/php/api/**/*",
+        "gpecom-3ds2/nodejs/**/*",
+        "gpecom-3ds2/dotnet/**/*",
+        "gpecom-3ds2/java/**/*"
+      ],
+      "depends_on": [
+        "gpecom-3ds2-env-config"
+      ],
+      "config_required": [
+        "MERCHANT_ID",
+        "ACCOUNT_ID",
+        "SHARED_SECRET",
+        "SERVICE_URL"
+      ],
+      "source_repo": "gpecom-3ds2",
+      "extraction_difficulty": "low: the README explicitly maps enrollment to POST /3ds2/protocol-versions"
+    },
+    {
+      "id": "gpecom-3ds2-env-config",
+      "layer": "baseplate",
+      "name": "3DS2 configuration loader",
+      "description": "Loads gateway credentials and service settings used for 3DS2 enrollment, auth, and payment.",
+      "capabilities": [
+        "credential loading",
+        "gateway config",
+        "sandbox endpoint setup"
+      ],
+      "files": [
+        "gpecom-3ds2/dotnet/**/*",
+        "gpecom-3ds2/java/**/*",
+        "gpecom-3ds2/nodejs/**/*",
+        "gpecom-3ds2/php/**/*"
+      ],
+      "depends_on": [
+        "gpecom-3ds2-server-shell"
+      ],
+      "config_required": [
+        "MERCHANT_ID",
+        "ACCOUNT_ID",
+        "SHARED_SECRET",
+        "SERVICE_URL"
+      ],
+      "source_repo": "gpecom-3ds2",
+      "extraction_difficulty": "low: credentials and API type are clear from the README summary"
+    },
+    {
+      "id": "gpecom-3ds2-method-and-challenge-webhooks",
+      "layer": "stud",
+      "name": "Method URL and challenge callback receivers",
+      "description": "Receives raw 3DS2 method and challenge notifications from the browser/ACS during authentication.",
+      "capabilities": [
+        "method notification endpoint",
+        "challenge notification endpoint",
+        "raw callback intake"
+      ],
+      "files": [
+        "gpecom-3ds2/php/webhooks/**/*",
+        "gpecom-3ds2/nodejs/**/*",
+        "gpecom-3ds2/dotnet/**/*",
+        "gpecom-3ds2/java/**/*"
+      ],
+      "depends_on": [
+        "gpecom-3ds2-env-config"
+      ],
+      "config_required": [],
+      "source_repo": "gpecom-3ds2",
+      "extraction_difficulty": "low: the README explicitly lists webhook handlers in the PHP implementation and equivalent single-file servers elsewhere"
+    },
+    {
+      "id": "gpecom-3ds2-post-auth-payment",
+      "layer": "brick",
+      "name": "Post-auth payment authorization",
+      "description": "Submits the final payment authorization using the authenticated 3DS2 data.",
+      "capabilities": [
+        "payment authorization",
+        "3DS2 data attachment",
+        "XML/SDK payment call"
+      ],
+      "files": [
+        "gpecom-3ds2/php/src/GpecomClient.php",
+        "gpecom-3ds2/nodejs/server.js",
+        "gpecom-3ds2/dotnet/Program.cs",
+        "gpecom-3ds2/java/src/**/*"
+      ],
+      "depends_on": [
+        "gpecom-3ds2-authentication"
+      ],
+      "config_required": [
+        "MERCHANT_ID",
+        "ACCOUNT_ID",
+        "SHARED_SECRET",
+        "SERVICE_URL"
+      ],
+      "source_repo": "gpecom-3ds2",
+      "extraction_difficulty": "low: the README explicitly describes payment as the final step and points to core implementation files"
+    },
+    {
+      "id": "gpecom-3ds2-server-shell",
+      "layer": "baseplate",
+      "name": "3DS2 backend shell",
+      "description": "Bootstraps the language-specific 3DS2 servers and response handling for each step of the EMV 3DS flow.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "JSON/http callback handling"
+      ],
+      "files": [
+        "gpecom-3ds2/dotnet/**/*",
+        "gpecom-3ds2/java/**/*",
+        "gpecom-3ds2/nodejs/**/*",
+        "gpecom-3ds2/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "gpecom-3ds2",
+      "extraction_difficulty": "medium: the repo page describes the structure, but internal handler file names are mixed across languages"
+    },
+    {
+      "id": "gpecom-3ds2-three-ds-test-ui",
+      "layer": "tile",
+      "name": "3DS2 test harness UI",
+      "description": "Renders the shared frontend for enrollment, challenge, card selection, and backend switching.",
+      "capabilities": [
+        "3DS2 form",
+        "test card selector",
+        "backend selector",
+        "ACS iframe host"
+      ],
+      "files": [
+        "gpecom-3ds2/index.html"
+      ],
+      "depends_on": [
+        "gpecom-3ds2-enrollment-check",
+        "gpecom-3ds2-authentication"
+      ],
+      "config_required": [],
+      "source_repo": "gpecom-3ds2",
+      "extraction_difficulty": "low: the README explicitly states the shared frontend lives in index.html"
+    },
+    {
+      "id": "integrated-partner-online-payments-with-hosted-fields-api-partner-charge",
+      "layer": "brick",
+      "name": "Partner payment processor",
+      "description": "Processes the tokenized card payment through the partner-integrated backend flow.",
+      "capabilities": [
+        "charge",
+        "billing data handling",
+        "partner merchant routing"
+      ],
+      "files": [
+        "integrated-partner-online-payments-with-hosted-fields-api/dotnet/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/go/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/java/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/nodejs/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/php/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/python/**/*"
+      ],
+      "depends_on": [
+        "integrated-partner-online-payments-with-hosted-fields-api-partner-config",
+        "integrated-partner-online-payments-with-hosted-fields-api-partner-jwt"
+      ],
+      "config_required": [
+        "AUTHTOKEN_JWT_SECRET",
+        "ACCOUNT_CREDENTIAL"
+      ],
+      "source_repo": "integrated-partner-online-payments-with-hosted-fields-api",
+      "extraction_difficulty": "low: payment processing flow is described directly in the README"
+    },
+    {
+      "id": "integrated-partner-online-payments-with-hosted-fields-api-partner-config",
+      "layer": "baseplate",
+      "name": "Partner credential configuration loader",
+      "description": "Loads platform and partner merchant credentials used to sign JWTs and process payments.",
+      "capabilities": [
+        "dotenv loading",
+        "partner account binding",
+        "credential injection"
+      ],
+      "files": [
+        "integrated-partner-online-payments-with-hosted-fields-api/dotnet/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/go/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/java/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/nodejs/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/php/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/python/**/*"
+      ],
+      "depends_on": [
+        "integrated-partner-online-payments-with-hosted-fields-api-server-shell"
+      ],
+      "config_required": [
+        "AUTHTOKEN_JWT_SECRET",
+        "ACCOUNT_CREDENTIAL"
+      ],
+      "source_repo": "integrated-partner-online-payments-with-hosted-fields-api",
+      "extraction_difficulty": "low: the README explicitly names the JWT secret and account credential requirements"
+    },
+    {
+      "id": "integrated-partner-online-payments-with-hosted-fields-api-partner-fee-split",
+      "layer": "brick",
+      "name": "Partner fee-splitting and merchant injection",
+      "description": "Applies partner-specific merchant credential injection and fee-splitting semantics around the core payment call.",
+      "capabilities": [
+        "multi-merchant routing",
+        "fee splitting",
+        "partner credential injection"
+      ],
+      "files": [
+        "integrated-partner-online-payments-with-hosted-fields-api/dotnet/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/go/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/java/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/nodejs/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/php/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/python/**/*"
+      ],
+      "depends_on": [
+        "integrated-partner-online-payments-with-hosted-fields-api-partner-charge"
+      ],
+      "config_required": [
+        "AUTHTOKEN_JWT_SECRET",
+        "ACCOUNT_CREDENTIAL"
+      ],
+      "source_repo": "integrated-partner-online-payments-with-hosted-fields-api",
+      "extraction_difficulty": "medium: repo description names the pattern, but actual split implementation files were not expanded"
+    },
+    {
+      "id": "integrated-partner-online-payments-with-hosted-fields-api-partner-hosted-fields-ui",
+      "layer": "tile",
+      "name": "Partner hosted-fields checkout UI",
+      "description": "Renders the hosted-fields frontend used for integrated partner payment capture.",
+      "capabilities": [
+        "hosted fields UI",
+        "partner-aware checkout",
+        "submit/result states"
+      ],
+      "files": [
+        "integrated-partner-online-payments-with-hosted-fields-api/index.html"
+      ],
+      "depends_on": [
+        "integrated-partner-online-payments-with-hosted-fields-api-partner-jwt"
+      ],
+      "config_required": [],
+      "source_repo": "integrated-partner-online-payments-with-hosted-fields-api",
+      "extraction_difficulty": "low: the shared root HTML file implements the frontend"
+    },
+    {
+      "id": "integrated-partner-online-payments-with-hosted-fields-api-partner-jwt",
+      "layer": "stud",
+      "name": "Hosted-fields JWT generator",
+      "description": "Generates the JWT consumed by hosted fields so the frontend can tokenize card data in partner context.",
+      "capabilities": [
+        "JWT signing",
+        "hosted-fields initialization",
+        "client bootstrap"
+      ],
+      "files": [
+        "integrated-partner-online-payments-with-hosted-fields-api/dotnet/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/go/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/java/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/nodejs/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/php/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/python/**/*"
+      ],
+      "depends_on": [
+        "integrated-partner-online-payments-with-hosted-fields-api-partner-config"
+      ],
+      "config_required": [
+        "AUTHTOKEN_JWT_SECRET",
+        "ACCOUNT_CREDENTIAL"
+      ],
+      "source_repo": "integrated-partner-online-payments-with-hosted-fields-api",
+      "extraction_difficulty": "low: the README explicitly documents this authentication flow"
+    },
+    {
+      "id": "integrated-partner-online-payments-with-hosted-fields-api-server-shell",
+      "layer": "baseplate",
+      "name": "Partner-payments server shell",
+      "description": "Bootstraps the hosted-fields partner-payment backends and standard error responses.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "JSON responses"
+      ],
+      "files": [
+        "integrated-partner-online-payments-with-hosted-fields-api/dotnet/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/go/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/java/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/nodejs/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/php/**/*",
+        "integrated-partner-online-payments-with-hosted-fields-api/python/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "integrated-partner-online-payments-with-hosted-fields-api",
+      "extraction_difficulty": "medium: six implementations follow the same pattern with separate entry files"
+    },
+    {
+      "id": "localized-checkout-experience-env-config",
+      "layer": "baseplate",
+      "name": "Locale-aware payment configuration loader",
+      "description": "Loads GP API credentials and language/currency defaults used by the checkout.",
+      "capabilities": [
+        "dotenv loading",
+        "service configuration",
+        "locale defaults"
+      ],
+      "files": [
+        "localized-checkout-experience/dotnet/**/*",
+        "localized-checkout-experience/java/**/*",
+        "localized-checkout-experience/nodejs/**/*",
+        "localized-checkout-experience/php/**/*"
+      ],
+      "depends_on": [
+        "localized-checkout-experience-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "localized-checkout-experience",
+      "extraction_difficulty": "low: the repo README explicitly describes this shared architecture"
+    },
+    {
+      "id": "localized-checkout-experience-localized-checkout-ui",
+      "layer": "tile",
+      "name": "Localized checkout UI",
+      "description": "Renders the multi-language, multi-currency checkout form and selectors.",
+      "capabilities": [
+        "language selector",
+        "currency selector",
+        "localized error messages",
+        "formatted amounts"
+      ],
+      "files": [
+        "localized-checkout-experience/index.html"
+      ],
+      "depends_on": [
+        "localized-checkout-experience-session-preferences"
+      ],
+      "config_required": [],
+      "source_repo": "localized-checkout-experience",
+      "extraction_difficulty": "low: the shared index file is explicitly part of the sample structure"
+    },
+    {
+      "id": "localized-checkout-experience-localized-sale",
+      "layer": "brick",
+      "name": "Localized sale processor",
+      "description": "Processes a tokenized sale using the currently selected currency and locale context.",
+      "capabilities": [
+        "sale/charge",
+        "currency-specific processing",
+        "localized response handling"
+      ],
+      "files": [
+        "localized-checkout-experience/dotnet/**/*",
+        "localized-checkout-experience/java/**/*",
+        "localized-checkout-experience/nodejs/**/*",
+        "localized-checkout-experience/php/**/*"
+      ],
+      "depends_on": [
+        "localized-checkout-experience-env-config",
+        "localized-checkout-experience-session-preferences"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "localized-checkout-experience",
+      "extraction_difficulty": "low: the README ties locale and currency selection directly to payment routing"
+    },
+    {
+      "id": "localized-checkout-experience-server-shell",
+      "layer": "baseplate",
+      "name": "Localized checkout server shell",
+      "description": "Bootstraps the checkout servers and standard response handling across languages.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "error handling"
+      ],
+      "files": [
+        "localized-checkout-experience/dotnet/**/*",
+        "localized-checkout-experience/java/**/*",
+        "localized-checkout-experience/nodejs/**/*",
+        "localized-checkout-experience/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "localized-checkout-experience",
+      "extraction_difficulty": "medium: four language trees implement the same behavior separately"
+    },
+    {
+      "id": "localized-checkout-experience-session-preferences",
+      "layer": "stud",
+      "name": "Session-backed locale preference bridge",
+      "description": "Persists selected language and currency preferences between frontend requests and backend payment handling.",
+      "capabilities": [
+        "session persistence",
+        "locale storage",
+        "currency preference transport"
+      ],
+      "files": [
+        "localized-checkout-experience/dotnet/**/*",
+        "localized-checkout-experience/java/**/*",
+        "localized-checkout-experience/nodejs/**/*",
+        "localized-checkout-experience/php/**/*"
+      ],
+      "depends_on": [
+        "localized-checkout-experience-env-config"
+      ],
+      "config_required": [],
+      "source_repo": "localized-checkout-experience",
+      "extraction_difficulty": "low: session persistence is a first-class documented feature of the repo"
+    },
+    {
+      "id": "network-tokenization-drop-in-token-bridge",
+      "layer": "stud",
+      "name": "Tokenization bridge for network-token flows",
+      "description": "Connects the frontend tokenization experience to backend provisioning of network tokens.",
+      "capabilities": [
+        "token handoff",
+        "frontend bootstrap",
+        "payment reference transport"
+      ],
+      "files": [
+        "network-tokenization/dotnet/**/*",
+        "network-tokenization/go/**/*",
+        "network-tokenization/java/**/*",
+        "network-tokenization/nodejs/**/*",
+        "network-tokenization/php/**/*",
+        "network-tokenization/python/**/*"
+      ],
+      "depends_on": [
+        "network-tokenization-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "network-tokenization",
+      "extraction_difficulty": "medium: topic metadata identifies drop-in UI usage, but route files were not opened"
+    },
+    {
+      "id": "network-tokenization-env-config",
+      "layer": "baseplate",
+      "name": "Network-token configuration loader",
+      "description": "Loads credentials and settings required for network token provisioning and use.",
+      "capabilities": [
+        "credential loading",
+        "wallet/token config",
+        "environment selection"
+      ],
+      "files": [
+        "network-tokenization/dotnet/**/*",
+        "network-tokenization/go/**/*",
+        "network-tokenization/java/**/*",
+        "network-tokenization/nodejs/**/*",
+        "network-tokenization/php/**/*",
+        "network-tokenization/python/**/*"
+      ],
+      "depends_on": [
+        "network-tokenization-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "network-tokenization",
+      "extraction_difficulty": "medium: inferred from repo description and sample conventions"
+    },
+    {
+      "id": "network-tokenization-network-token-charge",
+      "layer": "brick",
+      "name": "Network-token payment processor",
+      "description": "Uses the resulting network token in a subsequent payment operation.",
+      "capabilities": [
+        "charge with network token",
+        "stored token usage",
+        "transaction processing"
+      ],
+      "files": [
+        "network-tokenization/dotnet/**/*",
+        "network-tokenization/go/**/*",
+        "network-tokenization/java/**/*",
+        "network-tokenization/nodejs/**/*",
+        "network-tokenization/php/**/*",
+        "network-tokenization/python/**/*"
+      ],
+      "depends_on": [
+        "network-tokenization-network-token-provision"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "network-tokenization",
+      "extraction_difficulty": "medium: charging is implied by the sample theme but less explicit than provisioning in metadata"
+    },
+    {
+      "id": "network-tokenization-network-token-provision",
+      "layer": "brick",
+      "name": "Network token provisioning",
+      "description": "Replaces card numbers with issuer network tokens for secure storage and later use.",
+      "capabilities": [
+        "network token provisioning",
+        "secure storage token",
+        "card replacement"
+      ],
+      "files": [
+        "network-tokenization/dotnet/**/*",
+        "network-tokenization/go/**/*",
+        "network-tokenization/java/**/*",
+        "network-tokenization/nodejs/**/*",
+        "network-tokenization/php/**/*",
+        "network-tokenization/python/**/*"
+      ],
+      "depends_on": [
+        "network-tokenization-env-config",
+        "network-tokenization-drop-in-token-bridge"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "network-tokenization",
+      "extraction_difficulty": "low: the repo topic description explicitly defines this operation"
+    },
+    {
+      "id": "network-tokenization-network-token-ui",
+      "layer": "tile",
+      "name": "Network tokenization UI",
+      "description": "Renders the sample form and status views for provisioning and using network tokens.",
+      "capabilities": [
+        "tokenization form",
+        "provision request UI",
+        "result display"
+      ],
+      "files": [
+        "network-tokenization/index.html"
+      ],
+      "depends_on": [
+        "network-tokenization-drop-in-token-bridge"
+      ],
+      "config_required": [],
+      "source_repo": "network-tokenization",
+      "extraction_difficulty": "medium: UI is implied by the standard sample structure, not individually opened"
+    },
+    {
+      "id": "network-tokenization-server-shell",
+      "layer": "baseplate",
+      "name": "Network-tokenization server shell",
+      "description": "Bootstraps the sample servers and standardized error responses for network token flows.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "JSON errors"
+      ],
+      "files": [
+        "network-tokenization/dotnet/**/*",
+        "network-tokenization/go/**/*",
+        "network-tokenization/java/**/*",
+        "network-tokenization/nodejs/**/*",
+        "network-tokenization/php/**/*",
+        "network-tokenization/python/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "network-tokenization",
+      "extraction_difficulty": "medium: repository metadata exists, but the tree itself was not expanded"
+    },
+    {
+      "id": "online-card-payments-drop-in-access-token",
+      "layer": "stud",
+      "name": "Drop-In access token generator",
+      "description": "Generates the scoped token required to initialize the Drop-In UI before card tokenization.",
+      "capabilities": [
+        "scoped token generation",
+        "frontend bootstrap",
+        "public endpoint for UI init"
+      ],
+      "files": [
+        "online-card-payments/dotnet/**/*",
+        "online-card-payments/java/**/*",
+        "online-card-payments/nodejs/**/*",
+        "online-card-payments/php/**/*"
+      ],
+      "depends_on": [
+        "online-card-payments-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-card-payments",
+      "extraction_difficulty": "low: the README explicitly documents POST /get-access-token",
+      "status": "extracted",
+      "monorepo_component": "token-helper",
+      "manifest": "component_catalog/token-helper.component.yaml"
+    },
+    {
+      "id": "online-card-payments-drop-in-ui",
+      "layer": "tile",
+      "name": "Drop-In payment UI",
+      "description": "Renders the shared Drop-In UI experience for card capture and submission.",
+      "capabilities": [
+        "drop-in payment form",
+        "card tokenization UX",
+        "submit/result states"
+      ],
+      "files": [
+        "online-card-payments/index.html"
+      ],
+      "depends_on": [
+        "online-card-payments-drop-in-access-token"
+      ],
+      "config_required": [],
+      "source_repo": "online-card-payments",
+      "extraction_difficulty": "low: implemented in the shared root HTML file",
+      "status": "extracted",
+      "monorepo_component": "hosted-fields",
+      "manifest": "component_catalog/hosted-fields.component.yaml"
+    },
+    {
+      "id": "online-card-payments-env-config",
+      "layer": "baseplate",
+      "name": "GP API configuration loader",
+      "description": "Loads GP API credentials, environment, and SDK client configuration for sale processing.",
+      "capabilities": [
+        "dotenv loading",
+        "GpApiConfig setup",
+        "credential binding"
+      ],
+      "files": [
+        "online-card-payments/dotnet/**/*",
+        "online-card-payments/java/**/*",
+        "online-card-payments/nodejs/**/*",
+        "online-card-payments/php/**/*"
+      ],
+      "depends_on": [
+        "online-card-payments-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-card-payments",
+      "extraction_difficulty": "low: repo README names the required variables and architecture clearly"
+    },
+    {
+      "id": "online-card-payments-sale-charge",
+      "layer": "brick",
+      "name": "Sale transaction processor",
+      "description": "Submits a tokenized payment reference to the SDK to execute a sale transaction.",
+      "capabilities": [
+        "sale/charge",
+        "billing zip handling",
+        "transaction response mapping"
+      ],
+      "files": [
+        "online-card-payments/dotnet/**/*",
+        "online-card-payments/java/**/*",
+        "online-card-payments/nodejs/**/*",
+        "online-card-payments/php/**/*"
+      ],
+      "depends_on": [
+        "online-card-payments-env-config",
+        "online-card-payments-drop-in-access-token"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-card-payments",
+      "extraction_difficulty": "low: the README explicitly documents POST /process-sale and the sale flow",
+      "status": "extracted",
+      "monorepo_component": "charge",
+      "manifest": "component_catalog/charge.component.yaml"
+    },
+    {
+      "id": "online-card-payments-server-shell",
+      "layer": "baseplate",
+      "name": "Application server shell",
+      "description": "Bootstraps the language-specific servers and standard JSON error handling for the sale demo.",
+      "capabilities": [
+        "HTTP server startup",
+        "routing",
+        "JSON success/error responses"
+      ],
+      "files": [
+        "online-card-payments/dotnet/**/*",
+        "online-card-payments/java/**/*",
+        "online-card-payments/nodejs/**/*",
+        "online-card-payments/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "online-card-payments",
+      "extraction_difficulty": "medium: implementation is duplicated across four language folders"
+    },
+    {
+      "id": "online-check-payments-ach-form",
+      "layer": "tile",
+      "name": "ACH payment form",
+      "description": "Renders the bank-account form used to collect routing, account, and ownership fields.",
+      "capabilities": [
+        "bank account input UI",
+        "client-side validation",
+        "form submission"
+      ],
+      "files": [
+        "online-check-payments/index.html"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "online-check-payments",
+      "extraction_difficulty": "medium: the repo page was not opened directly, so file specifics are inferred from the standard sample layout"
+    },
+    {
+      "id": "online-check-payments-echeck-charge",
+      "layer": "brick",
+      "name": "ACH/eCheck payment processor",
+      "description": "Builds an eCheck request from raw bank account fields and submits it for payment.",
+      "capabilities": [
+        "eCheck/ACH charge",
+        "routing number use",
+        "account type handling"
+      ],
+      "files": [
+        "online-check-payments/dotnet/**/*",
+        "online-check-payments/java/**/*",
+        "online-check-payments/nodejs/**/*",
+        "online-check-payments/php/**/*"
+      ],
+      "depends_on": [
+        "online-check-payments-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-check-payments",
+      "extraction_difficulty": "medium: repo behavior is visible from topic metadata but the exact per-language entry files were not expanded"
+    },
+    {
+      "id": "online-check-payments-env-config",
+      "layer": "baseplate",
+      "name": "ACH configuration loader",
+      "description": "Loads GP API credentials and service settings used to submit eCheck requests.",
+      "capabilities": [
+        "dotenv loading",
+        "SDK config setup",
+        "credential binding"
+      ],
+      "files": [
+        "online-check-payments/dotnet/**/*",
+        "online-check-payments/java/**/*",
+        "online-check-payments/nodejs/**/*",
+        "online-check-payments/php/**/*"
+      ],
+      "depends_on": [
+        "online-check-payments-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-check-payments",
+      "extraction_difficulty": "medium: inferred from sibling repos and topic metadata rather than an opened repo page"
+    },
+    {
+      "id": "online-check-payments-server-shell",
+      "layer": "baseplate",
+      "name": "Application server shell",
+      "description": "Bootstraps the ACH/eCheck servers and shared error handling for direct bank account processing.",
+      "capabilities": [
+        "HTTP server startup",
+        "routing",
+        "JSON error handling"
+      ],
+      "files": [
+        "online-check-payments/dotnet/**/*",
+        "online-check-payments/java/**/*",
+        "online-check-payments/nodejs/**/*",
+        "online-check-payments/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "online-check-payments",
+      "extraction_difficulty": "medium: code lives in four language-specific trees"
+    },
+    {
+      "id": "online-payments-auth-and-delayed-capture-authorize",
+      "layer": "brick",
+      "name": "Authorization processor",
+      "description": "Creates an auth-only transaction for a tokenized payment method.",
+      "capabilities": [
+        "authorization",
+        "auth-only request",
+        "hold funds without capture"
+      ],
+      "files": [
+        "online-payments-auth-and-delayed-capture/dotnet/**/*",
+        "online-payments-auth-and-delayed-capture/java/**/*",
+        "online-payments-auth-and-delayed-capture/nodejs/**/*",
+        "online-payments-auth-and-delayed-capture/php/**/*"
+      ],
+      "depends_on": [
+        "online-payments-auth-and-delayed-capture-env-config",
+        "online-payments-auth-and-delayed-capture-payment-token-bridge"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-payments-auth-and-delayed-capture",
+      "extraction_difficulty": "low: authorization is the main documented operation of the repo",
+      "status": "extracted",
+      "monorepo_component": "authorize",
+      "manifest": "component_catalog/authorize.component.yaml"
+    },
+    {
+      "id": "online-payments-auth-and-delayed-capture-delayed-capture",
+      "layer": "brick",
+      "name": "Delayed capture processor",
+      "description": "Captures a previously authorized transaction in a second step.",
+      "capabilities": [
+        "capture",
+        "two-step payment flow",
+        "transaction id reuse"
+      ],
+      "files": [
+        "online-payments-auth-and-delayed-capture/dotnet/**/*",
+        "online-payments-auth-and-delayed-capture/java/**/*",
+        "online-payments-auth-and-delayed-capture/nodejs/**/*",
+        "online-payments-auth-and-delayed-capture/php/**/*"
+      ],
+      "depends_on": [
+        "online-payments-auth-and-delayed-capture-authorize"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-payments-auth-and-delayed-capture",
+      "extraction_difficulty": "medium: capture behavior is repository-level but the exact entry file names differ by language",
+      "status": "extracted",
+      "monorepo_component": "capture",
+      "manifest": "component_catalog/capture.component.yaml"
+    },
+    {
+      "id": "online-payments-auth-and-delayed-capture-env-config",
+      "layer": "baseplate",
+      "name": "Authorization flow configuration loader",
+      "description": "Loads payment credentials and SDK config for auth/capture processing.",
+      "capabilities": [
+        "dotenv loading",
+        "SDK config",
+        "developer identification"
+      ],
+      "files": [
+        "online-payments-auth-and-delayed-capture/dotnet/**/*",
+        "online-payments-auth-and-delayed-capture/java/**/*",
+        "online-payments-auth-and-delayed-capture/nodejs/**/*",
+        "online-payments-auth-and-delayed-capture/php/**/*"
+      ],
+      "depends_on": [
+        "online-payments-auth-and-delayed-capture-server-shell"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-payments-auth-and-delayed-capture",
+      "extraction_difficulty": "low: the repo and PHP README expose the common environment pattern"
+    },
+    {
+      "id": "online-payments-auth-and-delayed-capture-payment-form",
+      "layer": "tile",
+      "name": "Authorization payment form",
+      "description": "Renders the card form used to create tokenized payment data for the auth/capture flow.",
+      "capabilities": [
+        "payment form",
+        "submit auth request",
+        "status display"
+      ],
+      "files": [
+        "online-payments-auth-and-delayed-capture/index.html"
+      ],
+      "depends_on": [
+        "online-payments-auth-and-delayed-capture-payment-token-bridge"
+      ],
+      "config_required": [],
+      "source_repo": "online-payments-auth-and-delayed-capture",
+      "extraction_difficulty": "low: the shared root index file implements the form"
+    },
+    {
+      "id": "online-payments-auth-and-delayed-capture-payment-token-bridge",
+      "layer": "stud",
+      "name": "Payment token handoff",
+      "description": "Receives tokenized payment data from the frontend and normalizes it for auth/capture processing.",
+      "capabilities": [
+        "token handoff",
+        "billing zip transport",
+        "request normalization"
+      ],
+      "files": [
+        "online-payments-auth-and-delayed-capture/dotnet/**/*",
+        "online-payments-auth-and-delayed-capture/java/**/*",
+        "online-payments-auth-and-delayed-capture/nodejs/**/*",
+        "online-payments-auth-and-delayed-capture/php/**/*"
+      ],
+      "depends_on": [
+        "online-payments-auth-and-delayed-capture-env-config"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-payments-auth-and-delayed-capture",
+      "extraction_difficulty": "medium: tokenization is part of the front/back contract but endpoint names vary by implementation"
+    },
+    {
+      "id": "online-payments-auth-and-delayed-capture-server-shell",
+      "layer": "baseplate",
+      "name": "Authorization demo server shell",
+      "description": "Bootstraps the auth-only demo servers and standardized error responses.",
+      "capabilities": [
+        "server startup",
+        "routing",
+        "JSON error handling"
+      ],
+      "files": [
+        "online-payments-auth-and-delayed-capture/dotnet/**/*",
+        "online-payments-auth-and-delayed-capture/java/**/*",
+        "online-payments-auth-and-delayed-capture/nodejs/**/*",
+        "online-payments-auth-and-delayed-capture/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "online-payments-auth-and-delayed-capture",
+      "extraction_difficulty": "medium: there are four separate implementations"
+    },
+    {
+      "id": "online-recurring-payments-env-config",
+      "layer": "baseplate",
+      "name": "Recurring billing configuration loader",
+      "description": "Loads GP API credentials and SDK client configuration used by initial and recurring charges.",
+      "capabilities": [
+        "dotenv loading",
+        "GpApiConfig setup",
+        "service selection"
+      ],
+      "files": [
+        "online-recurring-payments/dotnet/**/*",
+        "online-recurring-payments/java/**/*",
+        "online-recurring-payments/nodejs/**/*",
+        "online-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "online-recurring-payments-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-recurring-payments",
+      "extraction_difficulty": "low: the repository README spells out the shared architecture and language set"
+    },
+    {
+      "id": "online-recurring-payments-hosted-fields-access-token",
+      "layer": "stud",
+      "name": "Hosted-fields access token generator",
+      "description": "Publishes the access token used by the frontend to tokenize cards without exposing raw PAN data.",
+      "capabilities": [
+        "access token generation",
+        "frontend bootstrap endpoint",
+        "tokenization initialization"
+      ],
+      "files": [
+        "online-recurring-payments/dotnet/**/*",
+        "online-recurring-payments/java/**/*",
+        "online-recurring-payments/nodejs/**/*",
+        "online-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "online-recurring-payments-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-recurring-payments",
+      "extraction_difficulty": "low: the README explicitly documents GET /config returning an access token"
+    },
+    {
+      "id": "online-recurring-payments-initial-charge",
+      "layer": "brick",
+      "name": "Initial recurring-setup charge",
+      "description": "Processes the first tokenized payment and captures the payment method for future use.",
+      "capabilities": [
+        "initial charge",
+        "customer binding",
+        "stored credential first use"
+      ],
+      "files": [
+        "online-recurring-payments/dotnet/**/*",
+        "online-recurring-payments/java/**/*",
+        "online-recurring-payments/nodejs/**/*",
+        "online-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "online-recurring-payments-env-config",
+        "online-recurring-payments-hosted-fields-access-token"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-recurring-payments",
+      "extraction_difficulty": "low: the README explains the non-recurring branch of /process-payment in detail"
+    },
+    {
+      "id": "online-recurring-payments-recurring-checkout-form",
+      "layer": "tile",
+      "name": "Recurring checkout form",
+      "description": "Renders the hosted-fields payment form and recurring schedule controls.",
+      "capabilities": [
+        "hosted fields",
+        "schedule selectors",
+        "recurring options UI"
+      ],
+      "files": [
+        "online-recurring-payments/index.html"
+      ],
+      "depends_on": [
+        "online-recurring-payments-hosted-fields-access-token"
+      ],
+      "config_required": [],
+      "source_repo": "online-recurring-payments",
+      "extraction_difficulty": "medium: the shared UI exists but schedule widgets are only described in README text"
+    },
+    {
+      "id": "online-recurring-payments-server-shell",
+      "layer": "baseplate",
+      "name": "Recurring payments server shell",
+      "description": "Bootstraps the subscription demo servers and standardized response handling.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "JSON responses"
+      ],
+      "files": [
+        "online-recurring-payments/dotnet/**/*",
+        "online-recurring-payments/java/**/*",
+        "online-recurring-payments/nodejs/**/*",
+        "online-recurring-payments/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "online-recurring-payments",
+      "extraction_difficulty": "medium: repeated across four implementation folders"
+    },
+    {
+      "id": "online-recurring-payments-stored-credential-recurring-charge",
+      "layer": "brick",
+      "name": "Stored-credential recurring charge",
+      "description": "Submits future recurring charges against the stored payment method without re-entering card data.",
+      "capabilities": [
+        "stored credential use",
+        "scheduled recurring billing",
+        "vault-backed charging"
+      ],
+      "files": [
+        "online-recurring-payments/dotnet/**/*",
+        "online-recurring-payments/java/**/*",
+        "online-recurring-payments/nodejs/**/*",
+        "online-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "online-recurring-payments-initial-charge"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "online-recurring-payments",
+      "extraction_difficulty": "low: the README explicitly describes the recurring branch of the flow"
+    },
+    {
+      "id": "pay-by-link-create-payment-link",
+      "layer": "brick",
+      "name": "Payment-link creator",
+      "description": "Creates secure time-limited payment links through the GP API.",
+      "capabilities": [
+        "payment link creation",
+        "multi-currency link payloads",
+        "remote payment initiation"
+      ],
+      "files": [
+        "pay-by-link/dotnet/**/*",
+        "pay-by-link/go/**/*",
+        "pay-by-link/java/**/*",
+        "pay-by-link/nodejs/**/*",
+        "pay-by-link/php/**/*",
+        "pay-by-link/python/**/*"
+      ],
+      "depends_on": [
+        "pay-by-link-env-config",
+        "pay-by-link-request-validation"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "pay-by-link",
+      "extraction_difficulty": "low: the README explicitly documents link creation as the central operation"
+    },
+    {
+      "id": "pay-by-link-env-config",
+      "layer": "baseplate",
+      "name": "Payment-link configuration loader",
+      "description": "Loads API credentials and environment settings used to create secure payment links.",
+      "capabilities": [
+        "dotenv loading",
+        "credential binding",
+        "sandbox/production selection"
+      ],
+      "files": [
+        "pay-by-link/dotnet/**/*",
+        "pay-by-link/go/**/*",
+        "pay-by-link/java/**/*",
+        "pay-by-link/nodejs/**/*",
+        "pay-by-link/php/**/*",
+        "pay-by-link/python/**/*"
+      ],
+      "depends_on": [
+        "pay-by-link-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "pay-by-link",
+      "extraction_difficulty": "low: the README names the shared environment configuration pattern"
+    },
+    {
+      "id": "pay-by-link-link-generator-ui",
+      "layer": "tile",
+      "name": "Payment-link generator UI",
+      "description": "Renders the form for creating and previewing shareable payment links.",
+      "capabilities": [
+        "link generation form",
+        "amount/currency selectors",
+        "created-link display"
+      ],
+      "files": [
+        "pay-by-link/index.html"
+      ],
+      "depends_on": [
+        "pay-by-link-create-payment-link"
+      ],
+      "config_required": [],
+      "source_repo": "pay-by-link",
+      "extraction_difficulty": "low: the shared root HTML file implements the frontend"
+    },
+    {
+      "id": "pay-by-link-request-validation",
+      "layer": "baseplate",
+      "name": "Payment-link input validator",
+      "description": "Validates amount, currency, and customer fields before link creation.",
+      "capabilities": [
+        "input validation",
+        "sanitization",
+        "standardized error messages"
+      ],
+      "files": [
+        "pay-by-link/dotnet/**/*",
+        "pay-by-link/go/**/*",
+        "pay-by-link/java/**/*",
+        "pay-by-link/nodejs/**/*",
+        "pay-by-link/php/**/*",
+        "pay-by-link/python/**/*"
+      ],
+      "depends_on": [
+        "pay-by-link-server-shell"
+      ],
+      "config_required": [],
+      "source_repo": "pay-by-link",
+      "extraction_difficulty": "low: validation is explicitly called out as a core feature of the repo"
+    },
+    {
+      "id": "pay-by-link-server-shell",
+      "layer": "baseplate",
+      "name": "Pay-by-Link server shell",
+      "description": "Bootstraps the payment-link creation API and consistent error responses.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "JSON validation errors"
+      ],
+      "files": [
+        "pay-by-link/dotnet/**/*",
+        "pay-by-link/go/**/*",
+        "pay-by-link/java/**/*",
+        "pay-by-link/nodejs/**/*",
+        "pay-by-link/php/**/*",
+        "pay-by-link/python/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "pay-by-link",
+      "extraction_difficulty": "medium: six implementations exist with similar but separate entry points"
+    },
+    {
+      "id": "php-payments-and-reporting-drop-in-access-token",
+      "layer": "stud",
+      "name": "Drop-In/HPP access token bridge",
+      "description": "Provides the client with the token or config needed to initialize the PCI-compliant payment UI.",
+      "capabilities": [
+        "frontend init token",
+        "safe client bootstrap",
+        "payment reference handoff"
+      ],
+      "files": [
+        "php-payments-and-reporting/api/**/*",
+        "php-payments-and-reporting/public/**/*"
+      ],
+      "depends_on": [
+        "php-payments-and-reporting-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "php-payments-and-reporting",
+      "extraction_difficulty": "medium: the repo mentions Drop-In/HPP integration, but the exact endpoint files were not opened"
+    },
+    {
+      "id": "php-payments-and-reporting-env-config",
+      "layer": "baseplate",
+      "name": "PHP SDK configuration loader",
+      "description": "Loads GP API credentials and reporting settings from the environment into the PHP SDK layer.",
+      "capabilities": [
+        "dotenv loading",
+        "SDK config binding",
+        "environment selection"
+      ],
+      "files": [
+        "php-payments-and-reporting/.env.example",
+        "php-payments-and-reporting/src/**/*",
+        "php-payments-and-reporting/api/**/*"
+      ],
+      "depends_on": [
+        "php-payments-and-reporting-router-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "php-payments-and-reporting",
+      "extraction_difficulty": "medium: config is clear at repo level but actual bootstrapping class names were not expanded"
+    },
+    {
+      "id": "php-payments-and-reporting-reporting-dashboard",
+      "layer": "tile",
+      "name": "Verification and reporting dashboard",
+      "description": "Renders the UI for running checks and viewing transaction/reporting results.",
+      "capabilities": [
+        "dashboard views",
+        "report tables",
+        "payment/verification UI"
+      ],
+      "files": [
+        "php-payments-and-reporting/public/**/*",
+        "php-payments-and-reporting/docs/**/*"
+      ],
+      "depends_on": [
+        "php-payments-and-reporting-drop-in-access-token",
+        "php-payments-and-reporting-reporting-query"
+      ],
+      "config_required": [],
+      "source_repo": "php-payments-and-reporting",
+      "extraction_difficulty": "medium: the repo layout shows public assets, but component-level files were not individually enumerated"
+    },
+    {
+      "id": "php-payments-and-reporting-reporting-query",
+      "layer": "brick",
+      "name": "Transaction reporting query",
+      "description": "Retrieves transaction and verification records for dashboard and reporting views.",
+      "capabilities": [
+        "transaction lookup",
+        "report retrieval",
+        "report data shaping"
+      ],
+      "files": [
+        "php-payments-and-reporting/api/**/*",
+        "php-payments-and-reporting/src/**/*"
+      ],
+      "depends_on": [
+        "php-payments-and-reporting-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "php-payments-and-reporting",
+      "extraction_difficulty": "medium: reporting is central to the repo, but the file boundaries are not visible in the snippet"
+    },
+    {
+      "id": "php-payments-and-reporting-router-shell",
+      "layer": "baseplate",
+      "name": "PHP router and app shell",
+      "description": "Bootstraps the PHP app, routes HTTP requests, and centralizes top-level exception handling.",
+      "capabilities": [
+        "router bootstrap",
+        "request dispatch",
+        "error handling"
+      ],
+      "files": [
+        "php-payments-and-reporting/router.php",
+        "php-payments-and-reporting/api/**/*",
+        "php-payments-and-reporting/src/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "php-payments-and-reporting",
+      "extraction_difficulty": "low: the repo snippet exposes the router and directory layout directly"
+    },
+    {
+      "id": "php-payments-and-reporting-verification",
+      "layer": "brick",
+      "name": "Card verification processor",
+      "description": "Runs card verification and auth-style validation checks without performing a sale.",
+      "capabilities": [
+        "card verification",
+        "AVS check",
+        "CVV check"
+      ],
+      "files": [
+        "php-payments-and-reporting/api/**/*",
+        "php-payments-and-reporting/src/**/*"
+      ],
+      "depends_on": [
+        "php-payments-and-reporting-env-config",
+        "php-payments-and-reporting-drop-in-access-token"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "php-payments-and-reporting",
+      "extraction_difficulty": "low: verification is a headline capability of the repository"
+    },
+    {
+      "id": "portico-donation-form-one-time-recurring-payments-config-loader",
+      "layer": "baseplate",
+      "name": "Portico donation configuration loader",
+      "description": "Loads Portico credentials for donation processing and public API key delivery.",
+      "capabilities": [
+        "dotenv loading",
+        "public API key config",
+        "gateway setup"
+      ],
+      "files": [
+        "portico-donation-form-one-time-recurring-payments/php/config.php",
+        "portico-donation-form-one-time-recurring-payments/dotnet/**/*",
+        "portico-donation-form-one-time-recurring-payments/java/**/*",
+        "portico-donation-form-one-time-recurring-payments/nodejs/**/*"
+      ],
+      "depends_on": [
+        "portico-donation-form-one-time-recurring-payments-server-shell"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY"
+      ],
+      "source_repo": "portico-donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: the PHP tree explicitly shows config.php and the public/secret key env variables"
+    },
+    {
+      "id": "portico-donation-form-one-time-recurring-payments-donation-form-ui",
+      "layer": "tile",
+      "name": "Portico donation form UI",
+      "description": "Renders the hosted-fields donation form with one-time and recurring donation options.",
+      "capabilities": [
+        "donation form",
+        "frequency selectors",
+        "amount widgets",
+        "submit/result states"
+      ],
+      "files": [
+        "portico-donation-form-one-time-recurring-payments/php/index.html",
+        "portico-donation-form-one-time-recurring-payments/index.html"
+      ],
+      "depends_on": [
+        "portico-donation-form-one-time-recurring-payments-public-config-endpoint"
+      ],
+      "config_required": [],
+      "source_repo": "portico-donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: the PHP tree explicitly includes index.html for the donation form"
+    },
+    {
+      "id": "portico-donation-form-one-time-recurring-payments-donation-router",
+      "layer": "stud",
+      "name": "Donation request router",
+      "description": "Routes submitted donations into one-time or recurring processing paths.",
+      "capabilities": [
+        "payment_type routing",
+        "request normalization",
+        "flow dispatch"
+      ],
+      "files": [
+        "portico-donation-form-one-time-recurring-payments/php/process-donation.php",
+        "portico-donation-form-one-time-recurring-payments/dotnet/**/*",
+        "portico-donation-form-one-time-recurring-payments/java/**/*",
+        "portico-donation-form-one-time-recurring-payments/nodejs/**/*"
+      ],
+      "depends_on": [
+        "portico-donation-form-one-time-recurring-payments-config-loader"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY"
+      ],
+      "source_repo": "portico-donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: the PHP tree explicitly exposes process-donation.php and its routing role"
+    },
+    {
+      "id": "portico-donation-form-one-time-recurring-payments-one-time-donation",
+      "layer": "brick",
+      "name": "Portico one-time donation processor",
+      "description": "Executes a single donation charge through Portico.",
+      "capabilities": [
+        "one-time charge",
+        "donation amount handling",
+        "transaction response mapping"
+      ],
+      "files": [
+        "portico-donation-form-one-time-recurring-payments/php/process-one-time.php",
+        "portico-donation-form-one-time-recurring-payments/dotnet/**/*",
+        "portico-donation-form-one-time-recurring-payments/java/**/*",
+        "portico-donation-form-one-time-recurring-payments/nodejs/**/*"
+      ],
+      "depends_on": [
+        "portico-donation-form-one-time-recurring-payments-donation-router"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY"
+      ],
+      "source_repo": "portico-donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: the PHP tree explicitly exposes process-one-time.php"
+    },
+    {
+      "id": "portico-donation-form-one-time-recurring-payments-public-config-endpoint",
+      "layer": "stud",
+      "name": "Donation public-config endpoint",
+      "description": "Returns the public API key/config used by hosted fields for the donation form.",
+      "capabilities": [
+        "GET /config style endpoint",
+        "public API key delivery",
+        "frontend bootstrap"
+      ],
+      "files": [
+        "portico-donation-form-one-time-recurring-payments/php/config.php",
+        "portico-donation-form-one-time-recurring-payments/dotnet/**/*",
+        "portico-donation-form-one-time-recurring-payments/java/**/*",
+        "portico-donation-form-one-time-recurring-payments/nodejs/**/*"
+      ],
+      "depends_on": [
+        "portico-donation-form-one-time-recurring-payments-config-loader"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY"
+      ],
+      "source_repo": "portico-donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: the PHP README excerpt explicitly identifies config.php as GET /config"
+    },
+    {
+      "id": "portico-donation-form-one-time-recurring-payments-recurring-donation",
+      "layer": "brick",
+      "name": "Portico recurring donation processor",
+      "description": "Creates the customer, payment method, and billing schedule required for recurring donations.",
+      "capabilities": [
+        "customer create",
+        "payment method create",
+        "schedule create",
+        "recurring billing"
+      ],
+      "files": [
+        "portico-donation-form-one-time-recurring-payments/php/process-recurring.php",
+        "portico-donation-form-one-time-recurring-payments/dotnet/**/*",
+        "portico-donation-form-one-time-recurring-payments/java/**/*",
+        "portico-donation-form-one-time-recurring-payments/nodejs/**/*"
+      ],
+      "depends_on": [
+        "portico-donation-form-one-time-recurring-payments-donation-router"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY"
+      ],
+      "source_repo": "portico-donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "low: the PHP README excerpt explicitly states the Customer → PaymentMethod → Schedule chain"
+    },
+    {
+      "id": "portico-donation-form-one-time-recurring-payments-server-shell",
+      "layer": "baseplate",
+      "name": "Portico donation server shell",
+      "description": "Bootstraps the Portico donation sample and request routing for one-time and recurring flows.",
+      "capabilities": [
+        "server startup",
+        "routing",
+        "error handling"
+      ],
+      "files": [
+        "portico-donation-form-one-time-recurring-payments/dotnet/**/*",
+        "portico-donation-form-one-time-recurring-payments/java/**/*",
+        "portico-donation-form-one-time-recurring-payments/nodejs/**/*",
+        "portico-donation-form-one-time-recurring-payments/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "portico-donation-form-one-time-recurring-payments",
+      "extraction_difficulty": "medium: repo tree details are clearest in PHP, with other languages inferred from the repo family"
+    },
+    {
+      "id": "portico-embedded-payments-fee-splitting-config-loader",
+      "layer": "baseplate",
+      "name": "Portico and ProPay configuration loader",
+      "description": "Loads the Portico payment credentials and optional ProPay SplitFunds credentials.",
+      "capabilities": [
+        "dotenv loading",
+        "dual credential binding",
+        "mock split-funds fallback"
+      ],
+      "files": [
+        "portico-embedded-payments-fee-splitting/dotnet/**/*",
+        "portico-embedded-payments-fee-splitting/java/**/*",
+        "portico-embedded-payments-fee-splitting/nodejs/**/*",
+        "portico-embedded-payments-fee-splitting/php/**/*"
+      ],
+      "depends_on": [
+        "portico-embedded-payments-fee-splitting-server-shell"
+      ],
+      "config_required": [
+        "PORTICO_PUBLIC_API_KEY",
+        "PORTICO_SECRET_API_KEY",
+        "PORTICO_DEVELOPER_ID",
+        "PORTICO_VERSION_NUMBER",
+        "PORTICO_ENVIRONMENT",
+        "PROPAY_USERNAME",
+        "PROPAY_PASSWORD",
+        "PROPAY_CERT_STR",
+        "PROPAY_TERM_ID"
+      ],
+      "source_repo": "portico-embedded-payments-fee-splitting",
+      "extraction_difficulty": "low: the repo README lists the credential groups and fallback behavior explicitly"
+    },
+    {
+      "id": "portico-embedded-payments-fee-splitting-hosted-fields-bridge",
+      "layer": "stud",
+      "name": "Hosted-fields tokenization bridge",
+      "description": "Publishes the client-side config needed to tokenize the card in the embedded marketplace checkout.",
+      "capabilities": [
+        "public tokenization config",
+        "frontend bootstrap",
+        "token handoff"
+      ],
+      "files": [
+        "portico-embedded-payments-fee-splitting/dotnet/**/*",
+        "portico-embedded-payments-fee-splitting/java/**/*",
+        "portico-embedded-payments-fee-splitting/nodejs/**/*",
+        "portico-embedded-payments-fee-splitting/php/**/*"
+      ],
+      "depends_on": [
+        "portico-embedded-payments-fee-splitting-config-loader"
+      ],
+      "config_required": [
+        "PORTICO_PUBLIC_API_KEY",
+        "PORTICO_SECRET_API_KEY",
+        "PORTICO_DEVELOPER_ID",
+        "PORTICO_VERSION_NUMBER",
+        "PORTICO_ENVIRONMENT"
+      ],
+      "source_repo": "portico-embedded-payments-fee-splitting",
+      "extraction_difficulty": "medium: hosted-fields usage is explicit, but route files were not enumerated"
+    },
+    {
+      "id": "portico-embedded-payments-fee-splitting-marketplace-ui",
+      "layer": "tile",
+      "name": "Marketplace payment and seller UI",
+      "description": "Renders the embedded checkout form, seller selector, and fee breakdown display.",
+      "capabilities": [
+        "hosted fields UI",
+        "seller selection",
+        "fee breakdown"
+      ],
+      "files": [
+        "portico-embedded-payments-fee-splitting/index.html"
+      ],
+      "depends_on": [
+        "portico-embedded-payments-fee-splitting-hosted-fields-bridge"
+      ],
+      "config_required": [],
+      "source_repo": "portico-embedded-payments-fee-splitting",
+      "extraction_difficulty": "medium: UI capabilities are described, though the root file list snippet did not show index.html explicitly"
+    },
+    {
+      "id": "portico-embedded-payments-fee-splitting-portico-charge",
+      "layer": "brick",
+      "name": "Primary Portico customer charge",
+      "description": "Processes the shopper payment through the Portico gateway before payout distribution.",
+      "capabilities": [
+        "charge",
+        "platform payment collection",
+        "seller validation"
+      ],
+      "files": [
+        "portico-embedded-payments-fee-splitting/dotnet/**/*",
+        "portico-embedded-payments-fee-splitting/java/**/*",
+        "portico-embedded-payments-fee-splitting/nodejs/**/*",
+        "portico-embedded-payments-fee-splitting/php/**/*"
+      ],
+      "depends_on": [
+        "portico-embedded-payments-fee-splitting-config-loader",
+        "portico-embedded-payments-fee-splitting-hosted-fields-bridge"
+      ],
+      "config_required": [
+        "PORTICO_PUBLIC_API_KEY",
+        "PORTICO_SECRET_API_KEY",
+        "PORTICO_DEVELOPER_ID",
+        "PORTICO_VERSION_NUMBER",
+        "PORTICO_ENVIRONMENT"
+      ],
+      "source_repo": "portico-embedded-payments-fee-splitting",
+      "extraction_difficulty": "low: the architecture overview explicitly lists backend charging as a core step"
+    },
+    {
+      "id": "portico-embedded-payments-fee-splitting-server-shell",
+      "layer": "baseplate",
+      "name": "Portico marketplace server shell",
+      "description": "Bootstraps the embedded Portico marketplace sample and standard responses.",
+      "capabilities": [
+        "server startup",
+        "routing",
+        "JSON error handling"
+      ],
+      "files": [
+        "portico-embedded-payments-fee-splitting/dotnet/**/*",
+        "portico-embedded-payments-fee-splitting/java/**/*",
+        "portico-embedded-payments-fee-splitting/nodejs/**/*",
+        "portico-embedded-payments-fee-splitting/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "portico-embedded-payments-fee-splitting",
+      "extraction_difficulty": "medium: four implementation trees share one architecture"
+    },
+    {
+      "id": "portico-embedded-payments-fee-splitting-split-funds",
+      "layer": "brick",
+      "name": "ProPay SplitFunds payout",
+      "description": "Transfers the seller payout after the platform fee is calculated.",
+      "capabilities": [
+        "SplitFunds payout",
+        "platform fee calculation",
+        "seller disbursement"
+      ],
+      "files": [
+        "portico-embedded-payments-fee-splitting/dotnet/**/*",
+        "portico-embedded-payments-fee-splitting/java/**/*",
+        "portico-embedded-payments-fee-splitting/nodejs/**/*",
+        "portico-embedded-payments-fee-splitting/php/**/*"
+      ],
+      "depends_on": [
+        "portico-embedded-payments-fee-splitting-portico-charge"
+      ],
+      "config_required": [
+        "PORTICO_PUBLIC_API_KEY",
+        "PORTICO_SECRET_API_KEY",
+        "PORTICO_DEVELOPER_ID",
+        "PORTICO_VERSION_NUMBER",
+        "PORTICO_ENVIRONMENT",
+        "PROPAY_USERNAME",
+        "PROPAY_PASSWORD",
+        "PROPAY_CERT_STR",
+        "PROPAY_TERM_ID"
+      ],
+      "source_repo": "portico-embedded-payments-fee-splitting",
+      "extraction_difficulty": "low: the README explicitly describes SplitFunds and its mock fallback"
+    },
+    {
+      "id": "portico-google-pay-payments-env-config",
+      "layer": "baseplate",
+      "name": "Portico Google Pay configuration loader",
+      "description": "Loads Portico credentials and Google Pay settings for wallet payments.",
+      "capabilities": [
+        "credential loading",
+        "wallet config",
+        "environment selection"
+      ],
+      "files": [
+        "portico-google-pay-payments/**/*"
+      ],
+      "depends_on": [
+        "portico-google-pay-payments-server-shell"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "GOOGLE_PAY_MERCHANT_ID"
+      ],
+      "source_repo": "portico-google-pay-payments",
+      "extraction_difficulty": "high: repo-level metadata exists but the file tree was not opened"
+    },
+    {
+      "id": "portico-google-pay-payments-google-pay-button",
+      "layer": "tile",
+      "name": "Portico Google Pay button UI",
+      "description": "Renders the wallet button and client-side request construction for Google Pay.",
+      "capabilities": [
+        "Google Pay button",
+        "wallet initialization",
+        "checkout initiation"
+      ],
+      "files": [
+        "portico-google-pay-payments/**/*"
+      ],
+      "depends_on": [
+        "portico-google-pay-payments-google-pay-token-bridge"
+      ],
+      "config_required": [],
+      "source_repo": "portico-google-pay-payments",
+      "extraction_difficulty": "high: the repo tree was not opened, so UI files are represented at repo scope"
+    },
+    {
+      "id": "portico-google-pay-payments-google-pay-charge",
+      "layer": "brick",
+      "name": "Portico Google Pay processor",
+      "description": "Processes the Google Pay token using the Portico gateway flow.",
+      "capabilities": [
+        "Google Pay charge",
+        "wallet token processing",
+        "Portico payment response"
+      ],
+      "files": [
+        "portico-google-pay-payments/**/*"
+      ],
+      "depends_on": [
+        "portico-google-pay-payments-env-config",
+        "portico-google-pay-payments-google-pay-token-bridge"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "GOOGLE_PAY_MERCHANT_ID"
+      ],
+      "source_repo": "portico-google-pay-payments",
+      "extraction_difficulty": "medium: operation is explicit in repo description even though file boundaries are not visible"
+    },
+    {
+      "id": "portico-google-pay-payments-google-pay-token-bridge",
+      "layer": "stud",
+      "name": "Portico wallet payload bridge",
+      "description": "Accepts Google Pay payment data and prepares it for Portico processing.",
+      "capabilities": [
+        "wallet payload handoff",
+        "frontend/backend contract",
+        "token normalization"
+      ],
+      "files": [
+        "portico-google-pay-payments/**/*"
+      ],
+      "depends_on": [
+        "portico-google-pay-payments-env-config"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "GOOGLE_PAY_MERCHANT_ID"
+      ],
+      "source_repo": "portico-google-pay-payments",
+      "extraction_difficulty": "medium: repo metadata clearly mentions Google Pay token processing"
+    },
+    {
+      "id": "portico-google-pay-payments-server-shell",
+      "layer": "baseplate",
+      "name": "Portico Google Pay server shell",
+      "description": "Bootstraps the Portico Google Pay sample backends and standardized responses.",
+      "capabilities": [
+        "server startup",
+        "routing",
+        "JSON error handling"
+      ],
+      "files": [
+        "portico-google-pay-payments/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "portico-google-pay-payments",
+      "extraction_difficulty": "high: only topic metadata was available, so file paths are represented at repo scope"
+    },
+    {
+      "id": "portico-online-card-payments-env-config",
+      "layer": "baseplate",
+      "name": "Portico card configuration loader",
+      "description": "Loads Portico credentials and SDK configuration for tokenized card sales.",
+      "capabilities": [
+        "dotenv loading",
+        "Portico config setup",
+        "developer identification"
+      ],
+      "files": [
+        "portico-online-card-payments/dotnet/**/*",
+        "portico-online-card-payments/go/**/*",
+        "portico-online-card-payments/java/**/*",
+        "portico-online-card-payments/nodejs/**/*",
+        "portico-online-card-payments/php/**/*",
+        "portico-online-card-payments/python/**/*"
+      ],
+      "depends_on": [
+        "portico-online-card-payments-server-shell"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "DEVELOPER_ID",
+        "VERSION_NUMBER"
+      ],
+      "source_repo": "portico-online-card-payments",
+      "extraction_difficulty": "low: the README states environment-based configuration with public/private API keys"
+    },
+    {
+      "id": "portico-online-card-payments-hosted-fields-form",
+      "layer": "tile",
+      "name": "Portico hosted-fields form",
+      "description": "Renders the shared test form used for Portico tokenization and payment submission.",
+      "capabilities": [
+        "payment form",
+        "hosted fields",
+        "submit/result states"
+      ],
+      "files": [
+        "portico-online-card-payments/index.html"
+      ],
+      "depends_on": [
+        "portico-online-card-payments-public-config-endpoint"
+      ],
+      "config_required": [],
+      "source_repo": "portico-online-card-payments",
+      "extraction_difficulty": "low: the shared root HTML file is explicitly present in the repo"
+    },
+    {
+      "id": "portico-online-card-payments-public-config-endpoint",
+      "layer": "stud",
+      "name": "Public API key/config bridge",
+      "description": "Exposes the public configuration needed for client-side Portico tokenization.",
+      "capabilities": [
+        "GET /config-style endpoint",
+        "public API key delivery",
+        "frontend bootstrap"
+      ],
+      "files": [
+        "portico-online-card-payments/dotnet/**/*",
+        "portico-online-card-payments/go/**/*",
+        "portico-online-card-payments/java/**/*",
+        "portico-online-card-payments/nodejs/**/*",
+        "portico-online-card-payments/php/**/*",
+        "portico-online-card-payments/python/**/*"
+      ],
+      "depends_on": [
+        "portico-online-card-payments-env-config"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY"
+      ],
+      "source_repo": "portico-online-card-payments",
+      "extraction_difficulty": "low: the README explicitly documents GET /config and public/private API key management"
+    },
+    {
+      "id": "portico-online-card-payments-sale-charge",
+      "layer": "brick",
+      "name": "Portico card sale processor",
+      "description": "Processes a tokenized card payment through the Portico gateway.",
+      "capabilities": [
+        "sale/charge",
+        "billing zip handling",
+        "Portico transaction response"
+      ],
+      "files": [
+        "portico-online-card-payments/dotnet/**/*",
+        "portico-online-card-payments/go/**/*",
+        "portico-online-card-payments/java/**/*",
+        "portico-online-card-payments/nodejs/**/*",
+        "portico-online-card-payments/php/**/*",
+        "portico-online-card-payments/python/**/*"
+      ],
+      "depends_on": [
+        "portico-online-card-payments-env-config",
+        "portico-online-card-payments-public-config-endpoint"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "DEVELOPER_ID",
+        "VERSION_NUMBER"
+      ],
+      "source_repo": "portico-online-card-payments",
+      "extraction_difficulty": "low: the README clearly defines POST /process-payment and the demo charge flow"
+    },
+    {
+      "id": "portico-online-card-payments-server-shell",
+      "layer": "baseplate",
+      "name": "Portico card server shell",
+      "description": "Bootstraps the Portico card-payment backends and default JSON error handling.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "JSON responses"
+      ],
+      "files": [
+        "portico-online-card-payments/dotnet/**/*",
+        "portico-online-card-payments/go/**/*",
+        "portico-online-card-payments/java/**/*",
+        "portico-online-card-payments/nodejs/**/*",
+        "portico-online-card-payments/php/**/*",
+        "portico-online-card-payments/python/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "portico-online-card-payments",
+      "extraction_difficulty": "medium: six implementations follow the same pattern"
+    },
+    {
+      "id": "portico-online-check-payments-ach-form",
+      "layer": "tile",
+      "name": "Portico ACH form",
+      "description": "Renders the frontend bank-account form used to post ACH/eCheck requests.",
+      "capabilities": [
+        "bank account form",
+        "routing/account fields",
+        "submission UI"
+      ],
+      "files": [
+        "portico-online-check-payments/index.html"
+      ],
+      "depends_on": [
+        "portico-online-check-payments-echeck-charge"
+      ],
+      "config_required": [],
+      "source_repo": "portico-online-check-payments",
+      "extraction_difficulty": "low: the shared root HTML file is listed in the repo page"
+    },
+    {
+      "id": "portico-online-check-payments-echeck-charge",
+      "layer": "brick",
+      "name": "Portico eCheck processor",
+      "description": "Constructs an ECheck object from raw bank account inputs and submits it to Portico.",
+      "capabilities": [
+        "eCheck payment",
+        "bank routing/account processing",
+        "server-side ACH flow"
+      ],
+      "files": [
+        "portico-online-check-payments/dotnet/**/*",
+        "portico-online-check-payments/java/**/*",
+        "portico-online-check-payments/nodejs/**/*",
+        "portico-online-check-payments/php/**/*"
+      ],
+      "depends_on": [
+        "portico-online-check-payments-env-config"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "PORTICO_ENVIRONMENT"
+      ],
+      "source_repo": "portico-online-check-payments",
+      "extraction_difficulty": "low: the README explicitly details that ACH processing is entirely server-side"
+    },
+    {
+      "id": "portico-online-check-payments-env-config",
+      "layer": "baseplate",
+      "name": "Portico ACH configuration loader",
+      "description": "Loads Portico credentials and gateway settings for eCheck processing.",
+      "capabilities": [
+        "dotenv loading",
+        "PorticoConfig setup",
+        "environment binding"
+      ],
+      "files": [
+        "portico-online-check-payments/dotnet/**/*",
+        "portico-online-check-payments/java/**/*",
+        "portico-online-check-payments/nodejs/**/*",
+        "portico-online-check-payments/php/**/*"
+      ],
+      "depends_on": [
+        "portico-online-check-payments-server-shell"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "PORTICO_ENVIRONMENT"
+      ],
+      "source_repo": "portico-online-check-payments",
+      "extraction_difficulty": "low: the README explicitly states this repo uses PorticoConfig"
+    },
+    {
+      "id": "portico-online-check-payments-server-shell",
+      "layer": "baseplate",
+      "name": "Portico ACH server shell",
+      "description": "Bootstraps the Portico ACH/eCheck sample backends and standard responses.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "JSON error handling"
+      ],
+      "files": [
+        "portico-online-check-payments/dotnet/**/*",
+        "portico-online-check-payments/java/**/*",
+        "portico-online-check-payments/nodejs/**/*",
+        "portico-online-check-payments/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "portico-online-check-payments",
+      "extraction_difficulty": "medium: code is distributed across four language implementations"
+    },
+    {
+      "id": "portico-online-recurring-payments-env-config",
+      "layer": "baseplate",
+      "name": "Portico recurring configuration loader",
+      "description": "Loads gateway credentials and recurring-billing settings for Portico flows.",
+      "capabilities": [
+        "dotenv loading",
+        "gateway config",
+        "customer-vault settings"
+      ],
+      "files": [
+        "portico-online-recurring-payments/dotnet/**/*",
+        "portico-online-recurring-payments/java/**/*",
+        "portico-online-recurring-payments/nodejs/**/*",
+        "portico-online-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "portico-online-recurring-payments-server-shell"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "PORTICO_ENVIRONMENT"
+      ],
+      "source_repo": "portico-online-recurring-payments",
+      "extraction_difficulty": "medium: inferred from repo description and family of similar Portico samples"
+    },
+    {
+      "id": "portico-online-recurring-payments-initial-recurring-charge",
+      "layer": "brick",
+      "name": "Initial Portico recurring charge",
+      "description": "Processes the initial transaction and stores the payment method/customer context.",
+      "capabilities": [
+        "initial charge",
+        "payment method storage",
+        "customer management"
+      ],
+      "files": [
+        "portico-online-recurring-payments/dotnet/**/*",
+        "portico-online-recurring-payments/java/**/*",
+        "portico-online-recurring-payments/nodejs/**/*",
+        "portico-online-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "portico-online-recurring-payments-env-config",
+        "portico-online-recurring-payments-tokenization-bridge"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "PORTICO_ENVIRONMENT"
+      ],
+      "source_repo": "portico-online-recurring-payments",
+      "extraction_difficulty": "medium: capability is explicit in repo description but file-level details were not visible"
+    },
+    {
+      "id": "portico-online-recurring-payments-recurring-ui",
+      "layer": "tile",
+      "name": "Portico recurring checkout UI",
+      "description": "Renders the UI for initial enrollment and recurring schedule selection.",
+      "capabilities": [
+        "checkout form",
+        "recurring controls",
+        "status display"
+      ],
+      "files": [
+        "portico-online-recurring-payments/index.html"
+      ],
+      "depends_on": [
+        "portico-online-recurring-payments-tokenization-bridge"
+      ],
+      "config_required": [],
+      "source_repo": "portico-online-recurring-payments",
+      "extraction_difficulty": "medium: UI structure inferred from sample category and standard repo layout"
+    },
+    {
+      "id": "portico-online-recurring-payments-scheduled-recurring-charge",
+      "layer": "brick",
+      "name": "Scheduled Portico recurring charge",
+      "description": "Uses the stored payment method to execute future recurring transactions.",
+      "capabilities": [
+        "recurring billing",
+        "stored payment usage",
+        "customer-vault charge"
+      ],
+      "files": [
+        "portico-online-recurring-payments/dotnet/**/*",
+        "portico-online-recurring-payments/java/**/*",
+        "portico-online-recurring-payments/nodejs/**/*",
+        "portico-online-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "portico-online-recurring-payments-initial-recurring-charge"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "PORTICO_ENVIRONMENT"
+      ],
+      "source_repo": "portico-online-recurring-payments",
+      "extraction_difficulty": "medium: operation is explicit in repo metadata but implementation files were not opened"
+    },
+    {
+      "id": "portico-online-recurring-payments-server-shell",
+      "layer": "baseplate",
+      "name": "Portico recurring server shell",
+      "description": "Bootstraps recurring-billing backends for the Portico gateway.",
+      "capabilities": [
+        "server startup",
+        "routing",
+        "error handling"
+      ],
+      "files": [
+        "portico-online-recurring-payments/dotnet/**/*",
+        "portico-online-recurring-payments/java/**/*",
+        "portico-online-recurring-payments/nodejs/**/*",
+        "portico-online-recurring-payments/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "portico-online-recurring-payments",
+      "extraction_difficulty": "medium: public metadata confirms the repo but the tree was not expanded"
+    },
+    {
+      "id": "portico-online-recurring-payments-tokenization-bridge",
+      "layer": "stud",
+      "name": "Recurring tokenization bridge",
+      "description": "Supplies frontend configuration so the first recurring payment can be tokenized safely.",
+      "capabilities": [
+        "frontend bootstrap",
+        "token handoff",
+        "payment method capture"
+      ],
+      "files": [
+        "portico-online-recurring-payments/dotnet/**/*",
+        "portico-online-recurring-payments/java/**/*",
+        "portico-online-recurring-payments/nodejs/**/*",
+        "portico-online-recurring-payments/php/**/*"
+      ],
+      "depends_on": [
+        "portico-online-recurring-payments-env-config"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY"
+      ],
+      "source_repo": "portico-online-recurring-payments",
+      "extraction_difficulty": "medium: repo metadata suggests standard hosted-fields behavior, but routes were not inspected"
+    },
+    {
+      "id": "portico-save-and-reuse-payment-methods-env-config",
+      "layer": "baseplate",
+      "name": "Portico vault configuration loader",
+      "description": "Loads Portico credentials and token-management settings used for saved methods.",
+      "capabilities": [
+        "dotenv loading",
+        "customer-vault config",
+        "credential binding"
+      ],
+      "files": [
+        "portico-save-and-reuse-payment-methods/dotnet/**/*",
+        "portico-save-and-reuse-payment-methods/go/**/*",
+        "portico-save-and-reuse-payment-methods/java/**/*",
+        "portico-save-and-reuse-payment-methods/nodejs/**/*",
+        "portico-save-and-reuse-payment-methods/php/**/*"
+      ],
+      "depends_on": [
+        "portico-save-and-reuse-payment-methods-server-shell"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "PORTICO_ENVIRONMENT"
+      ],
+      "source_repo": "portico-save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: inferred from repo metadata rather than an opened page"
+    },
+    {
+      "id": "portico-save-and-reuse-payment-methods-one-click-charge",
+      "layer": "brick",
+      "name": "Portico one-click charge",
+      "description": "Uses a stored Portico payment method to complete checkout immediately.",
+      "capabilities": [
+        "one-click charge",
+        "stored payment use",
+        "streamlined checkout"
+      ],
+      "files": [
+        "portico-save-and-reuse-payment-methods/dotnet/**/*",
+        "portico-save-and-reuse-payment-methods/go/**/*",
+        "portico-save-and-reuse-payment-methods/java/**/*",
+        "portico-save-and-reuse-payment-methods/nodejs/**/*",
+        "portico-save-and-reuse-payment-methods/php/**/*"
+      ],
+      "depends_on": [
+        "portico-save-and-reuse-payment-methods-vault-create"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "PORTICO_ENVIRONMENT"
+      ],
+      "source_repo": "portico-save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: functionality is stated in the repo description but not expanded into files"
+    },
+    {
+      "id": "portico-save-and-reuse-payment-methods-saved-methods-ui",
+      "layer": "tile",
+      "name": "Portico saved-methods checkout UI",
+      "description": "Renders the checkout for saving and reusing Portico payment methods.",
+      "capabilities": [
+        "saved-method selector",
+        "save-card form",
+        "one-click checkout UI"
+      ],
+      "files": [
+        "portico-save-and-reuse-payment-methods/index.html"
+      ],
+      "depends_on": [
+        "portico-save-and-reuse-payment-methods-tokenization-bridge",
+        "portico-save-and-reuse-payment-methods-vault-create"
+      ],
+      "config_required": [],
+      "source_repo": "portico-save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: UI is inferred from the sample theme and standard repo layout"
+    },
+    {
+      "id": "portico-save-and-reuse-payment-methods-server-shell",
+      "layer": "baseplate",
+      "name": "Portico saved-methods server shell",
+      "description": "Bootstraps the Portico one-click payment sample and standard responses.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "error handling"
+      ],
+      "files": [
+        "portico-save-and-reuse-payment-methods/dotnet/**/*",
+        "portico-save-and-reuse-payment-methods/go/**/*",
+        "portico-save-and-reuse-payment-methods/java/**/*",
+        "portico-save-and-reuse-payment-methods/nodejs/**/*",
+        "portico-save-and-reuse-payment-methods/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "portico-save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: topic metadata confirms five language implementations but not per-file details"
+    },
+    {
+      "id": "portico-save-and-reuse-payment-methods-tokenization-bridge",
+      "layer": "stud",
+      "name": "Portico tokenization bridge",
+      "description": "Provides the public config needed to tokenize and submit a card for saving.",
+      "capabilities": [
+        "public config endpoint",
+        "token handoff",
+        "client bootstrap"
+      ],
+      "files": [
+        "portico-save-and-reuse-payment-methods/dotnet/**/*",
+        "portico-save-and-reuse-payment-methods/go/**/*",
+        "portico-save-and-reuse-payment-methods/java/**/*",
+        "portico-save-and-reuse-payment-methods/nodejs/**/*",
+        "portico-save-and-reuse-payment-methods/php/**/*"
+      ],
+      "depends_on": [
+        "portico-save-and-reuse-payment-methods-env-config"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY"
+      ],
+      "source_repo": "portico-save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: standard sample pattern is inferred from related Portico repos"
+    },
+    {
+      "id": "portico-save-and-reuse-payment-methods-vault-create",
+      "layer": "brick",
+      "name": "Portico reusable payment method creator",
+      "description": "Stores a tokenized payment method as a multi-use Portico vault/customer record.",
+      "capabilities": [
+        "vault create",
+        "multi-use token storage",
+        "customer-vault binding"
+      ],
+      "files": [
+        "portico-save-and-reuse-payment-methods/dotnet/**/*",
+        "portico-save-and-reuse-payment-methods/go/**/*",
+        "portico-save-and-reuse-payment-methods/java/**/*",
+        "portico-save-and-reuse-payment-methods/nodejs/**/*",
+        "portico-save-and-reuse-payment-methods/php/**/*"
+      ],
+      "depends_on": [
+        "portico-save-and-reuse-payment-methods-env-config",
+        "portico-save-and-reuse-payment-methods-tokenization-bridge"
+      ],
+      "config_required": [
+        "PUBLIC_API_KEY",
+        "SECRET_API_KEY",
+        "PORTICO_ENVIRONMENT"
+      ],
+      "source_repo": "portico-save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: capability is explicit in topic metadata but file-level routes were not opened"
+    },
+    {
+      "id": "reporting-service-analytics-dashboard",
+      "layer": "tile",
+      "name": "Reporting dashboard UI",
+      "description": "Renders the dashboard, search controls, and export triggers for reporting data.",
+      "capabilities": [
+        "dashboard",
+        "search filters",
+        "export controls",
+        "data visualization"
+      ],
+      "files": [
+        "reporting-service/**/*"
+      ],
+      "depends_on": [
+        "reporting-service-transaction-search",
+        "reporting-service-export-service"
+      ],
+      "config_required": [],
+      "source_repo": "reporting-service",
+      "extraction_difficulty": "high: only repository metadata was available, so UI files are represented at repo scope"
+    },
+    {
+      "id": "reporting-service-env-config",
+      "layer": "baseplate",
+      "name": "Reporting-service configuration loader",
+      "description": "Loads credentials and report-query defaults used by the reporting service.",
+      "capabilities": [
+        "credential loading",
+        "query defaults",
+        "environment selection"
+      ],
+      "files": [
+        "reporting-service/**/*"
+      ],
+      "depends_on": [
+        "reporting-service-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "reporting-service",
+      "extraction_difficulty": "high: repository-level metadata is available, but no file tree was opened"
+    },
+    {
+      "id": "reporting-service-export-service",
+      "layer": "brick",
+      "name": "Report export service",
+      "description": "Exports report results in CSV, JSON, or XML formats.",
+      "capabilities": [
+        "CSV export",
+        "JSON export",
+        "XML export"
+      ],
+      "files": [
+        "reporting-service/**/*"
+      ],
+      "depends_on": [
+        "reporting-service-transaction-search"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "reporting-service",
+      "extraction_difficulty": "medium: export formats are explicit in repo metadata even though file boundaries are not"
+    },
+    {
+      "id": "reporting-service-server-shell",
+      "layer": "baseplate",
+      "name": "Reporting service server shell",
+      "description": "Bootstraps the transaction reporting service and standard API response handling.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "error handling"
+      ],
+      "files": [
+        "reporting-service/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "reporting-service",
+      "extraction_difficulty": "high: only topic metadata was available, so implementation files are inferred at repo level"
+    },
+    {
+      "id": "reporting-service-transaction-search",
+      "layer": "brick",
+      "name": "Transaction search service",
+      "description": "Retrieves transactions using interactive search and filter criteria.",
+      "capabilities": [
+        "transaction search",
+        "filtering",
+        "report result shaping"
+      ],
+      "files": [
+        "reporting-service/**/*"
+      ],
+      "depends_on": [
+        "reporting-service-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "reporting-service",
+      "extraction_difficulty": "medium: the repo description clearly names search and filtering as core operations"
+    },
+    {
+      "id": "save-and-reuse-payment-methods-access-token-bridge",
+      "layer": "stud",
+      "name": "Frontend tokenization bridge",
+      "description": "Publishes the config needed for the frontend to tokenize a card before saving it for reuse.",
+      "capabilities": [
+        "frontend bootstrap",
+        "token handoff",
+        "client/server contract"
+      ],
+      "files": [
+        "save-and-reuse-payment-methods/dotnet/**/*",
+        "save-and-reuse-payment-methods/java/**/*",
+        "save-and-reuse-payment-methods/php/**/*"
+      ],
+      "depends_on": [
+        "save-and-reuse-payment-methods-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: standard sample pattern inferred from neighboring repos"
+    },
+    {
+      "id": "save-and-reuse-payment-methods-env-config",
+      "layer": "baseplate",
+      "name": "Customer-vault configuration loader",
+      "description": "Loads credentials and SDK settings for vault and one-click operations.",
+      "capabilities": [
+        "dotenv loading",
+        "vault config",
+        "credential binding"
+      ],
+      "files": [
+        "save-and-reuse-payment-methods/dotnet/**/*",
+        "save-and-reuse-payment-methods/java/**/*",
+        "save-and-reuse-payment-methods/php/**/*"
+      ],
+      "depends_on": [
+        "save-and-reuse-payment-methods-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: repo topic metadata exposes capabilities but not individual entry files"
+    },
+    {
+      "id": "save-and-reuse-payment-methods-one-click-charge",
+      "layer": "brick",
+      "name": "Saved-method one-click charge",
+      "description": "Charges a previously stored payment method without re-entering card data.",
+      "capabilities": [
+        "one-click charge",
+        "stored payment use",
+        "instant checkout"
+      ],
+      "files": [
+        "save-and-reuse-payment-methods/dotnet/**/*",
+        "save-and-reuse-payment-methods/java/**/*",
+        "save-and-reuse-payment-methods/php/**/*"
+      ],
+      "depends_on": [
+        "save-and-reuse-payment-methods-vault-create"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: operation is strongly implied by repo description but internal endpoint names were not opened"
+    },
+    {
+      "id": "save-and-reuse-payment-methods-saved-methods-ui",
+      "layer": "tile",
+      "name": "Saved payment methods UI",
+      "description": "Renders the wallet-like checkout for saving and reusing payment methods.",
+      "capabilities": [
+        "saved-method list",
+        "one-click checkout UI",
+        "card save form"
+      ],
+      "files": [
+        "save-and-reuse-payment-methods/index.html"
+      ],
+      "depends_on": [
+        "save-and-reuse-payment-methods-access-token-bridge",
+        "save-and-reuse-payment-methods-vault-create"
+      ],
+      "config_required": [],
+      "source_repo": "save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: UI is inferred from the sample theme and common layout"
+    },
+    {
+      "id": "save-and-reuse-payment-methods-server-shell",
+      "layer": "baseplate",
+      "name": "Saved-methods server shell",
+      "description": "Bootstraps the one-click payment sample and standard JSON error handling.",
+      "capabilities": [
+        "server startup",
+        "routing",
+        "JSON responses"
+      ],
+      "files": [
+        "save-and-reuse-payment-methods/dotnet/**/*",
+        "save-and-reuse-payment-methods/java/**/*",
+        "save-and-reuse-payment-methods/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: public metadata covers the repo, but the tree itself was not opened"
+    },
+    {
+      "id": "save-and-reuse-payment-methods-vault-create",
+      "layer": "brick",
+      "name": "Reusable payment method creator",
+      "description": "Converts a tokenized payment method into a reusable customer-vault record.",
+      "capabilities": [
+        "vault create",
+        "multi-use token creation",
+        "payment method storage"
+      ],
+      "files": [
+        "save-and-reuse-payment-methods/dotnet/**/*",
+        "save-and-reuse-payment-methods/java/**/*",
+        "save-and-reuse-payment-methods/php/**/*"
+      ],
+      "depends_on": [
+        "save-and-reuse-payment-methods-env-config",
+        "save-and-reuse-payment-methods-access-token-bridge"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "save-and-reuse-payment-methods",
+      "extraction_difficulty": "medium: operation is explicit in repo metadata but file-level details were not expanded"
+    },
+    {
+      "id": "starter-template-env-config",
+      "layer": "baseplate",
+      "name": "Environment configuration loader",
+      "description": "Loads SDK credentials and service settings from environment variables for each implementation.",
+      "capabilities": [
+        "dotenv loading",
+        "service URL setup",
+        "credential binding"
+      ],
+      "files": [
+        "starter-template/dotnet/**/*",
+        "starter-template/go/**/*",
+        "starter-template/java/**/*",
+        "starter-template/nodejs/**/*",
+        "starter-template/php/**/*",
+        "starter-template/python/**/*"
+      ],
+      "depends_on": [
+        "starter-template-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT",
+        "SERVICE_URL"
+      ],
+      "source_repo": "starter-template",
+      "extraction_difficulty": "low: the template README and standard file layout make the config pattern explicit"
+    },
+    {
+      "id": "starter-template-hosted-fields-bridge",
+      "layer": "stud",
+      "name": "Hosted-fields tokenization bridge",
+      "description": "Exposes the minimal config and request plumbing needed for a frontend to tokenize payment data and post a token back to the server.",
+      "capabilities": [
+        "public config endpoint",
+        "payment token handoff",
+        "frontend/backend contract"
+      ],
+      "files": [
+        "starter-template/dotnet/**/*",
+        "starter-template/go/**/*",
+        "starter-template/java/**/*",
+        "starter-template/nodejs/**/*",
+        "starter-template/php/**/*",
+        "starter-template/python/**/*"
+      ],
+      "depends_on": [
+        "starter-template-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "starter-template",
+      "extraction_difficulty": "medium: tokenization is described at template level but individual endpoint names differ by language"
+    },
+    {
+      "id": "starter-template-payment-placeholder",
+      "layer": "brick",
+      "name": "Payment processing placeholder",
+      "description": "Provides a starter payment endpoint that developers can adapt into charge, authorize, capture, refund, or vault flows.",
+      "capabilities": [
+        "sample process-payment endpoint",
+        "SDK request scaffolding",
+        "response formatting"
+      ],
+      "files": [
+        "starter-template/dotnet/**/*",
+        "starter-template/go/**/*",
+        "starter-template/java/**/*",
+        "starter-template/nodejs/**/*",
+        "starter-template/php/**/*",
+        "starter-template/python/**/*"
+      ],
+      "depends_on": [
+        "starter-template-env-config",
+        "starter-template-hosted-fields-bridge"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "starter-template",
+      "extraction_difficulty": "medium: placeholder logic is intentionally skeletal and spread over all implementations"
+    },
+    {
+      "id": "starter-template-server-shell",
+      "layer": "baseplate",
+      "name": "Multi-language server shell",
+      "description": "Bootstraps the sample servers, routes, and default exception handling across the template languages.",
+      "capabilities": [
+        "http-server bootstrap",
+        "route registration",
+        "default error responses",
+        "static asset serving"
+      ],
+      "files": [
+        "starter-template/dotnet/**/*",
+        "starter-template/go/**/*",
+        "starter-template/java/**/*",
+        "starter-template/nodejs/**/*",
+        "starter-template/php/**/*",
+        "starter-template/python/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "starter-template",
+      "extraction_difficulty": "medium: shared behavior exists in multiple language-specific entry points rather than one canonical file"
+    },
+    {
+      "id": "starter-template-starter-form",
+      "layer": "tile",
+      "name": "Starter hosted-fields form",
+      "description": "Renders the shared sample HTML form used to initialize tokenization and submit a starter payment request.",
+      "capabilities": [
+        "payment form",
+        "hosted fields mount points",
+        "client-side submit flow"
+      ],
+      "files": [
+        "starter-template/index.html"
+      ],
+      "depends_on": [
+        "starter-template-hosted-fields-bridge"
+      ],
+      "config_required": [],
+      "source_repo": "starter-template",
+      "extraction_difficulty": "low: implemented in the shared root HTML file"
+    },
+    {
+      "id": "wallet-management-access-token-bridge",
+      "layer": "stud",
+      "name": "Wallet tokenization bridge",
+      "description": "Provides the frontend config needed to tokenize a card before converting it into a multi-use token.",
+      "capabilities": [
+        "public config endpoint",
+        "token handoff",
+        "client bootstrap"
+      ],
+      "files": [
+        "wallet-management/dotnet/**/*",
+        "wallet-management/java/**/*",
+        "wallet-management/nodejs/**/*",
+        "wallet-management/php/**/*"
+      ],
+      "depends_on": [
+        "wallet-management-env-config"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "wallet-management",
+      "extraction_difficulty": "medium: token creation is explicit but not every route name was visible"
+    },
+    {
+      "id": "wallet-management-env-config",
+      "layer": "baseplate",
+      "name": "Wallet configuration loader",
+      "description": "Loads credentials and storage settings used to create and manage multi-use tokens.",
+      "capabilities": [
+        "dotenv loading",
+        "credential binding",
+        "storage path config"
+      ],
+      "files": [
+        "wallet-management/dotnet/**/*",
+        "wallet-management/java/**/*",
+        "wallet-management/nodejs/**/*",
+        "wallet-management/php/**/*"
+      ],
+      "depends_on": [
+        "wallet-management-server-shell"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "wallet-management",
+      "extraction_difficulty": "low: the README explains the configuration and mock-mode system at repo level"
+    },
+    {
+      "id": "wallet-management-multi-use-token-create",
+      "layer": "brick",
+      "name": "Multi-use token creator",
+      "description": "Converts a single-use token into a reusable stored payment method token.",
+      "capabilities": [
+        "multi-use token creation",
+        "stored payment tokenization",
+        "customer data association"
+      ],
+      "files": [
+        "wallet-management/dotnet/**/*",
+        "wallet-management/java/**/*",
+        "wallet-management/nodejs/**/*",
+        "wallet-management/php/**/*"
+      ],
+      "depends_on": [
+        "wallet-management-env-config",
+        "wallet-management-access-token-bridge"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "wallet-management",
+      "extraction_difficulty": "low: repo README explicitly calls out multi-use token creation"
+    },
+    {
+      "id": "wallet-management-payment-method-crud",
+      "layer": "brick",
+      "name": "Payment method CRUD",
+      "description": "Lists and updates stored payment method metadata, including nickname and default selection.",
+      "capabilities": [
+        "list stored methods",
+        "edit nickname",
+        "default payment method flag"
+      ],
+      "files": [
+        "wallet-management/dotnet/**/*",
+        "wallet-management/java/**/*",
+        "wallet-management/nodejs/**/*",
+        "wallet-management/php/**/*"
+      ],
+      "depends_on": [
+        "wallet-management-multi-use-token-create"
+      ],
+      "config_required": [
+        "GP_APP_ID",
+        "GP_APP_KEY",
+        "GP_ENVIRONMENT"
+      ],
+      "source_repo": "wallet-management",
+      "extraction_difficulty": "low: CRUD endpoints are enumerated directly in the README"
+    },
+    {
+      "id": "wallet-management-server-shell",
+      "layer": "baseplate",
+      "name": "Wallet-management server shell",
+      "description": "Bootstraps the multi-language wallet API and standardized response handling.",
+      "capabilities": [
+        "server startup",
+        "route registration",
+        "JSON error responses"
+      ],
+      "files": [
+        "wallet-management/dotnet/**/*",
+        "wallet-management/java/**/*",
+        "wallet-management/nodejs/**/*",
+        "wallet-management/php/**/*"
+      ],
+      "depends_on": [],
+      "config_required": [],
+      "source_repo": "wallet-management",
+      "extraction_difficulty": "medium: multiple language implementations carry the same behavior"
+    },
+    {
+      "id": "wallet-management-wallet-ui",
+      "layer": "tile",
+      "name": "Wallet management UI",
+      "description": "Renders the UI for listing, editing, and adding payment methods.",
+      "capabilities": [
+        "saved-method list",
+        "edit controls",
+        "add payment method form"
+      ],
+      "files": [
+        "wallet-management/index.html"
+      ],
+      "depends_on": [
+        "wallet-management-access-token-bridge",
+        "wallet-management-payment-method-crud"
+      ],
+      "config_required": [],
+      "source_repo": "wallet-management",
+      "extraction_difficulty": "low: the shared interface is part of the documented sample flow"
+    }
+  ]
+}

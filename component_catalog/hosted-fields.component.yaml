@@ -1,0 +1,18 @@
+id: hosted-fields
+layer: tile
+name: Hosted Fields
+description: Secure card-entry iframes rendered inside the branded checkout page
+capabilities: [card-capture, tokenization-ux]
+depends_on: [token-helper]
+config_required: []
+entry_points: []
+files: []
+# assets are copied into the generated project's public/components/ directory
+assets: [tiles/hosted-fields/hosted-fields.js]
+inserts:
+  tiles/hosted-fields/fragments/markup.html: TILE_MARKUP
+  tiles/hosted-fields/fragments/scripts.html: TILE_SCRIPTS
+  tiles/hosted-fields/fragments/testcard.html: ASIDE_EXTRAS
+test_fragments: [tiles/hosted-fields/tests/hosted-fields.test.js]
+source_repo: online-card-payments
+extraction_difficulty: low

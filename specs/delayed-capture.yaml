@@ -1,0 +1,5 @@
+name: delayed-capture
+language: node
+tiles: [hosted-fields]
+bricks: [authorize, capture]
+# studs and baseplate resolved automatically via depends_on

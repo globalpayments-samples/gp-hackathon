@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ PROJECT_TITLE }} — Global Payments sample</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js" } }
+  </script>
+</head>
+<body>
+  <header class="gp-header">
+    <img class="gp-logo" src="/gp-logo.png" alt="Global Payments" width="666" height="211" />
+    <div class="gp-header-right">
+      <span class="gp-env-pill">Sandbox</span>
+      <p class="gp-rallycry">Already on it.</p>
+    </div>
+  </header>
+
+  <main class="gp-main" id="main">
+    <p class="gp-eyebrow">Generated sample project</p>
+    <h1>{{ PROJECT_TITLE }}</h1>
+    <p class="gp-lede">
+      A standalone integration composed from the Global Payments component
+      catalog. Real sandbox transactions, no boilerplate.
+    </p>
+
+    <script>
+      window.GP_SAMPLE = window.GP_SAMPLE || {};
+      {{ FRONTEND_CONFIG }}
+    </script>
+
+    <div class="gp-layout">
+      <div class="gp-layout-primary">
+        {{ TILE_MARKUP }}
+      </div>
+
+      <aside class="gp-layout-aside">
+        <section class="gp-aside-card">
+          <h2 class="gp-aside-title">In this sample</h2>
+          <div class="gp-flow">
+            <canvas id="gp-flow-canvas" aria-hidden="true"></canvas>
+            <p class="gp-flow-caption" id="gp-flow-caption" role="status">This stack is the sample's real architecture — one piece per component.</p>
+          </div>
+          <ul class="gp-chips">
+            {{ COMPONENT_CHIPS }}
+          </ul>
+          <p class="gp-aside-note">Watch the stack when you pay — each piece lights up as the transaction flows through it.</p>
+        </section>
+
+        {{ ASIDE_EXTRAS }}
+      </aside>
+    </div>
+  </main>
+
+  <footer class="gp-footer">
+    <p class="gp-footer-links">
+      <a href="https://developer.globalpayments.com" target="_blank" rel="noopener">Developer portal</a>
+      <a href="https://developer.globalpayments.com/resources/test-cards" target="_blank" rel="noopener">Test cards</a>
+      <a href="https://developer.globalpayments.com/api/payments" target="_blank" rel="noopener">API reference</a>
+    </p>
+    <p>Sandbox environment. No real money moves here. © 2026 Global Payments Inc.</p>
+  </footer>
+
+  {{ TILE_SCRIPTS }}
+  <script>
+    // Lazy-load the architecture flow animation after the page is interactive,
+    // so three.js/GSAP never block first paint or DOMContentLoaded.
+    window.addEventListener('load', function () {
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js';
+      s.onload = function () { import('/flow.js'); };
+      document.head.appendChild(s);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+id: token-helper
+layer: stud
+name: Tokenization helper
+description: Mints the scoped access token the Hosted Fields frontend needs for client-side tokenization
+capabilities: [tokenization]
+depends_on: []
+config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
+entry_points: [generateAccessToken]
+files: [studs/token-helper.js]
+inserts:
+  studs/fragments/token-helper-route.js: ROUTE_HANDLERS
+test_fragments: [studs/tests/token-helper.test.js]
+source_repo: online-card-payments
+extraction_difficulty: low

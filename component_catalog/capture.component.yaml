@@ -1,0 +1,17 @@
+id: capture
+layer: brick
+name: Capture
+description: Captures a previously authorized transaction by id
+capabilities: [payments]
+depends_on: [authorize]
+config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
+entry_points: [capture]
+files: [bricks/payments.js]
+inserts:
+  bricks/fragments/capture-route.js: ROUTE_HANDLERS
+  bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
+test_fragments:
+  - bricks/tests/capture.test.js
+  - bricks/tests/fixtures/sandbox.js
+source_repo: online-payments-auth-and-delayed-capture
+extraction_difficulty: low

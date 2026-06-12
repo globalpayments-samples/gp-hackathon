@@ -1,0 +1,19 @@
+{
+  "name": "globalpayments-samples-node",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Internal component workshop for the Global Payments modular 'Lego' sample system (Node vertical slice)",
+  "type": "commonjs",
+  "scripts": {
+    "build": "node builder/build-project.js",
+    "test:determinism": "node builder/snapshot-test.js",
+    "test": "node builder/snapshot-test.js"
+  },
+  "dependencies": {
+    "globalpayments-api": "^3.0.0",
+    "yaml": "^2.4.0"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.1.0"
+  }
+}
