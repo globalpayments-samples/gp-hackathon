@@ -1,17 +1,56 @@
+# Unique identifier — used in depends_on lists, spec files, and catalog.json.
 id: authorize
+
+# Architecture layer: baseplate | stud | brick | tile.
+# Bricks are atomic SDK operations (a single GP API call).
 layer: brick
+
+# Display name shown in the UI component chips and generated README.
 name: Authorize
+
+# One-line description used in the README table and catalog search.
 description: Places a hold on funds for later capture
+
+# Free-form capability tags used for catalog filtering.
 capabilities: [payments]
+
+# Components that must be resolved and inserted before this one.
+# The Builder topologically sorts all selected components on this field;
+# circular dependencies are rejected at build time.
 depends_on: [token-helper]
+
+# Environment variables required at runtime. The Builder validates these
+# are present and lists them in the generated project's README and .env.example.
 config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
+
+# Exported function names from the files listed below.
+# The Builder uses these to generate the correct require() calls in index.js.
 entry_points: [authorize]
+
+# Source files copied verbatim into the generated project's components/ directory.
+# Multiple components can share the same file (e.g. payments.js exports charge,
+# authorize, and capture — each has its own manifest but the same source file).
 files: [bricks/payments.js]
+
+# Fragment files to splice into scaffold slot markers.
+# Format: <fragment path>: <SLOT_NAME>
+#
+# ROUTE_HANDLERS  — Express route definitions inserted into index.js
+# FRONTEND_CONFIG — window.GP_SAMPLE config object read by the browser tile
 inserts:
   bricks/fragments/authorize-route.js: ROUTE_HANDLERS
   bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
+
+# Test files copied into the generated project's tests/ directory.
+# Fixtures listed here are shared across multiple components (sandbox.js is
+# used by authorize, capture, and charge tests).
 test_fragments:
   - bricks/tests/authorize.test.js
   - bricks/tests/fixtures/sandbox.js
+
+# The legacy GP sample repo this component was originally extracted from.
 source_repo: online-payments-auth-and-delayed-capture
+
+# Extraction difficulty rating used for Phase 3 porting backlog prioritization.
+# Values: low | medium | high
 extraction_difficulty: low

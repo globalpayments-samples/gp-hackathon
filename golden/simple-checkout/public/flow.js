@@ -80,6 +80,54 @@ function legoPiece({ color, w, d, h, studs }) {
   return group;
 }
 
+// Creates a billboard sprite that always faces the camera, showing the
+// component name and layer type on the side of each brick.
+function makeLabel(name, layer) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+
+  // Background pill
+  const r = 20;
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(canvas.width - r, 0);
+  ctx.quadraticCurveTo(canvas.width, 0, canvas.width, r);
+  ctx.lineTo(canvas.width, canvas.height - r);
+  ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - r, canvas.height);
+  ctx.lineTo(r, canvas.height);
+  ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.closePath();
+  ctx.fill();
+
+  // Component name
+  ctx.fillStyle = '#0c0c0c';
+  ctx.font = 'bold 48px DM Sans, Noto Sans, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(name, canvas.width / 2, 44);
+
+  // Layer badge
+  const badgeColors = { tile: '#fda052', stud: '#1cabff', brick: '#262aff' };
+  ctx.fillStyle = badgeColors[layer] || '#262aff';
+  ctx.font = '34px DM Sans, Noto Sans, sans-serif';
+  ctx.fillText(layer.toUpperCase(), canvas.width / 2, 90);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+  const sprite = new THREE.Sprite(mat);
+  // Scale to fit within the brick face
+  sprite.scale.set(1.8, 0.45, 1);
+  // Centered on the brick
+  sprite.position.set(0, 0, 0);
+  sprite.renderOrder = 1;
+  return sprite;
+}
+
 // DOM-only fallback: when WebGL is unavailable the chips still trace the flow.
 function chipFallback(gsap, components) {
   const canvas = document.getElementById('gp-flow-canvas');
@@ -178,6 +226,11 @@ async function init() {
     piece.position.x = (i % 2 === 0 ? -1 : 1) * 0.12;
     y += piece.userData.height;
     piece.userData.component = component;
+    // Add a billboard label showing the component name and layer
+    const label = makeLabel(component.name, component.layer);
+    label.position.y = piece.userData.height / 2;
+    piece.add(label);
+    piece.userData.label = label;
     stack.add(piece);
     return piece;
   });

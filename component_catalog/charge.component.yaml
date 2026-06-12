@@ -1,17 +1,40 @@
+# Unique identifier — used in depends_on lists, spec files, and catalog.json.
 id: charge
+
+# Architecture layer: baseplate | stud | brick | tile.
 layer: brick
+
+# Display name shown in the UI component chips and generated README.
 name: Charge
+
+# One-line description used in the README table and catalog search.
 description: Single-step authorization and capture of a tokenized card
+
+# Free-form capability tags used for catalog filtering.
 capabilities: [payments]
+
+# charge depends on token-helper because it receives a single-use card token
+# (not raw card data) — the token is minted by the stud before this route runs.
 depends_on: [token-helper]
+
+# Environment variables required at runtime.
 config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
+
+# Exported function name the Builder uses to generate the require() call.
 entry_points: [charge]
+
+# Shares payments.js with authorize and capture.
 files: [bricks/payments.js]
+
+# ROUTE_HANDLERS  — Express route definition (POST /api/charge)
+# FRONTEND_CONFIG — sets window.GP_SAMPLE.payEndpoint so the tile posts here.
 inserts:
   bricks/fragments/charge-route.js: ROUTE_HANDLERS
   bricks/fragments/charge-frontend.js: FRONTEND_CONFIG
+
 test_fragments:
   - bricks/tests/charge.test.js
   - bricks/tests/fixtures/sandbox.js
+
 source_repo: online-card-payments
 extraction_difficulty: low

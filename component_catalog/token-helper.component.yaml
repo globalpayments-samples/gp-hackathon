@@ -1,14 +1,39 @@
+# Unique identifier — used in depends_on lists, spec files, and catalog.json.
 id: token-helper
+
+# Architecture layer: stud.
+# Studs are primitives — small utilities that other components depend on.
+# token-helper has no depends_on of its own; it is a root node in the
+# dependency graph and is always inserted first.
 layer: stud
+
+# Display name shown in the UI component chips and generated README.
 name: Tokenization helper
+
+# One-line description.
 description: Mints the scoped access token the Hosted Fields frontend needs for client-side tokenization
+
+# Free-form capability tags.
 capabilities: [tokenization]
+
+# No dependencies — this is the foundation all payment bricks build on.
 depends_on: []
+
+# Environment variables required at runtime.
 config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
+
+# Exported function name the Builder uses to generate the require() call.
 entry_points: [generateAccessToken]
+
+# Source file copied into the generated project's components/ directory.
 files: [studs/token-helper.js]
+
+# ROUTE_HANDLERS — Express route (GET /api/access-token) that the browser
+# tile calls on page load to obtain its scoped tokenization token.
 inserts:
   studs/fragments/token-helper-route.js: ROUTE_HANDLERS
+
 test_fragments: [studs/tests/token-helper.test.js]
+
 source_repo: online-card-payments
 extraction_difficulty: low

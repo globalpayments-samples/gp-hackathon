@@ -1,17 +1,43 @@
+# Unique identifier — used in depends_on lists, spec files, and catalog.json.
 id: capture
+
+# Architecture layer: baseplate | stud | brick | tile.
 layer: brick
+
+# Display name shown in the UI component chips and generated README.
 name: Capture
+
+# One-line description used in the README table and catalog search.
 description: Captures a previously authorized transaction by id
+
+# Free-form capability tags used for catalog filtering.
 capabilities: [payments]
+
+# capture depends on authorize because capture only makes sense after an
+# authorization has been placed — the Builder will always insert authorize first.
 depends_on: [authorize]
+
+# Environment variables required at runtime.
 config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
+
+# Exported function names the Builder uses to generate require() calls.
 entry_points: [capture]
+
+# Shares payments.js with authorize and charge — only one copy is written
+# to the generated project regardless of how many bricks reference it.
 files: [bricks/payments.js]
+
+# ROUTE_HANDLERS  — Express route definition (POST /api/capture/:transactionId)
+# FRONTEND_CONFIG — sets window.GP_SAMPLE.captureEndpoint so the tile knows
+#                   to render the Capture button after authorization succeeds.
 inserts:
   bricks/fragments/capture-route.js: ROUTE_HANDLERS
   bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
+
+# sandbox.js is a shared fixture — listed here so the Builder copies it once.
 test_fragments:
   - bricks/tests/capture.test.js
   - bricks/tests/fixtures/sandbox.js
+
 source_repo: online-payments-auth-and-delayed-capture
 extraction_difficulty: low

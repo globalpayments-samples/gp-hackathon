@@ -1,18 +1,51 @@
+# Unique identifier — used in depends_on lists, spec files, and catalog.json.
 id: hosted-fields
+
+# Architecture layer: tile.
+# Tiles are UI components — they render HTML/CSS/JS into the checkout page.
+# Unlike bricks and studs, tiles have no server-side entry points.
 layer: tile
+
+# Display name shown in the UI component chips and generated README.
 name: Hosted Fields
+
+# One-line description.
 description: Secure card-entry iframes rendered inside the branded checkout page
+
+# Free-form capability tags.
 capabilities: [card-capture, tokenization-ux]
+
+# hosted-fields depends on token-helper because it fetches a scoped access
+# token from /api/access-token (provided by the stud) on page load.
 depends_on: [token-helper]
+
+# Tiles have no server-side config requirements of their own — credentials
+# are consumed by the studs/bricks they depend on.
 config_required: []
+
+# Tiles have no server-side entry points — they are pure frontend.
 entry_points: []
+
+# Tiles have no files copied to components/ on the server side.
 files: []
+
 # assets are copied into the generated project's public/components/ directory
+# (served as static files, loaded by the tile's scripts.html fragment).
 assets: [tiles/hosted-fields/hosted-fields.js]
+
+# Fragment files spliced into scaffold slot markers:
+#
+# TILE_MARKUP   — HTML inserted into the checkout page body (card form fields)
+# TILE_SCRIPTS  — <script> tags inserted before </body> to load hosted-fields.js
+# ASIDE_EXTRAS  — Additional sidebar content (test card helper widget)
 inserts:
   tiles/hosted-fields/fragments/markup.html: TILE_MARKUP
   tiles/hosted-fields/fragments/scripts.html: TILE_SCRIPTS
   tiles/hosted-fields/fragments/testcard.html: ASIDE_EXTRAS
+
+# Static wiring test — verifies the JS asset is vendored and all five
+# secure field targets are present in the generated checkout page.
 test_fragments: [tiles/hosted-fields/tests/hosted-fields.test.js]
+
 source_repo: online-card-payments
 extraction_difficulty: low
