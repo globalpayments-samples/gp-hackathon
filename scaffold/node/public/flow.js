@@ -45,7 +45,7 @@ function readComponents() {
   }));
 }
 
-function legoPiece({ color, w, d, h, studs }) {
+function legoPiece({ color, w, d, h, studs, label }) {
   const group = new THREE.Group();
   const material = new THREE.MeshStandardMaterial({
     color,
@@ -58,6 +58,34 @@ function legoPiece({ color, w, d, h, studs }) {
   body.position.y = h / 2;
   body.castShadow = true;
   group.add(body);
+
+  // Bake text directly onto the front and back (long) faces as flush planes.
+  if (label) {
+    const cw = 512;
+    const ch = Math.max(32, Math.round(512 * h / w));
+    const tc = document.createElement('canvas');
+    tc.width = cw;
+    tc.height = ch;
+    const ctx = tc.getContext('2d');
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.shadowColor = 'rgba(0,0,0,0.45)';
+    ctx.shadowBlur = 6;
+    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const fontSize = Math.max(10, Math.min(ch * 0.52, cw / (label.length * 0.62)));
+    ctx.font = `bold ${Math.round(fontSize)}px DM Sans, Noto Sans, sans-serif`;
+    ctx.fillText(label, cw / 2, ch / 2);
+    const tex = new THREE.CanvasTexture(tc);
+    const faceMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false });
+    const front = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.92, h * 0.82), faceMat);
+    front.position.set(0, h / 2, d / 2 + 0.003);
+    group.add(front);
+    const back = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.92, h * 0.82), faceMat);
+    back.position.set(0, h / 2, -(d / 2 + 0.003));
+    back.rotation.y = Math.PI;
+    group.add(back);
+  }
 
   const [nx, nz] = studs;
   if (nx > 0 && nz > 0) {
@@ -77,6 +105,7 @@ function legoPiece({ color, w, d, h, studs }) {
   }
   group.userData.material = material;
   group.userData.height = h + (nx > 0 ? 0.16 : 0);
+  group.userData.bodyHeight = h; // body-only height used for interlocking stacking
   return group;
 }
 
@@ -133,25 +162,25 @@ async function init() {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 50);
-  camera.position.set(4.4, 3.4, 5.6);
-  camera.lookAt(0, 1.1, 0);
+  camera.position.set(5.2, 3.6, 6.2);
+  camera.lookAt(-0.4, 1.2, 0);
 
   scene.add(new THREE.AmbientLight(COLORS.white, 0.85));
   const key = new THREE.DirectionalLight(COLORS.white, 1.6);
   key.position.set(4, 7, 5);
   key.castShadow = true;
   key.shadow.mapSize.set(512, 512);
-  key.shadow.camera.left = -4;
-  key.shadow.camera.right = 4;
-  key.shadow.camera.top = 4;
-  key.shadow.camera.bottom = -4;
+  key.shadow.camera.left = -6;
+  key.shadow.camera.right = 6;
+  key.shadow.camera.top = 6;
+  key.shadow.camera.bottom = -6;
   scene.add(key);
   const fill = new THREE.DirectionalLight(COLORS.pulseBlue, 0.25);
   fill.position.set(-4, 3, -3);
   scene.add(fill);
 
   const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(14, 14),
+    new THREE.PlaneGeometry(18, 18),
     new THREE.ShadowMaterial({ opacity: 0.1 })
   );
   ground.rotation.x = -Math.PI / 2;
@@ -161,23 +190,40 @@ async function init() {
   const stack = new THREE.Group();
   scene.add(stack);
 
-  // Baseplate — the shared infrastructure every project stands on.
-  const baseplate = legoPiece({ color: COLORS.deepBlue, w: 3.4, d: 2.2, h: 0.3, studs: [5, 3] });
+  // Wider baseplate to accommodate the side-by-side stud layout.
+  const baseplate = legoPiece({ color: COLORS.deepBlue, w: 5.6, d: 2.4, h: 0.3, studs: [8, 3], label: 'Global Payments' });
   baseplate.traverse((m) => { if (m.isMesh) m.receiveShadow = true; });
   stack.add(baseplate);
 
-  // One piece per component, stacked in dependency order (chips order).
-  let y = baseplate.userData.height;
-  const pieces = components.map((component, i) => {
+  // Studs sit on the baseplate to the left; bricks/tiles stack on the right.
+  // Use bodyHeight (not height) so each brick's studs slot into the underside
+  // of the brick above, just like real LEGO.
+  const baseplateTop = baseplate.userData.bodyHeight;
+  let stackY = baseplateTop;
+  let studX = -1.9;
+  let stackBrickIndex = 0;
+
+  const pieces = components.map((component) => {
     const style = LAYER_STYLE[component.layer] || LAYER_STYLE.brick;
+    const brickLabel = component.name.replace(/\s*helper\s*/i, '');
     const piece = legoPiece({
       ...style,
-      color: component.layer === 'brick' && i % 2 === 1 ? COLORS.deepBlue : style.color,
+      color: component.layer === 'brick' && stackBrickIndex % 2 === 1 ? COLORS.deepBlue : style.color,
+      label: brickLabel,
     });
-    piece.position.y = y;
-    piece.position.x = (i % 2 === 0 ? -1 : 1) * 0.12;
-    y += piece.userData.height;
     piece.userData.component = component;
+
+    if (component.layer === 'stud') {
+      // Place studs on the baseplate beside the brick stack.
+      piece.position.set(studX, baseplateTop, 0);
+      studX += style.w + 0.15;
+    } else {
+      // Stack bricks and tiles vertically on the right side.
+      piece.position.set(0.6, stackY, 0);
+      stackY += piece.userData.bodyHeight;
+      stackBrickIndex += 1;
+    }
+
     stack.add(piece);
     return piece;
   });
