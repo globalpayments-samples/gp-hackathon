@@ -6,14 +6,16 @@
   "type": "commonjs",
   "scripts": {
     "build": "node builder/build-project.js",
-    "test:determinism": "node builder/snapshot-test.js",
-    "test": "node builder/snapshot-test.js"
+    "test": "npm run test:unit && npm run test:determinism",
+    "test:unit": "node --test '**/*.test.js'",
+    "test:determinism": "node builder/snapshot-test.js"
   },
   "dependencies": {
     "globalpayments-api": "^3.0.0",
     "yaml": "^2.4.0"
   },
   "devDependencies": {
+    "dotenv": "^17.4.2",
     "puppeteer-core": "^25.1.0"
   }
 }

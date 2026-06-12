@@ -25,6 +25,8 @@ finalize(app);
 
 {{ TARGET_AFTER }}
 
+{{ TARGET_AFTER }}
+
 const port = process.env.PORT || 3000;
 if (require.main === module) {
   app.listen(port, () => {
