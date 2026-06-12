@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hosted Fields tile — Global Payments sample</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main>
+    <section class="gp-card" aria-labelledby="gp-card-title">
+      <div class="gp-card-head">
+        <p class="gp-eyebrow">Secure checkout</p>
+        <h2 id="gp-card-title">Payment details</h2>
+        <p class="gp-card-note">Card data is entered in secure fields hosted by Global Payments — it never touches this server.</p>
+      </div>
+
+      <div class="gp-hf-grid">
+        <label class="gp-field gp-hf--full" for="gp-amount">
+          <span class="gp-hf-label">Amount (USD)</span>
+          <input id="gp-amount" inputmode="decimal" value="29.99" autocomplete="off" />
+        </label>
+        <div class="gp-hf gp-hf--full">
+          <span class="gp-hf-label">Card number</span>
+          <div class="gp-hf-target" id="gp-card-number"></div>
+        </div>
+        <div class="gp-hf">
+          <span class="gp-hf-label">Expiry date</span>
+          <div class="gp-hf-target" id="gp-card-expiration"></div>
+        </div>
+        <div class="gp-hf">
+          <span class="gp-hf-label">Security code</span>
+          <div class="gp-hf-target" id="gp-card-cvv"></div>
+        </div>
+        <div class="gp-hf gp-hf--full">
+          <span class="gp-hf-label">Cardholder name</span>
+          <div class="gp-hf-target" id="gp-card-holder"></div>
+        </div>
+        <div class="gp-hf gp-hf--full">
+          <div class="gp-hf-target gp-hf-target--submit" id="gp-card-submit"></div>
+        </div>
+      </div>
+
+      <p id="gp-status" class="gp-status" role="status">Loading secure fields…</p>
+      <dl id="gp-result" class="gp-result" hidden></dl>
+      <div id="gp-actions" class="gp-actions"></div>
+    </section>
+  </main>
+
+  <script src="https://js.globalpay.com/4.1.10/globalpayments.js"></script>
+  <script src="/components/hosted-fields.js" defer></script>
+</body>
+</html>
