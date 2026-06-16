@@ -23,8 +23,12 @@ function listFilesRecursive(dir, base = dir) {
   const out = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...listFilesRecursive(full, base));
-    else out.push(path.relative(base, full));
+    if (entry.isDirectory()) {
+      if (entry.name === 'node_modules') continue;
+      out.push(...listFilesRecursive(full, base));
+    } else {
+      out.push(path.relative(base, full));
+    }
   }
   return out;
 }
