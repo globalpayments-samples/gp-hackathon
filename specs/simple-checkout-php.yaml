@@ -1,0 +1,5 @@
+name: simple-checkout-php
+language: php
+tiles: [hosted-fields]
+bricks: [charge]
+# token-helper stud resolved automatically via hosted-fields → charge depends_on

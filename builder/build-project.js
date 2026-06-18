@@ -297,9 +297,12 @@ function build(specPath, outOverride) {
   }
   step('Scaffold rendered, slots resolved');
 
-  // 5. Vendor core/ — the Baseplate travels with every project.
-  for (const rel of listFilesRecursive(path.join(ROOT, 'core'))) {
-    copyFile(path.join(ROOT, 'core', rel), path.join(outDir, 'core', rel));
+  // 5. Vendor core/ — the Node baseplate travels with every Node project.
+  // PHP bakes core/ into the scaffold (scaffold/php/core/); no separate vendoring needed.
+  if (spec.language === 'node') {
+    for (const rel of listFilesRecursive(path.join(ROOT, 'core'))) {
+      copyFile(path.join(ROOT, 'core', rel), path.join(outDir, 'core', rel));
+    }
   }
 
   // 6. Vendor component modules, frontend assets, and test fragments.
@@ -323,7 +326,7 @@ function build(specPath, outOverride) {
     for (const asset of [...(component.assets || [])].sort()) {
       vendor(asset, path.posix.join('public', 'components', path.posix.basename(asset)));
     }
-    for (const testFile of [...(component.test_fragments || [])].sort()) {
+    for (const testFile of [...resolveForLanguage(component.test_fragments, spec.language, [])].sort()) {
       const marker = '/tests/';
       const idx = testFile.indexOf(marker);
       if (idx === -1) fail(`test_fragments entry must live under a tests/ directory: ${testFile}`);
@@ -340,13 +343,26 @@ function build(specPath, outOverride) {
 
   // 8. Next steps, in brand voice.
   const relOut = path.relative(process.cwd(), outDir);
+  const nextSteps = {
+    node: [
+      '  npm install',
+      '  npm start              # branded checkout on http://localhost:3000',
+      '  npm test               # sandbox integration tests',
+    ],
+    php: [
+      '  composer install',
+      '  ./run.sh               # branded checkout on http://localhost:3000',
+      '  ./vendor/bin/phpunit tests/  # smoke tests (skip without credentials)',
+    ],
+  };
   console.log(`\n${paint(BLUE + BOLD, 'Done.')} Standalone project at ${paint(BOLD, relOut)}\n`);
   console.log(paint(CHARCOAL, 'Next steps:'));
   console.log(`  cd ${relOut}`);
   console.log('  cp .env.example .env   # fill in: ' + configVars.join(', '));
-  console.log('  npm install');
-  console.log('  npm start              # branded checkout on http://localhost:3000');
-  console.log('  npm test               # sandbox integration tests\n');
+  for (const line of (nextSteps[spec.language] || nextSteps.node)) {
+    console.log(line);
+  }
+  console.log('');
   return outDir;
 }
 

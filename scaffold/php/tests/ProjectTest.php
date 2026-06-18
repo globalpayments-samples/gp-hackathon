@@ -8,7 +8,7 @@ declare(strict_types=1);
  * Mirrors scaffold/node/tests/project.test.js:
  *   - Skips when required env vars are missing (no sandbox credentials needed
  *     for the structural checks).
- *   - Skips if index.php still contains unfilled {{ SLOT }} markers (Builder
+ *   - Skips if index.php still contains unfilled slot markers (Builder
  *     must run before tests are meaningful).
  *   - Starts the built-in PHP server on an ephemeral port, verifies /health,
  *     the root page, and the GP logo asset.

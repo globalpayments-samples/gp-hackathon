@@ -30,16 +30,19 @@ entry_points: [authorize]
 # Source files copied verbatim into the generated project's components/ directory.
 # Multiple components can share the same file (e.g. payments.js exports charge,
 # authorize, and capture — each has its own manifest but the same source file).
-files: [bricks/payments.js]
+files:
+  node: [bricks/payments.js]
+  php:  [bricks/payments.php]
 
-# Fragment files to splice into scaffold slot markers.
-# Format: <fragment path>: <SLOT_NAME>
-#
-# ROUTE_HANDLERS  — Express route definitions inserted into index.js
-# FRONTEND_CONFIG — window.GP_SAMPLE config object read by the browser tile
+# ROUTE_HANDLERS  — route definitions inserted into index.js / index.php
+# FRONTEND_CONFIG — window.GP_SAMPLE config (plain JS, language-agnostic)
 inserts:
-  bricks/fragments/authorize-route.js: ROUTE_HANDLERS
-  bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
+  node:
+    bricks/fragments/authorize-route.js:    ROUTE_HANDLERS
+    bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
+  php:
+    bricks/fragments/authorize-route.php:   ROUTE_HANDLERS
+    bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
 
 # Test files copied into the generated project's tests/ directory.
 # Fixtures listed here are shared across multiple components (sandbox.js is

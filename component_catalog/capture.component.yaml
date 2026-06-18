@@ -25,14 +25,19 @@ entry_points: [capture]
 
 # Shares payments.js with authorize and charge — only one copy is written
 # to the generated project regardless of how many bricks reference it.
-files: [bricks/payments.js]
+files:
+  node: [bricks/payments.js]
+  php:  [bricks/payments.php]
 
-# ROUTE_HANDLERS  — Express route definition (POST /api/capture/:transactionId)
-# FRONTEND_CONFIG — sets window.GP_SAMPLE.captureEndpoint so the tile knows
-#                   to render the Capture button after authorization succeeds.
+# ROUTE_HANDLERS  — route definitions inserted into index.js / index.php
+# FRONTEND_CONFIG — window.GP_SAMPLE.captureEndpoint (plain JS, language-agnostic)
 inserts:
-  bricks/fragments/capture-route.js: ROUTE_HANDLERS
-  bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
+  node:
+    bricks/fragments/capture-route.js:    ROUTE_HANDLERS
+    bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
+  php:
+    bricks/fragments/capture-route.php:   ROUTE_HANDLERS
+    bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
 
 # sandbox.js is a shared fixture — listed here so the Builder copies it once.
 test_fragments:

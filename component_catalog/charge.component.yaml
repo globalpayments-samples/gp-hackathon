@@ -24,13 +24,22 @@ config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
 entry_points: [charge]
 
 # Shares payments.js with authorize and capture.
-files: [bricks/payments.js]
+files:
+  node: [bricks/payments.js]
+  php:  [bricks/payments.php]
 
-# ROUTE_HANDLERS  — Express route definition (POST /api/charge)
-# FRONTEND_CONFIG — sets window.GP_SAMPLE.payEndpoint so the tile posts here.
+# Fragment files to splice into scaffold slot markers.
+#
+# ROUTE_HANDLERS  — route definition inserted into index.js / index.php
+# FRONTEND_CONFIG — window.GP_SAMPLE config object read by the browser tile
+#                   (plain JS, language-agnostic — shared between node and php)
 inserts:
-  bricks/fragments/charge-route.js: ROUTE_HANDLERS
-  bricks/fragments/charge-frontend.js: FRONTEND_CONFIG
+  node:
+    bricks/fragments/charge-route.js:      ROUTE_HANDLERS
+    bricks/fragments/charge-frontend.js:   FRONTEND_CONFIG
+  php:
+    bricks/fragments/charge-route.php:     ROUTE_HANDLERS
+    bricks/fragments/charge-frontend.js:   FRONTEND_CONFIG
 
 test_fragments:
   - bricks/tests/charge.test.js
