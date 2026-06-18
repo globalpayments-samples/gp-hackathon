@@ -178,7 +178,37 @@ function renderTemplate(text, fragmentsBySlot, values) {
   return out.join('\n').replace(/\n{3,}/g, '\n\n');
 }
 
-// --- main build --------------------------------------------------------------
+// --- language-keyed manifest helpers ----------------------------------------
+
+/**
+ * Resolves a manifest field that may be either:
+ *   - a flat Array/Object (legacy — treated as node-only, returned as-is for 'node',
+ *     empty for any other language), OR
+ *   - a language-keyed Object { node: ..., php: ..., etc. } — the entry for
+ *     `language` is selected and returned.
+ *
+ * @param {Array|Object} field  The raw manifest value for 'files' or 'inserts'.
+ * @param {string}       language  The target language from the spec.
+ * @param {Array|Object} emptyValue  Default when no entry exists ([] or {}).
+ */
+function resolveForLanguage(field, language, emptyValue) {
+  if (!field) return emptyValue;
+  if (Array.isArray(field)) {
+    // Flat array — node-only shorthand.
+    return language === 'node' ? field : emptyValue;
+  }
+  // Object — check if it's language-keyed (values are arrays or objects)
+  // vs. the flat inserts map (values are slot name strings).
+  const firstValue = Object.values(field)[0];
+  if (typeof firstValue === 'string') {
+    // Flat inserts map { 'path/file.js': 'SLOT_NAME' } — node-only shorthand.
+    return language === 'node' ? field : emptyValue;
+  }
+  // Language-keyed map { node: ..., php: ... } — select by language.
+  return field[language] ?? emptyValue;
+}
+
+
 function build(specPath, outOverride) {
   if (!fs.existsSync(specPath)) {
     fail(`Spec file not found: ${specPath}`);
@@ -187,8 +217,9 @@ function build(specPath, outOverride) {
   for (const key of ['name', 'language']) {
     if (!spec[key]) fail(`Spec is missing required field "${key}".`);
   }
-  if (spec.language !== 'node') {
-    fail(`Unsupported language "${spec.language}" — this vertical slice ships Node only.`);
+  const SUPPORTED_LANGUAGES = ['node', 'php'];
+  if (!SUPPORTED_LANGUAGES.includes(spec.language)) {
+    fail(`Unsupported language "${spec.language}" — supported: ${SUPPORTED_LANGUAGES.join(', ')}.`);
   }
 
   const requested = [...(spec.tiles || []), ...(spec.bricks || [])];
@@ -212,7 +243,7 @@ function build(specPath, outOverride) {
   // 2. Collect fragments per slot in deterministic component order.
   const fragmentsBySlot = new Map();
   for (const component of components) {
-    const inserts = component.inserts || {};
+    const inserts = resolveForLanguage(component.inserts, spec.language, {});
     for (const fragmentPath of Object.keys(inserts).sort()) {
       const slot = inserts[fragmentPath];
       if (!FRAGMENT_SLOTS.includes(slot)) {
@@ -252,7 +283,7 @@ function build(specPath, outOverride) {
   };
 
   // 4. Render scaffold files into the output project.
-  const textExtensions = new Set(['.js', '.json', '.md', '.html', '.css', '.yaml', '.yml']);
+  const textExtensions = new Set(['.js', '.json', '.md', '.html', '.css', '.yaml', '.yml', '.php', '.sh']);
   for (const rel of scaffoldFiles) {
     const src = path.join(scaffoldDir, rel);
     const dest = path.join(outDir, rel);
@@ -286,7 +317,7 @@ function build(specPath, outOverride) {
     }
   };
   for (const component of components) {
-    for (const file of [...(component.files || [])].sort()) {
+    for (const file of [...resolveForLanguage(component.files, spec.language, [])].sort()) {
       vendor(file, path.posix.join('components', path.posix.basename(file)));
     }
     for (const asset of [...(component.assets || [])].sort()) {
