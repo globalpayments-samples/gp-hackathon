@@ -39,9 +39,14 @@ assets: [tiles/hosted-fields/hosted-fields.js]
 # TILE_SCRIPTS  — <script> tags inserted before </body> to load hosted-fields.js
 # ASIDE_EXTRAS  — Additional sidebar content (test card helper widget)
 inserts:
-  tiles/hosted-fields/fragments/markup.html: TILE_MARKUP
-  tiles/hosted-fields/fragments/scripts.html: TILE_SCRIPTS
-  tiles/hosted-fields/fragments/testcard.html: ASIDE_EXTRAS
+  node:
+    tiles/hosted-fields/fragments/markup.html: TILE_MARKUP
+    tiles/hosted-fields/fragments/scripts.html: TILE_SCRIPTS
+    tiles/hosted-fields/fragments/testcard.html: ASIDE_EXTRAS
+  php:
+    tiles/hosted-fields/fragments/markup.html: TILE_MARKUP
+    tiles/hosted-fields/fragments/scripts.html: TILE_SCRIPTS
+    tiles/hosted-fields/fragments/testcard.html: ASIDE_EXTRAS
 
 # Static wiring test — verifies the JS asset is vendored and all five
 # secure field targets are present in the generated checkout page.
