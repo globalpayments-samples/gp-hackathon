@@ -1,0 +1,5 @@
+name: delayed-capture-dotnet
+language: dotnet
+tiles: [hosted-fields]
+bricks: [authorize, capture]
+# studs and baseplate resolved automatically via depends_on
