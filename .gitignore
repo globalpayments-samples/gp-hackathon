@@ -1,3 +1,10 @@
 node_modules/
 output/
 .env
+
+# .NET build artifacts
+scaffold/dotnet/obj/
+scaffold/dotnet/bin/
+
+# Java build artifacts
+scaffold/java/target/
