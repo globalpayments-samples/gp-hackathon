@@ -1,4 +1,4 @@
-# Global Payments samples — the Lego system (Node vertical slice)
+# Global Payments samples — the Lego system
 
 One spec in, one predictable sample project out. Every time.
 
@@ -15,20 +15,34 @@ model. Built and proven end-to-end at the company hackathon.
 - Developers wade through ~200 lines of boilerplate to find ~15 lines of
   transactional code.
 
-A generated project's `index.js` is ~55 lines, and every one of them is signal.
+A generated project's entry point is ~55 lines, and every one of them is signal.
+
+## Language support
+
+| Language | Scaffold | Baseplate | Bricks | Studs |
+| -------- | -------- | --------- | ------ | ----- |
+| Node.js  | ✅       | ✅        | ✅     | ✅    |
+| PHP      | ✅       | ✅        | ✅     | ✅    |
+| .NET     | ✅       | ✅        | ✅     | ✅    |
+| Java     | ✅       | ✅        | ✅     | ✅    |
+| Python   | roadmap  | —         | —      | —     |
+| Go       | roadmap  | —         | —      | —     |
 
 ## Layout
 
 ```
-core/                  Baseplate: config manager, Express shell, exception handler
+core/                  Baseplate: config manager, Express shell, exception handler (Node)
 studs/                 token-helper (+ fragments, tests)
-bricks/                payments.js: charge / authorize / capture (+ fragments, tests)
+bricks/                payments: charge / authorize / capture (+ fragments, tests)
 tiles/hosted-fields/   secure card-entry tile (+ fragments, tests)
 component_catalog/     *.component.yaml manifests + catalog.json (138 components, 25 repos)
 catalog-sweep/         raw sweep data feeding generate-catalog.js
-scaffold/node/         standalone-project template with named {{ SLOT }} markers
+scaffold/node/         Node standalone-project template with named {{ SLOT }} markers
+scaffold/php/          PHP standalone-project template
+scaffold/dotnet/       .NET standalone-project template (ASP.NET Core Minimal API)
+scaffold/java/         Java standalone-project template (Jakarta EE Servlet + Cargo/Tomcat)
 builder/               build-project.js (deterministic generation) + snapshot-test.js
-specs/                 project specs: simple-checkout, delayed-capture
+specs/                 project specs — simple-checkout / delayed-capture × 4 languages
 golden/simple-checkout Hand-validated expected Builder output (determinism reference)
 output/                generated projects land here (gitignored)
 ```
@@ -38,14 +52,21 @@ output/                generated projects land here (gitignored)
 ```bash
 npm install
 
-# generate a standalone project from a spec
-node builder/build-project.js specs/delayed-capture.yaml
+# Node.js
+node builder/build-project.js specs/simple-checkout.yaml
+cd output/simple-checkout && cp ../../.env .env && npm install && npm start
 
-# run it
-cd output/delayed-capture
-cp ../../.env .env          # or fill .env.example with your sandbox credentials
-npm install && npm start    # branded checkout on http://localhost:3000
-npm test                    # real sandbox integration tests (skip cleanly without creds)
+# PHP
+node builder/build-project.js specs/simple-checkout-php.yaml
+cd output/simple-checkout-php && cp ../../.env .env && composer install && ./run.sh
+
+# .NET
+node builder/build-project.js specs/simple-checkout-dotnet.yaml
+cd output/simple-checkout-dotnet && cp ../../.env .env && dotnet run
+
+# Java
+node builder/build-project.js specs/simple-checkout-java.yaml
+cd output/simple-checkout-java && cp ../../.env .env && mvn integration-test
 
 # prove determinism: two builds byte-identical + matches golden/
 npm test                    # from the monorepo root
@@ -65,7 +86,7 @@ id alphabetically. No timestamps, no random ids, sorted iteration everywhere:
 the same spec always produces a byte-identical project, which is what makes
 regeneration a maintenance model instead of 30 manual PRs.
 
-Generated projects are **fully detached**: `core/` and component files are
+Generated projects are **fully detached**: the baseplate and component files are
 vendored in, so end users get a self-contained sample matching the existing
 sample project model.
 
@@ -85,8 +106,8 @@ accents only as accents, Raspberry reserved for negative states, no gradients.
 
 ## Roadmap (per the architectural spec)
 
-1. **Phase 1-2 remainder** — PHP, Java, .NET, Python baseplates and scaffolds;
-   extract remaining components prioritized by catalog difficulty ratings.
+1. **Phase 1-2** — ✅ Complete: PHP, .NET, Java baseplates, scaffolds, and core
+   component extractions (charge, authorize, capture, token-helper, hosted-fields).
 2. **Phase 3** — port all 30+ scenarios from `catalog.json`; deprecate legacy repos.
 3. **Phase 4** — CI regenerates samples from specs on SDK releases; the
    snapshot test is the seed.
