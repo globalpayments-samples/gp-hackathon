@@ -217,7 +217,7 @@ function build(specPath, outOverride) {
   for (const key of ['name', 'language']) {
     if (!spec[key]) fail(`Spec is missing required field "${key}".`);
   }
-  const SUPPORTED_LANGUAGES = ['node', 'php'];
+  const SUPPORTED_LANGUAGES = ['node', 'php', 'dotnet', 'java'];
   if (!SUPPORTED_LANGUAGES.includes(spec.language)) {
     fail(`Unsupported language "${spec.language}" — supported: ${SUPPORTED_LANGUAGES.join(', ')}.`);
   }
@@ -283,7 +283,7 @@ function build(specPath, outOverride) {
   };
 
   // 4. Render scaffold files into the output project.
-  const textExtensions = new Set(['.js', '.json', '.md', '.html', '.css', '.yaml', '.yml', '.php', '.sh']);
+  const textExtensions = new Set(['.js', '.json', '.md', '.html', '.css', '.yaml', '.yml', '.php', '.sh', '.cs', '.java', '.xml', '.csproj', '.properties']);
   for (const rel of scaffoldFiles) {
     const src = path.join(scaffoldDir, rel);
     const dest = path.join(outDir, rel);
@@ -298,7 +298,7 @@ function build(specPath, outOverride) {
   step('Scaffold rendered, slots resolved');
 
   // 5. Vendor core/ — the Node baseplate travels with every Node project.
-  // PHP bakes core/ into the scaffold (scaffold/php/core/); no separate vendoring needed.
+  // PHP, .NET, and Java bake core/ into the scaffold; no separate vendoring needed.
   if (spec.language === 'node') {
     for (const rel of listFilesRecursive(path.join(ROOT, 'core'))) {
       copyFile(path.join(ROOT, 'core', rel), path.join(outDir, 'core', rel));
@@ -321,7 +321,13 @@ function build(specPath, outOverride) {
   };
   for (const component of components) {
     for (const file of [...resolveForLanguage(component.files, spec.language, [])].sort()) {
-      vendor(file, path.posix.join('components', path.posix.basename(file)));
+      let destRel;
+      if (spec.language === 'java') {
+        destRel = path.posix.join('src/main/java/com/globalpayments/sample', path.posix.basename(file));
+      } else {
+        destRel = path.posix.join('components', path.posix.basename(file));
+      }
+      vendor(file, destRel);
     }
     for (const asset of [...(component.assets || [])].sort()) {
       vendor(asset, path.posix.join('public', 'components', path.posix.basename(asset)));
@@ -353,6 +359,12 @@ function build(specPath, outOverride) {
       '  composer install',
       '  ./run.sh               # branded checkout on http://localhost:3000',
       '  ./vendor/bin/phpunit tests/  # smoke tests (skip without credentials)',
+    ],
+    dotnet: [
+      '  dotnet run             # branded checkout on http://localhost:3000',
+    ],
+    java: [
+      '  mvn integration-test   # builds + starts embedded Tomcat on http://localhost:3000',
     ],
   };
   console.log(`\n${paint(BLUE + BOLD, 'Done.')} Standalone project at ${paint(BOLD, relOut)}\n`);
