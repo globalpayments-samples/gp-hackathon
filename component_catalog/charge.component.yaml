@@ -25,20 +25,28 @@ entry_points: [charge]
 
 # Shares payments.js with authorize and capture.
 files:
-  node: [bricks/payments.js]
-  php:  [bricks/payments.php]
+  node:   [bricks/payments.js]
+  php:    [bricks/payments.php]
+  dotnet: [bricks/payments.cs]
+  java:   [bricks/Payments.java]
 
 # Fragment files to splice into scaffold slot markers.
 #
-# ROUTE_HANDLERS  — route definition inserted into index.js / index.php
+# ROUTE_HANDLERS  — route definition inserted into the server entry point
 # FRONTEND_CONFIG — window.GP_SAMPLE config object read by the browser tile
-#                   (plain JS, language-agnostic — shared between node and php)
+#                   (plain JS, language-agnostic — shared across all languages)
 inserts:
   node:
     bricks/fragments/charge-route.js:      ROUTE_HANDLERS
     bricks/fragments/charge-frontend.js:   FRONTEND_CONFIG
   php:
     bricks/fragments/charge-route.php:     ROUTE_HANDLERS
+    bricks/fragments/charge-frontend.js:   FRONTEND_CONFIG
+  dotnet:
+    bricks/fragments/charge-route.cs:      ROUTE_HANDLERS
+    bricks/fragments/charge-frontend.js:   FRONTEND_CONFIG
+  java:
+    bricks/fragments/charge-route.java:    ROUTE_HANDLERS
     bricks/fragments/charge-frontend.js:   FRONTEND_CONFIG
 
 test_fragments:

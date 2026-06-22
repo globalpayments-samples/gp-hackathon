@@ -31,10 +31,12 @@ entry_points: [authorize]
 # Multiple components can share the same file (e.g. payments.js exports charge,
 # authorize, and capture — each has its own manifest but the same source file).
 files:
-  node: [bricks/payments.js]
-  php:  [bricks/payments.php]
+  node:   [bricks/payments.js]
+  php:    [bricks/payments.php]
+  dotnet: [bricks/payments.cs]
+  java:   [bricks/Payments.java]
 
-# ROUTE_HANDLERS  — route definitions inserted into index.js / index.php
+# ROUTE_HANDLERS  — route definitions inserted into the server entry point
 # FRONTEND_CONFIG — window.GP_SAMPLE config (plain JS, language-agnostic)
 inserts:
   node:
@@ -42,6 +44,12 @@ inserts:
     bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
   php:
     bricks/fragments/authorize-route.php:   ROUTE_HANDLERS
+    bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
+  dotnet:
+    bricks/fragments/authorize-route.cs:    ROUTE_HANDLERS
+    bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
+  java:
+    bricks/fragments/authorize-route.java:  ROUTE_HANDLERS
     bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
 
 # Test files copied into the generated project's tests/ directory.

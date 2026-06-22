@@ -26,10 +26,12 @@ entry_points: [capture]
 # Shares payments.js with authorize and charge — only one copy is written
 # to the generated project regardless of how many bricks reference it.
 files:
-  node: [bricks/payments.js]
-  php:  [bricks/payments.php]
+  node:   [bricks/payments.js]
+  php:    [bricks/payments.php]
+  dotnet: [bricks/payments.cs]
+  java:   [bricks/Payments.java]
 
-# ROUTE_HANDLERS  — route definitions inserted into index.js / index.php
+# ROUTE_HANDLERS  — route definitions inserted into the server entry point
 # FRONTEND_CONFIG — window.GP_SAMPLE.captureEndpoint (plain JS, language-agnostic)
 inserts:
   node:
@@ -37,6 +39,12 @@ inserts:
     bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
   php:
     bricks/fragments/capture-route.php:   ROUTE_HANDLERS
+    bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
+  dotnet:
+    bricks/fragments/capture-route.cs:    ROUTE_HANDLERS
+    bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
+  java:
+    bricks/fragments/capture-route.java:  ROUTE_HANDLERS
     bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
 
 # sandbox.js is a shared fixture — listed here so the Builder copies it once.

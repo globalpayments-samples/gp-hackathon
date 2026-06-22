@@ -40,12 +40,20 @@ assets: [tiles/hosted-fields/hosted-fields.js]
 # ASIDE_EXTRAS  — Additional sidebar content (test card helper widget)
 inserts:
   node:
-    tiles/hosted-fields/fragments/markup.html: TILE_MARKUP
-    tiles/hosted-fields/fragments/scripts.html: TILE_SCRIPTS
+    tiles/hosted-fields/fragments/markup.html:   TILE_MARKUP
+    tiles/hosted-fields/fragments/scripts.html:  TILE_SCRIPTS
     tiles/hosted-fields/fragments/testcard.html: ASIDE_EXTRAS
   php:
-    tiles/hosted-fields/fragments/markup.html: TILE_MARKUP
-    tiles/hosted-fields/fragments/scripts.html: TILE_SCRIPTS
+    tiles/hosted-fields/fragments/markup.html:   TILE_MARKUP
+    tiles/hosted-fields/fragments/scripts.html:  TILE_SCRIPTS
+    tiles/hosted-fields/fragments/testcard.html: ASIDE_EXTRAS
+  dotnet:
+    tiles/hosted-fields/fragments/markup.html:   TILE_MARKUP
+    tiles/hosted-fields/fragments/scripts.html:  TILE_SCRIPTS
+    tiles/hosted-fields/fragments/testcard.html: ASIDE_EXTRAS
+  java:
+    tiles/hosted-fields/fragments/markup.html:   TILE_MARKUP
+    tiles/hosted-fields/fragments/scripts.html:  TILE_SCRIPTS
     tiles/hosted-fields/fragments/testcard.html: ASIDE_EXTRAS
 
 # Static wiring test — verifies the JS asset is vendored and all five
