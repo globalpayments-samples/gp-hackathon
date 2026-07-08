@@ -1,4 +1,4 @@
-name: simple-checkout
+name: simple-checkout-node
 language: node
 tiles: [hosted-fields]
 bricks: [charge]

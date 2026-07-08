@@ -1,5 +1,5 @@
 /**
- * simple-checkout — generated standalone sample project.
+ * simple-checkout-node — generated standalone sample project.
  * Composed by the Builder from the Global Payments component catalog.
  * Everything below the imports is signal: configuration, then one route per
  * selected component. The Baseplate hides the server boilerplate in ./core.
@@ -29,7 +29,7 @@ app.get('/api/access-token', async (req, res, next) => {
 });
 
 // -- charge: single-step authorization and capture ---------------------------
-const { charge } = require('./components/payments');
+const { charge } = require('./components/charge');
 
 app.post('/api/charge', async (req, res, next) => {
   try {

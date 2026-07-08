@@ -13,7 +13,7 @@ const skip = missing.length > 0
 
 test('charge brick executes a single-step sandbox sale', { skip }, async () => {
   const { loadConfig } = require('../core/config');
-  const { charge } = require('../components/payments');
+  const { charge } = require('../components/charge');
 
   loadConfig();
   const token = await sandboxCardToken();

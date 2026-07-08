@@ -1,4 +1,4 @@
-name: delayed-capture
+name: delayed-capture-node
 language: node
 tiles: [hosted-fields]
 bricks: [authorize, capture]

@@ -1,4 +1,4 @@
-# Simple checkout
+# Simple checkout node
 
 A standalone, runnable Global Payments sample project. Generated deterministically
 by the Lego system Builder — no monorepo dependencies, everything is vendored.
