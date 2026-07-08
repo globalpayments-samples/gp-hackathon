@@ -158,9 +158,20 @@ function renderTemplate(text, fragmentsBySlot, values) {
     const slotMatch = line.match(/^(\s*)\{\{\s*([A-Z0-9_]+)\s*\}\}\s*$/);
     if (slotMatch && FRAGMENT_SLOTS.includes(slotMatch[2])) {
       const indent = slotMatch[1];
-      const fragments = fragmentsBySlot.get(slotMatch[2]) || [];
+      const slotName = slotMatch[2];
+      const fragments = fragmentsBySlot.get(slotName) || [];
       if (fragments.length === 0) continue; // unused slot resolves to empty
-      const body = fragments.join('\n\n');
+      let body = fragments.join('\n\n');
+      if (slotName === 'IMPORTS') {
+        const seen = new Set();
+        body = body.split('\n').filter(l => {
+          const t = l.trim();
+          if (!t) return true;
+          if (seen.has(t)) return false;
+          seen.add(t);
+          return true;
+        }).join('\n');
+      }
       for (const bodyLine of body.split('\n')) {
         out.push(bodyLine.length > 0 ? indent + bodyLine : '');
       }
@@ -357,14 +368,18 @@ function build(specPath, outOverride) {
     ],
     php: [
       '  composer install',
-      '  ./run.sh               # branded checkout on http://localhost:3000',
-      '  ./vendor/bin/phpunit tests/  # smoke tests (skip without credentials)',
+      '  php -S 0.0.0.0:3000 router.php  # branded checkout on http://localhost:3000',
+      '  ./vendor/bin/phpunit tests/      # smoke tests (skip without credentials)',
     ],
     dotnet: [
+      '  dotnet restore',
       '  dotnet run             # branded checkout on http://localhost:3000',
+      '  dotnet test            # sandbox integration tests',
     ],
     java: [
+      '  mvn dependency:resolve',
       '  mvn integration-test   # builds + starts embedded Tomcat on http://localhost:3000',
+      '  mvn test               # unit tests',
     ],
   };
   console.log(`\n${paint(BLUE + BOLD, 'Done.')} Standalone project at ${paint(BOLD, relOut)}\n`);
