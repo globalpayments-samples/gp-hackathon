@@ -13,7 +13,8 @@ const skip = missing.length > 0
 
 test('capture brick settles a prior sandbox authorization', { skip }, async () => {
   const { loadConfig } = require('../core/config');
-  const { authorize, capture } = require('../components/payments');
+  const { authorize } = require('../components/authorize');
+  const { capture } = require('../components/capture');
 
   loadConfig();
   const token = await sandboxCardToken();
