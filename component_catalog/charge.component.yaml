@@ -23,12 +23,11 @@ config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
 # Exported function name the Builder uses to generate the require() call.
 entry_points: [charge]
 
-# Shares payments.js with authorize and capture.
 files:
-  node:   [bricks/payments.js]
-  php:    [bricks/payments.php]
-  dotnet: [bricks/payments.cs]
-  java:   [bricks/Payments.java]
+  node:   [bricks/charge.js]
+  php:    [bricks/charge.php]
+  dotnet: [bricks/charge.cs]
+  java:   [bricks/Charge.java]
 
 # Fragment files to splice into scaffold slot markers.
 #

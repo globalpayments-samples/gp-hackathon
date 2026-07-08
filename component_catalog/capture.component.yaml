@@ -23,13 +23,11 @@ config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
 # Exported function names the Builder uses to generate require() calls.
 entry_points: [capture]
 
-# Shares payments.js with authorize and charge — only one copy is written
-# to the generated project regardless of how many bricks reference it.
 files:
-  node:   [bricks/payments.js]
-  php:    [bricks/payments.php]
-  dotnet: [bricks/payments.cs]
-  java:   [bricks/Payments.java]
+  node:   [bricks/capture.js]
+  php:    [bricks/capture.php]
+  dotnet: [bricks/capture.cs]
+  java:   [bricks/Capture.java]
 
 # ROUTE_HANDLERS  — route definitions inserted into the server entry point
 # FRONTEND_CONFIG — window.GP_SAMPLE.captureEndpoint (plain JS, language-agnostic)

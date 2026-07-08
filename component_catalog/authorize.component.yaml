@@ -28,13 +28,11 @@ config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
 entry_points: [authorize]
 
 # Source files copied verbatim into the generated project's components/ directory.
-# Multiple components can share the same file (e.g. payments.js exports charge,
-# authorize, and capture — each has its own manifest but the same source file).
 files:
-  node:   [bricks/payments.js]
-  php:    [bricks/payments.php]
-  dotnet: [bricks/payments.cs]
-  java:   [bricks/Payments.java]
+  node:   [bricks/authorize.js]
+  php:    [bricks/authorize.php]
+  dotnet: [bricks/authorize.cs]
+  java:   [bricks/Authorize.java]
 
 # ROUTE_HANDLERS  — route definitions inserted into the server entry point
 # FRONTEND_CONFIG — window.GP_SAMPLE config (plain JS, language-agnostic)
