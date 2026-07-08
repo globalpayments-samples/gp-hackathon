@@ -1,5 +1,5 @@
 // -- charge: single-step authorization and capture ---------------------------
-require_once __DIR__ . '/components/payments.php';
+require_once __DIR__ . '/components/charge.php';
 
 if ($method === 'POST' && $uri === '/api/charge') {
     try {

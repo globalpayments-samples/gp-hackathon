@@ -1,5 +1,5 @@
 // -- authorize: hold funds without capturing ---------------------------------
-const { authorize } = require('./components/payments');
+const { authorize } = require('./components/authorize');
 
 app.post('/api/authorize', async (req, res, next) => {
   try {

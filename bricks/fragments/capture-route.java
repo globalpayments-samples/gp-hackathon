@@ -9,7 +9,7 @@ if ("POST".equals(method) && uri.startsWith("/api/capture/")) {
                 .collect(java.util.stream.Collectors.joining()));
         String amount   = body.has("amount") && !body.isNull("amount") ? body.optString("amount") : null;
         String currency = body.optString("currency", "USD");
-        org.json.JSONObject result = Payments.capture(transactionId, amount, currency);
+        org.json.JSONObject result = Capture.capture(transactionId, amount, currency);
         response.getWriter().write(result.toString());
     } catch (Exception e) {
         ErrorHandler.send(response, e);

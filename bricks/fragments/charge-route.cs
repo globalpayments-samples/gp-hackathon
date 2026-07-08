@@ -1,3 +1,5 @@
+// requires: using GlobalPayments.Api.Entities;
+//           using GlobalPayments.Api.PaymentMethods;
 // -- charge: single-step authorization and capture ---------------------------
 
 app.MapPost("/api/charge", async (HttpContext ctx) =>

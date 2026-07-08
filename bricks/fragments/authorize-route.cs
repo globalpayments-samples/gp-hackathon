@@ -1,3 +1,5 @@
+// requires: using GlobalPayments.Api.Entities;
+//           using GlobalPayments.Api.PaymentMethods;
 // -- authorize: hold funds without capturing ----------------------------------
 
 app.MapPost("/api/authorize", async (HttpContext ctx) =>

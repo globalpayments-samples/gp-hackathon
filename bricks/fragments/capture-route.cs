@@ -1,3 +1,4 @@
+// requires: using GlobalPayments.Api.Entities;
 // -- capture: settle a previously authorized transaction ----------------------
 
 app.MapPost("/api/capture/{transactionId}", async (string transactionId, HttpContext ctx) =>

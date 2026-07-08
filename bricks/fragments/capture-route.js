@@ -1,5 +1,5 @@
 // -- capture: settle a previously authorized transaction ---------------------
-const { capture } = require('./components/payments');
+const { capture } = require('./components/capture');
 
 app.post('/api/capture/:transactionId', async (req, res, next) => {
   try {

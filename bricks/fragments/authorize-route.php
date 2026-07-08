@@ -1,5 +1,5 @@
 // -- authorize: hold funds without capturing ---------------------------------
-require_once __DIR__ . '/components/payments.php';
+require_once __DIR__ . '/components/authorize.php';
 
 if ($method === 'POST' && $uri === '/api/authorize') {
     try {
