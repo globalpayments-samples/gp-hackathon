@@ -43,7 +43,7 @@ scaffold/dotnet/       .NET standalone-project template (ASP.NET Core Minimal AP
 scaffold/java/         Java standalone-project template (Jakarta EE Servlet + Cargo/Tomcat)
 builder/               build-project.js (deterministic generation) + snapshot-test.js
 specs/                 project specs — simple-checkout / delayed-capture × 4 languages
-golden/simple-checkout Hand-validated expected Builder output (determinism reference)
+golden/simple-checkout-node Hand-validated expected Builder output (determinism reference)
 output/                generated projects land here (gitignored)
 ```
 
@@ -53,12 +53,12 @@ output/                generated projects land here (gitignored)
 npm install
 
 # Node.js
-node builder/build-project.js specs/simple-checkout.yaml
-cd output/simple-checkout && cp ../../.env .env && npm install && npm start
+node builder/build-project.js specs/simple-checkout-node.yaml
+cd output/simple-checkout-node && cp ../../.env .env && npm install && npm start
 
 # PHP
 node builder/build-project.js specs/simple-checkout-php.yaml
-cd output/simple-checkout-php && cp ../../.env .env && composer install && ./run.sh
+cd output/simple-checkout-php && cp ../../.env .env && composer install && php -S 0.0.0.0:3000 router.php
 
 # .NET
 node builder/build-project.js specs/simple-checkout-dotnet.yaml
@@ -70,6 +70,29 @@ cd output/simple-checkout-java && cp ../../.env .env && mvn integration-test
 
 # prove determinism: two builds byte-identical + matches golden/
 npm test                    # from the monorepo root
+```
+
+## Delayed capture
+
+Authorize now, capture later — a two-step payment flow with separate
+`/api/authorize` and `/api/capture/:transactionId` endpoints.
+
+```bash
+# Node.js
+node builder/build-project.js specs/delayed-capture-node.yaml
+cd output/delayed-capture-node && cp ../../.env .env && npm install && npm start
+
+# PHP
+node builder/build-project.js specs/delayed-capture-php.yaml
+cd output/delayed-capture-php && cp ../../.env .env && composer install && php -S 0.0.0.0:3000 router.php
+
+# .NET
+node builder/build-project.js specs/delayed-capture-dotnet.yaml
+cd output/delayed-capture-dotnet && cp ../../.env .env && dotnet run
+
+# Java
+node builder/build-project.js specs/delayed-capture-java.yaml
+cd output/delayed-capture-java && cp ../../.env .env && mvn integration-test
 ```
 
 ## How composition works
