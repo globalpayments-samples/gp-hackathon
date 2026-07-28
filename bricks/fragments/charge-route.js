@@ -1,5 +1,5 @@
 // -- charge: single-step authorization and capture ---------------------------
-const { charge } = require('./components/payments');
+const { charge } = require('./components/charge');
 
 app.post('/api/charge', async (req, res, next) => {
   try {

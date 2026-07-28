@@ -28,18 +28,27 @@ config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
 entry_points: [authorize]
 
 # Source files copied verbatim into the generated project's components/ directory.
-# Multiple components can share the same file (e.g. payments.js exports charge,
-# authorize, and capture — each has its own manifest but the same source file).
-files: [bricks/payments.js]
+files:
+  node:   [bricks/authorize.js]
+  php:    [bricks/authorize.php]
+  dotnet: [bricks/authorize.cs]
+  java:   [bricks/Authorize.java]
 
-# Fragment files to splice into scaffold slot markers.
-# Format: <fragment path>: <SLOT_NAME>
-#
-# ROUTE_HANDLERS  — Express route definitions inserted into index.js
-# FRONTEND_CONFIG — window.GP_SAMPLE config object read by the browser tile
+# ROUTE_HANDLERS  — route definitions inserted into the server entry point
+# FRONTEND_CONFIG — window.GP_SAMPLE config (plain JS, language-agnostic)
 inserts:
-  bricks/fragments/authorize-route.js: ROUTE_HANDLERS
-  bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
+  node:
+    bricks/fragments/authorize-route.js:    ROUTE_HANDLERS
+    bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
+  php:
+    bricks/fragments/authorize-route.php:   ROUTE_HANDLERS
+    bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
+  dotnet:
+    bricks/fragments/authorize-route.cs:    ROUTE_HANDLERS
+    bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
+  java:
+    bricks/fragments/authorize-route.java:  ROUTE_HANDLERS
+    bricks/fragments/authorize-frontend.js: FRONTEND_CONFIG
 
 # Test files copied into the generated project's tests/ directory.
 # Fixtures listed here are shared across multiple components (sandbox.js is

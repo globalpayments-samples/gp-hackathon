@@ -26,12 +26,23 @@ config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
 entry_points: [generateAccessToken]
 
 # Source file copied into the generated project's components/ directory.
-files: [studs/token-helper.js]
+files:
+  node:   [studs/token-helper.js]
+  php:    [studs/token-helper.php]
+  dotnet: [studs/token-helper.cs]
+  java:   [studs/TokenHelper.java]
 
-# ROUTE_HANDLERS — Express route (GET /api/access-token) that the browser
+# ROUTE_HANDLERS — server route (GET /api/access-token) that the browser
 # tile calls on page load to obtain its scoped tokenization token.
 inserts:
-  studs/fragments/token-helper-route.js: ROUTE_HANDLERS
+  node:
+    studs/fragments/token-helper-route.js:   ROUTE_HANDLERS
+  php:
+    studs/fragments/token-helper-route.php:  ROUTE_HANDLERS
+  dotnet:
+    studs/fragments/token-helper-route.cs:   ROUTE_HANDLERS
+  java:
+    studs/fragments/token-helper-route.java: ROUTE_HANDLERS
 
 test_fragments: [studs/tests/token-helper.test.js]
 

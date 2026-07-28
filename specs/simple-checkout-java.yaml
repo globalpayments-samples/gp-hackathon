@@ -1,0 +1,5 @@
+name: simple-checkout-java
+language: java
+tiles: [hosted-fields]
+bricks: [charge]
+# studs and baseplate resolved automatically via depends_on

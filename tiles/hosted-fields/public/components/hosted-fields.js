@@ -120,8 +120,8 @@
       ['Transaction id', result.transactionId],
       ['Status', result.status],
       ['Response code', result.responseCode],
-      ['Authorization code', result.authorizationCode || '—'],
-    ];
+      result.authorizationCode ? ['Authorization code', result.authorizationCode] : null,
+    ].filter(Boolean);
     rows.forEach(function (row) {
       var dt = document.createElement('dt');
       dt.textContent = row[0];

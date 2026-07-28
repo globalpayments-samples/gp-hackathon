@@ -13,7 +13,7 @@ const skip = missing.length > 0
 
 test('authorize brick places a sandbox hold without capturing', { skip }, async () => {
   const { loadConfig } = require('../core/config');
-  const { authorize } = require('../components/payments');
+  const { authorize } = require('../components/authorize');
 
   loadConfig();
   const token = await sandboxCardToken();

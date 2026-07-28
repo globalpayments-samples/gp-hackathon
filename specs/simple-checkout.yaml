@@ -1,5 +1,0 @@
-name: simple-checkout
-language: node
-tiles: [hosted-fields]
-bricks: [charge]
-# studs and baseplate resolved automatically via depends_on

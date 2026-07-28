@@ -23,16 +23,27 @@ config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
 # Exported function names the Builder uses to generate require() calls.
 entry_points: [capture]
 
-# Shares payments.js with authorize and charge — only one copy is written
-# to the generated project regardless of how many bricks reference it.
-files: [bricks/payments.js]
+files:
+  node:   [bricks/capture.js]
+  php:    [bricks/capture.php]
+  dotnet: [bricks/capture.cs]
+  java:   [bricks/Capture.java]
 
-# ROUTE_HANDLERS  — Express route definition (POST /api/capture/:transactionId)
-# FRONTEND_CONFIG — sets window.GP_SAMPLE.captureEndpoint so the tile knows
-#                   to render the Capture button after authorization succeeds.
+# ROUTE_HANDLERS  — route definitions inserted into the server entry point
+# FRONTEND_CONFIG — window.GP_SAMPLE.captureEndpoint (plain JS, language-agnostic)
 inserts:
-  bricks/fragments/capture-route.js: ROUTE_HANDLERS
-  bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
+  node:
+    bricks/fragments/capture-route.js:    ROUTE_HANDLERS
+    bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
+  php:
+    bricks/fragments/capture-route.php:   ROUTE_HANDLERS
+    bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
+  dotnet:
+    bricks/fragments/capture-route.cs:    ROUTE_HANDLERS
+    bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
+  java:
+    bricks/fragments/capture-route.java:  ROUTE_HANDLERS
+    bricks/fragments/capture-frontend.js: FRONTEND_CONFIG
 
 # sandbox.js is a shared fixture — listed here so the Builder copies it once.
 test_fragments:

@@ -158,9 +158,20 @@ function renderTemplate(text, fragmentsBySlot, values) {
     const slotMatch = line.match(/^(\s*)\{\{\s*([A-Z0-9_]+)\s*\}\}\s*$/);
     if (slotMatch && FRAGMENT_SLOTS.includes(slotMatch[2])) {
       const indent = slotMatch[1];
-      const fragments = fragmentsBySlot.get(slotMatch[2]) || [];
+      const slotName = slotMatch[2];
+      const fragments = fragmentsBySlot.get(slotName) || [];
       if (fragments.length === 0) continue; // unused slot resolves to empty
-      const body = fragments.join('\n\n');
+      let body = fragments.join('\n\n');
+      if (slotName === 'IMPORTS') {
+        const seen = new Set();
+        body = body.split('\n').filter(l => {
+          const t = l.trim();
+          if (!t) return true;
+          if (seen.has(t)) return false;
+          seen.add(t);
+          return true;
+        }).join('\n');
+      }
       for (const bodyLine of body.split('\n')) {
         out.push(bodyLine.length > 0 ? indent + bodyLine : '');
       }
@@ -178,7 +189,37 @@ function renderTemplate(text, fragmentsBySlot, values) {
   return out.join('\n').replace(/\n{3,}/g, '\n\n');
 }
 
-// --- main build --------------------------------------------------------------
+// --- language-keyed manifest helpers ----------------------------------------
+
+/**
+ * Resolves a manifest field that may be either:
+ *   - a flat Array/Object (legacy — treated as node-only, returned as-is for 'node',
+ *     empty for any other language), OR
+ *   - a language-keyed Object { node: ..., php: ..., etc. } — the entry for
+ *     `language` is selected and returned.
+ *
+ * @param {Array|Object} field  The raw manifest value for 'files' or 'inserts'.
+ * @param {string}       language  The target language from the spec.
+ * @param {Array|Object} emptyValue  Default when no entry exists ([] or {}).
+ */
+function resolveForLanguage(field, language, emptyValue) {
+  if (!field) return emptyValue;
+  if (Array.isArray(field)) {
+    // Flat array — node-only shorthand.
+    return language === 'node' ? field : emptyValue;
+  }
+  // Object — check if it's language-keyed (values are arrays or objects)
+  // vs. the flat inserts map (values are slot name strings).
+  const firstValue = Object.values(field)[0];
+  if (typeof firstValue === 'string') {
+    // Flat inserts map { 'path/file.js': 'SLOT_NAME' } — node-only shorthand.
+    return language === 'node' ? field : emptyValue;
+  }
+  // Language-keyed map { node: ..., php: ... } — select by language.
+  return field[language] ?? emptyValue;
+}
+
+
 function build(specPath, outOverride) {
   if (!fs.existsSync(specPath)) {
     fail(`Spec file not found: ${specPath}`);
@@ -187,8 +228,9 @@ function build(specPath, outOverride) {
   for (const key of ['name', 'language']) {
     if (!spec[key]) fail(`Spec is missing required field "${key}".`);
   }
-  if (spec.language !== 'node') {
-    fail(`Unsupported language "${spec.language}" — this vertical slice ships Node only.`);
+  const SUPPORTED_LANGUAGES = ['node', 'php', 'dotnet', 'java'];
+  if (!SUPPORTED_LANGUAGES.includes(spec.language)) {
+    fail(`Unsupported language "${spec.language}" — supported: ${SUPPORTED_LANGUAGES.join(', ')}.`);
   }
 
   const requested = [...(spec.tiles || []), ...(spec.bricks || [])];
@@ -212,7 +254,7 @@ function build(specPath, outOverride) {
   // 2. Collect fragments per slot in deterministic component order.
   const fragmentsBySlot = new Map();
   for (const component of components) {
-    const inserts = component.inserts || {};
+    const inserts = resolveForLanguage(component.inserts, spec.language, {});
     for (const fragmentPath of Object.keys(inserts).sort()) {
       const slot = inserts[fragmentPath];
       if (!FRAGMENT_SLOTS.includes(slot)) {
@@ -252,7 +294,7 @@ function build(specPath, outOverride) {
   };
 
   // 4. Render scaffold files into the output project.
-  const textExtensions = new Set(['.js', '.json', '.md', '.html', '.css', '.yaml', '.yml']);
+  const textExtensions = new Set(['.js', '.json', '.md', '.html', '.css', '.yaml', '.yml', '.php', '.sh', '.cs', '.java', '.xml', '.csproj', '.properties']);
   for (const rel of scaffoldFiles) {
     const src = path.join(scaffoldDir, rel);
     const dest = path.join(outDir, rel);
@@ -266,9 +308,12 @@ function build(specPath, outOverride) {
   }
   step('Scaffold rendered, slots resolved');
 
-  // 5. Vendor core/ — the Baseplate travels with every project.
-  for (const rel of listFilesRecursive(path.join(ROOT, 'core'))) {
-    copyFile(path.join(ROOT, 'core', rel), path.join(outDir, 'core', rel));
+  // 5. Vendor core/ — the Node baseplate travels with every Node project.
+  // PHP, .NET, and Java bake core/ into the scaffold; no separate vendoring needed.
+  if (spec.language === 'node') {
+    for (const rel of listFilesRecursive(path.join(ROOT, 'core'))) {
+      copyFile(path.join(ROOT, 'core', rel), path.join(outDir, 'core', rel));
+    }
   }
 
   // 6. Vendor component modules, frontend assets, and test fragments.
@@ -286,13 +331,19 @@ function build(specPath, outOverride) {
     }
   };
   for (const component of components) {
-    for (const file of [...(component.files || [])].sort()) {
-      vendor(file, path.posix.join('components', path.posix.basename(file)));
+    for (const file of [...resolveForLanguage(component.files, spec.language, [])].sort()) {
+      let destRel;
+      if (spec.language === 'java') {
+        destRel = path.posix.join('src/main/java/com/globalpayments/sample', path.posix.basename(file));
+      } else {
+        destRel = path.posix.join('components', path.posix.basename(file));
+      }
+      vendor(file, destRel);
     }
     for (const asset of [...(component.assets || [])].sort()) {
       vendor(asset, path.posix.join('public', 'components', path.posix.basename(asset)));
     }
-    for (const testFile of [...(component.test_fragments || [])].sort()) {
+    for (const testFile of [...resolveForLanguage(component.test_fragments, spec.language, [])].sort()) {
       const marker = '/tests/';
       const idx = testFile.indexOf(marker);
       if (idx === -1) fail(`test_fragments entry must live under a tests/ directory: ${testFile}`);
@@ -309,13 +360,36 @@ function build(specPath, outOverride) {
 
   // 8. Next steps, in brand voice.
   const relOut = path.relative(process.cwd(), outDir);
+  const nextSteps = {
+    node: [
+      '  npm install',
+      '  npm start              # branded checkout on http://localhost:3000',
+      '  npm test               # sandbox integration tests',
+    ],
+    php: [
+      '  composer install',
+      '  php -S 0.0.0.0:3000 router.php  # branded checkout on http://localhost:3000',
+      '  ./vendor/bin/phpunit tests/      # smoke tests (skip without credentials)',
+    ],
+    dotnet: [
+      '  dotnet restore',
+      '  dotnet run             # branded checkout on http://localhost:3000',
+      '  dotnet test            # sandbox integration tests',
+    ],
+    java: [
+      '  mvn dependency:resolve',
+      '  mvn integration-test   # builds + starts embedded Tomcat on http://localhost:3000',
+      '  mvn test               # unit tests',
+    ],
+  };
   console.log(`\n${paint(BLUE + BOLD, 'Done.')} Standalone project at ${paint(BOLD, relOut)}\n`);
   console.log(paint(CHARCOAL, 'Next steps:'));
   console.log(`  cd ${relOut}`);
   console.log('  cp .env.example .env   # fill in: ' + configVars.join(', '));
-  console.log('  npm install');
-  console.log('  npm start              # branded checkout on http://localhost:3000');
-  console.log('  npm test               # sandbox integration tests\n');
+  for (const line of (nextSteps[spec.language] || nextSteps.node)) {
+    console.log(line);
+  }
+  console.log('');
   return outDir;
 }
 
