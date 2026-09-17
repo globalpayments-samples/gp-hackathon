@@ -1,0 +1,6 @@
+name: Access checkout node
+platform: access
+language: node
+region: GB
+persona: enterprise-merchant
+components: "access.checkout.create-session,access.payment.authorize-checkout,access.payment.cancel,access.payment.query,access.payment.settle,access.tile.checkout,common.webhook-receiver"

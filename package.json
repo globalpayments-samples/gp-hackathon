@@ -8,7 +8,8 @@
     "build": "node builder/build-project.js",
     "test": "npm run test:unit && npm run test:determinism",
     "test:unit": "node --test '**/*.test.js'",
-    "test:determinism": "node builder/snapshot-test.js"
+    "test:determinism": "node builder/snapshot-test.js",
+    "validate:tapi-credentials": "node builder/validate-tapi-credentials.js"
   },
   "dependencies": {
     "globalpayments-api": "^3.0.0",

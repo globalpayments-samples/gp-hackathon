@@ -1,0 +1,24 @@
+id: gp-api
+display_name: GP API
+supported_languages: [node, php, dotnet, java]
+v2_supported_languages: [node, php, dotnet, java]
+supported_integration_modes: [server-sdk, direct-rest, web-sdk]
+default_integration_mode: server-sdk
+endpoints:
+  sandbox: https://apis.sandbox.globalpay.com
+dependencies:
+  node:
+    dependencies:
+      globalpayments-api: ^1.4.6
+      dotenv: ^16.4.5
+  php:
+    dependencies:
+      globalpayments/php-sdk: ^13.4
+      vlucas/phpdotenv: ^5.5
+  dotnet:
+    dependencies:
+      GlobalPayments.Api: 9.0.16
+  java:
+    dependencies:
+      com.heartlandpaymentsystems:globalpayments-sdk: 14.2.20
+config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]

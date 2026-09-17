@@ -1,0 +1,9 @@
+schema_version: 2
+name: tapi-integrated-credit-php
+platform: tapi
+language: php
+integration_mode: server-sdk
+region: US
+persona: integrated-partner
+studs: [tapi.idempotency-key]
+bricks: [tapi.credit.sale, tapi.credit.authorize, tapi.credit.capture, tapi.credit.void, tapi.credit.refund, tapi.credit.status]

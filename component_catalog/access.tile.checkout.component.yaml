@@ -1,0 +1,18 @@
+id: access.tile.checkout
+layer: tile
+name: Access Checkout
+description: Browser Checkout session and secure guest payment collection
+platform: access
+integration_mode: web-sdk
+supported_languages: [node]
+region: [GB]
+test_strategy: [component, contract]
+config_required: []
+files:
+  node: [tiles/access/node/checkout-tile.js]
+inserts:
+  node:
+    tiles/access/fragments/checkout-markup.html: TILE_MARKUP
+    tiles/access/fragments/checkout-script.html: TILE_SCRIPTS
+test_fragments:
+  node: [bricks/access/tests/node/contract.js, bricks/access/tests/fixtures/checkout.json]

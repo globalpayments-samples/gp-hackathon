@@ -1,0 +1,7 @@
+schema_version: 2
+name: baseplate-tapi-dotnet
+platform: tapi
+language: dotnet
+integration_mode: server-sdk
+region: US
+persona: integrated-partner

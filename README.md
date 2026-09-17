@@ -17,6 +17,23 @@ model. Built and proven end-to-end at the company hackathon.
 
 A generated project's entry point is ~55 lines, and every one of them is signal.
 
+## Platform support
+
+Schema-version-2 specs select an explicit platform profile. Version-1 specs remain
+supported and default to GP API, preserving existing generated output. The
+currently verified v2 anchors are GP API Node/PHP, Access Node, and TAPI PHP.
+
+| Platform | Integration modes | Supported sample languages |
+| -------- | ----------------- | -------------------------- |
+| GP API | server SDK, direct REST, web SDK | Node.js, PHP, .NET, Java |
+| Access Checkout | REST, web SDK | Node.js |
+| TAPI Integrated Payments | server SDK, direct REST | PHP |
+
+The builder rejects cross-platform component IDs, unsupported languages, modes,
+and declared region mismatches before it writes an output directory. V2 samples
+include credential-gated live paths: absent credentials produce explicit errors,
+never simulated payment success.
+
 ## Language support
 
 | Language | Scaffold | Baseplate | Bricks | Studs |
@@ -95,11 +112,52 @@ node builder/build-project.js specs/delayed-capture-java.yaml
 cd output/delayed-capture-java && cp ../../.env .env && mvn integration-test
 ```
 
+## Phase 2 anchors
+
+```bash
+node builder/build-project.js specs/gp-api-payment-lifecycle-node.yaml
+node builder/build-project.js specs/gp-api-payment-lifecycle-dotnet.yaml
+node builder/build-project.js specs/gp-api-payment-lifecycle-java.yaml
+node builder/build-project.js specs/access-checkout-node.yaml
+node builder/build-project.js specs/tapi-integrated-credit-php.yaml
+node builder/build-project.js specs/tapi-integrated-credit-dotnet.yaml
+```
+
+The GP API payment lifecycle is generator-validated in Node.js, PHP, .NET, and Java.
+The Access Checkout anchor covers Checkout session creation, guest payment,
+HAL-managed settlement/cancel actions, events, and query-by-reference in Node.
+The TAPI integrated-credit lifecycle is generator-validated in PHP and .NET. The
+.NET anchor uses the official `TransactionApiConfig` properties and integration-test
+idioms for sale, authorize, capture, void, linked refund, and reporting status.
+Both anchors accept the shared `TAPI_ACCOUNT_CREDENTIAL`, `TAPI_API_SECRET`, and
+`TAPI_REGION` names. PHP additionally uses `TAPI_API_KEY`; its protocol version
+and partner-app name have safe, overridable defaults.
+
+Validate the root `.env` without creating a transaction:
+
+```bash
+npm run validate:tapi-credentials
+```
+
+The probe requests a randomly generated, nonexistent sandbox transaction ID.
+An authenticated client receives a normal API validation/not-found response;
+`401` and `403` are treated as credential failures. No credential values are
+printed.
+
+TAPI Java remains outside the approved generator catalog. The local official
+artifact `com.heartlandpaymentsystems:globalpayments-sdk:14.2.20` does contain
+`com.global.api.serviceConfigs.TransactionApiConfig` and
+`com.global.api.gateways.TransactionApiConnector`; the unsupported status is a
+product/catalog boundary, not an SDK absence. A v2 TAPI Java spec therefore fails
+explicitly instead of generating direct REST or an unapproved SDK sample.
+Each generated anchor includes `.env.example`, contract tests, Docker assets,
+`AGENTS.md`, `llms.txt`, and Developer Portal metadata.
+
 ## How composition works
 
 Each component ships a manifest (`component_catalog/<id>.component.yaml`)
-declaring its files, one-level `depends_on`, required env vars, and **insertion
-fragments** mapped to named scaffold slots (`IMPORTS`, `TARGET_BEFORE`,
+declaring real language-keyed `files`, one-level `depends_on`, required env
+vars, deterministic `test_fragments`, and **insertion fragments** mapped to named scaffold slots (`IMPORTS`, `TARGET_BEFORE`,
 `TARGET_DURING_1`, `ROUTE_HANDLERS`, `WIRING`, `TARGET_AFTER`,
 `FRONTEND_CONFIG`, `TILE_MARKUP`, `TILE_SCRIPTS`).
 
@@ -129,8 +187,9 @@ accents only as accents, Raspberry reserved for negative states, no gradients.
 
 ## Roadmap (per the architectural spec)
 
-1. **Phase 1-2** — ✅ Complete: PHP, .NET, Java baseplates, scaffolds, and core
-   component extractions (charge, authorize, capture, token-helper, hosted-fields).
+1. **Phase 1-2** — In progress: schema-v2 anchors are generated only for verified
+   platform/language SDK combinations. Unsupported combinations fail generation;
+   they are not represented as runnable samples.
 2. **Phase 3** — port all 30+ scenarios from `catalog.json`; deprecate legacy repos.
 3. **Phase 4** — CI regenerates samples from specs on SDK releases; the
    snapshot test is the seed.
