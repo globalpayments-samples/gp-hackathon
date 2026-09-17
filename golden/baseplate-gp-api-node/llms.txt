@@ -1,0 +1,2 @@
+baseplate-gp-api-node is a GP API sample composed from: .
+Credential-gated live calls use explicit fixed routes only.

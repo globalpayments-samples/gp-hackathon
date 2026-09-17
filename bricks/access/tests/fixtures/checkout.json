@@ -1,0 +1,12 @@
+{
+  "checkoutSession": {
+    "reference": "order-10001",
+    "amount": "1099",
+    "currency": "GBP",
+    "returnUrl": "https://example.test/return"
+  },
+  "halLinks": {
+    "settle": { "href": "/payments/fixture/settle" },
+    "cancel": { "href": "/payments/fixture/cancel" }
+  }
+}

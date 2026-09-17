@@ -1,0 +1,2 @@
+baseplate-access-node is an Access Checkout sample composed from: .
+It exposes fixed Checkout/payment/query/webhook routes and rejects off-origin HAL actions.

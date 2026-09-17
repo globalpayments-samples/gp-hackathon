@@ -1,0 +1,13 @@
+id: access
+display_name: Access Checkout
+supported_languages: [node]
+v2_supported_languages: [node]
+supported_integration_modes: [rest, web-sdk]
+default_integration_mode: rest
+endpoints:
+  sandbox: https://try.access.worldpay.com
+dependencies:
+  node:
+    dependencies:
+      dotenv: ^16.4.5
+config_required: [ACCESS_MERCHANT_CODE, ACCESS_MERCHANT_KEY, ACCESS_BASE_URL, ACCESS_WEBHOOK_SECRET]

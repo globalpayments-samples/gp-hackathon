@@ -1,0 +1,7 @@
+schema_version: 2
+name: baseplate-access-node
+platform: access
+language: node
+integration_mode: rest
+region: GB
+persona: enterprise-merchant

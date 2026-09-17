@@ -1,0 +1,17 @@
+id: access.payment.cancel
+layer: brick
+name: Cancel Access payment
+description: Follow the cancellation HAL link from the payment response
+platform: access
+integration_mode: rest
+supported_languages: [node]
+region: [GB]
+test_strategy: [component, contract, live]
+config_required: [ACCESS_MERCHANT_CODE, ACCESS_MERCHANT_KEY, ACCESS_BASE_URL]
+files:
+  node: [bricks/access/node/access-client.js, bricks/access/node/payment.js]
+inserts:
+  node:
+    bricks/access/fragments/node/cancel-route.js: ROUTE_HANDLERS
+test_fragments:
+  node: [bricks/access/tests/node/contract.js, bricks/access/tests/fixtures/checkout.json]

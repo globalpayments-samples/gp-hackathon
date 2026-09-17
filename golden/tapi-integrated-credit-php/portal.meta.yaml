@@ -1,0 +1,6 @@
+name: Tapi integrated credit php
+platform: tapi
+language: php
+region: US
+persona: integrated-partner
+components: "tapi.credit.authorize,tapi.credit.capture,tapi.credit.refund,tapi.credit.sale,tapi.credit.status,tapi.credit.void,tapi.idempotency-key"

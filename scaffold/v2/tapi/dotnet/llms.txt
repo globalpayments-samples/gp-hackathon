@@ -1,0 +1,5 @@
+Project: {{ PROJECT_TITLE }}
+Platform: {{ PLATFORM_NAME }}
+Language: .NET
+Components: {{ COMPONENT_SUMMARY }}
+Uses official TransactionApiConfig and environment-only credentials.

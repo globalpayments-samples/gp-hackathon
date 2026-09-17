@@ -19,6 +19,7 @@ const YAML = require('yaml');
 
 const ROOT = path.join(__dirname, '..');
 const CATALOG_DIR = path.join(ROOT, 'component_catalog');
+const PLATFORMS_DIR = path.join(ROOT, 'platforms');
 
 // Slots that take concatenated insertion fragments.
 const FRAGMENT_SLOTS = [
@@ -47,8 +48,11 @@ const banner = () => {
 };
 const step = (msg) => console.log(`${paint(BLUE, '▪')} ${msg}`);
 const fail = (msg) => {
-  console.error(`\n${paint(BOLD, 'Build failed:')} ${msg}\n`);
-  process.exit(1);
+  if (require.main === module) {
+    console.error(`\n${paint(BOLD, 'Build failed:')} ${msg}\n`);
+    process.exit(1);
+  }
+  throw new Error(msg);
 };
 
 // --- catalog loading ---------------------------------------------------------
@@ -69,6 +73,18 @@ function loadManifest(id) {
   return manifest;
 }
 
+function loadPlatform(id) {
+  const file = path.join(PLATFORMS_DIR, `${id}.yaml`);
+  if (!fs.existsSync(file)) {
+    fail(`Unknown platform "${id}" — no profile at platforms/${id}.yaml.`);
+  }
+  const platform = YAML.parse(fs.readFileSync(file, 'utf8'));
+  for (const key of ['id', 'supported_languages', 'supported_integration_modes', 'default_integration_mode']) {
+    if (!platform[key]) fail(`Platform profile "${id}" is missing required field "${key}".`);
+  }
+  return platform;
+}
+
 /**
  * Resolves the requested component ids plus their depends_on closure.
  * Manifests declare dependencies one level deep; resolution follows them
@@ -85,6 +101,7 @@ function resolveComponents(requestedIds) {
     for (const dep of [...(manifest.depends_on || [])].sort()) {
       if (!resolved.has(dep)) queue.push(dep);
     }
+
   }
 
   // Deterministic topological order: Kahn's algorithm, always taking the
@@ -114,6 +131,41 @@ function resolveComponents(requestedIds) {
   return ordered.map((id) => resolved.get(id));
 }
 
+function validateV2Compatibility(spec, platform, components) {
+  const requested = [...(spec.tiles || []), ...(spec.bricks || []), ...(spec.studs || [])];
+  for (const id of requested) {
+    if (!id.startsWith('common.') && !id.startsWith(`${platform.id}.`)) {
+      fail(
+        `Component "${id}" is not namespaced for platform "${platform.id}" ` +
+        `(schema_version 2 requires "${platform.id}.*" or "common.*").`
+      );
+    }
+  }
+  for (const component of components) {
+    if (component.platform && component.platform !== platform.id && !component.id.startsWith('common.')) {
+      fail(`Component "${component.id}" belongs to platform "${component.platform}", not "${platform.id}".`);
+    }
+    if (component.integration_mode && !platform.supported_integration_modes.includes(component.integration_mode)) {
+      fail(
+        `Component "${component.id}" requires integration_mode "${component.integration_mode}", ` +
+        `unsupported by platform "${platform.id}".`
+      );
+    }
+    if (component.supported_languages && !component.supported_languages.includes(spec.language)) {
+      fail(
+        `Component "${component.id}" has no "${spec.language}" implementation ` +
+        `(supported: ${component.supported_languages.join(', ')}).`
+      );
+    }
+    if (component.region && spec.region && !component.region.includes(spec.region)) {
+      fail(`Component "${component.id}" is not applicable in region "${spec.region}".`);
+    }
+    if (!Array.isArray(component.test_strategy) || component.test_strategy.length === 0) {
+      fail(`Component "${component.id}" has no declared test_strategy.`);
+    }
+  }
+}
+
 // --- helpers -----------------------------------------------------------------
 function titleCase(name) {
   const words = name.replace(/[-_]+/g, ' ').trim();
@@ -124,7 +176,10 @@ function listFilesRecursive(dir, base = dir) {
   const out = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...listFilesRecursive(full, base));
+    if (entry.isDirectory()) {
+      if (['bin', 'node_modules', 'obj', 'target', 'vendor'].includes(entry.name)) continue;
+      out.push(...listFilesRecursive(full, base));
+    }
     else out.push(path.relative(base, full));
   }
   return out;
@@ -219,6 +274,165 @@ function resolveForLanguage(field, language, emptyValue) {
   return field[language] ?? emptyValue;
 }
 
+function languageKeys(field) {
+  if (!field || Array.isArray(field)) return [];
+  const firstValue = Object.values(field)[0];
+  if (typeof firstValue === 'string') return [];
+  return Object.keys(field).sort();
+}
+
+function resolveConfigForLanguage(field, language) {
+  if (!field) return [];
+  if (Array.isArray(field)) return field;
+  return field[language] || [];
+}
+
+function renderDependencyJson(platform, language) {
+  const dependencies = platform.dependencies?.[language]?.dependencies || {};
+  return JSON.stringify(Object.fromEntries(Object.entries(dependencies).sort()), null, 4)
+    .split('\n')
+    .map((line, index) => (index === 0 ? line : '    ' + line))
+    .join('\n');
+}
+
+function componentTable(components) {
+  if (components.length === 0) {
+    return '| Component | Layer | Description |\n| --- | --- | --- |\n| Baseplate only | baseplate | Platform scaffold without optional components. |';
+  }
+  return [
+    '| Component | Layer | Description |',
+    '| --- | --- | --- |',
+    ...components.map((c) => `| ${c.id} | ${c.layer} | ${c.description} |`),
+  ].join('\n');
+}
+
+function collectTemplateValues(spec, platform, components, configVars) {
+  const title = titleCase(spec.name);
+  return {
+    PROJECT_NAME: spec.name,
+    PROJECT_TITLE: title,
+    PLATFORM_ID: platform.id,
+    PLATFORM_NAME: platform.display_name || platform.id,
+    LANGUAGE: spec.language,
+    REGION: spec.region || 'unconfirmed',
+    PERSONA: spec.persona || 'developer',
+    COMPONENT_SUMMARY: components.length ? components.map((c) => `${c.name} (${c.layer})`).join(', ') : 'Baseplate only',
+    COMPONENT_TABLE: componentTable(components),
+    SEQUENCE: components.length ? components.map((c, i) => `${i + 1}. **${c.name}** — ${c.description}.`).join('\n') : '1. **Baseplate** — platform-specific scaffold, health check, metadata, Docker assets, and deterministic tests.',
+    CONFIG_VARS: configVars.length ? configVars.map((v) => `- \`${v}\``).join('\n') : '- None',
+    CONFIG_ENV: configVars.map((v) => `${v}=`).join('\n') + (configVars.length ? '\n' : ''),
+    CONFIG_ARRAY: JSON.stringify(configVars),
+    CONFIG_CS_ARRAY: configVars.map((v) => `"${v}"`).join(', '),
+    CONFIG_JAVA_ARRAY: configVars.map((v) => `"${v}"`).join(', '),
+    DEPENDENCIES_JSON: renderDependencyJson(platform, spec.language),
+    COMPONENT_IDS: components.map((c) => c.id).join(','),
+  };
+}
+
+function validateV2ManifestShape(component, language) {
+  for (const key of ['files', 'inserts', 'config_required', 'test_fragments']) {
+    if (!Object.prototype.hasOwnProperty.call(component, key)) {
+      fail(`Manifest for "${component.id}" is missing required schema-v2 field "${key}".`);
+    }
+  }
+  if (!Array.isArray(component.config_required) && typeof component.config_required !== 'object') {
+    fail(`Manifest for "${component.id}" must declare config_required as an array or language-keyed object.`);
+  }
+  if (!Array.isArray(component.config_required) && !Object.prototype.hasOwnProperty.call(component.config_required, language)) {
+    fail(`Manifest for "${component.id}" has no language-keyed config_required entry for "${language}".`);
+  }
+  if (!languageKeys(component.files).includes(language)) {
+    fail(`Manifest for "${component.id}" has no language-keyed files entry for "${language}".`);
+  }
+  if (!languageKeys(component.inserts).includes(language)) {
+    fail(`Manifest for "${component.id}" has no language-keyed inserts entry for "${language}".`);
+  }
+  if (!languageKeys(component.test_fragments).includes(language)) {
+    fail(`Manifest for "${component.id}" has no language-keyed test_fragments entry for "${language}".`);
+  }
+}
+
+function buildV2({ spec, platform, components, outOverride, root }) {
+  const scaffoldDir = path.join(root, 'scaffold', 'v2', platform.id, spec.language);
+  if (!fs.existsSync(scaffoldDir)) {
+    fail(
+      `V2 ${platform.id}/${spec.language} is not supported by a verified executable scaffold. ` +
+      'Check the platform profile and scaffold/v2 for verified schema-v2 anchors.'
+    );
+  }
+
+  const outDir = outOverride || path.join(root, 'output', spec.name);
+  fs.rmSync(outDir, { recursive: true, force: true });
+
+  const fragmentsBySlot = new Map();
+  for (const component of components) {
+    validateV2ManifestShape(component, spec.language);
+    const inserts = resolveForLanguage(component.inserts, spec.language, {});
+    for (const fragmentPath of Object.keys(inserts).sort()) {
+      const slot = inserts[fragmentPath];
+      if (!FRAGMENT_SLOTS.includes(slot)) {
+        fail(`Component "${component.id}" targets unknown slot "${slot}" (fragment ${fragmentPath}).`);
+      }
+      const full = path.join(root, fragmentPath);
+      if (!fs.existsSync(full)) fail(`Component "${component.id}" lists missing fragment file: ${fragmentPath}`);
+      if (!fragmentsBySlot.has(slot)) fragmentsBySlot.set(slot, []);
+      fragmentsBySlot.get(slot).push(stripMarkers(fs.readFileSync(full, 'utf8')));
+    }
+  }
+
+  const configVars = [...new Set([
+    ...resolveConfigForLanguage(platform.config_required, spec.language),
+    ...components.flatMap((c) => resolveConfigForLanguage(c.config_required, spec.language)),
+  ])].sort();
+  const values = collectTemplateValues(spec, platform, components, configVars);
+
+  const textExtensions = new Set([
+    '.js', '.json', '.md', '.html', '.css', '.yaml', '.yml', '.php', '.sh',
+    '.xml', '.txt', '.example', '.cs', '.csproj', '.java', '.properties',
+  ]);
+  for (const rel of listFilesRecursive(scaffoldDir)) {
+    const src = path.join(scaffoldDir, rel);
+    const dest = path.join(outDir, rel);
+    if (textExtensions.has(path.extname(rel)) || rel === '.env.example' || rel === 'Dockerfile') {
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.writeFileSync(dest, renderTemplate(fs.readFileSync(src, 'utf8'), fragmentsBySlot, values));
+    } else {
+      copyFile(src, dest);
+    }
+  }
+
+  const vendored = new Map();
+  const vendor = (srcRel, destRel = srcRel) => {
+    const existing = vendored.get(destRel);
+    if (existing && existing !== srcRel) fail(`Vendoring collision: ${existing} and ${srcRel} both map to ${destRel}.`);
+    if (existing) return;
+    const src = path.join(root, srcRel);
+    if (!fs.existsSync(src)) fail(`Listed file does not exist: ${srcRel}`);
+    copyFile(src, path.join(outDir, destRel));
+    vendored.set(destRel, srcRel);
+  };
+
+  for (const component of components) {
+    for (const file of [...resolveForLanguage(component.files, spec.language, [])].sort()) {
+      vendor(file);
+    }
+    for (const asset of [...(component.assets || [])].sort()) {
+      vendor(asset);
+    }
+    for (const testFile of [...resolveForLanguage(component.test_fragments, spec.language, [])].sort()) {
+      const marker = '/tests/';
+      const idx = testFile.indexOf(marker);
+      if (idx === -1) fail(`test_fragments entry must live under a tests/ directory: ${testFile}`);
+      let testRel = testFile.slice(idx + marker.length);
+      if (testRel.startsWith(`${spec.language}/`)) testRel = testRel.slice(spec.language.length + 1);
+      vendor(testFile, path.posix.join('tests', testRel));
+    }
+  }
+
+  step(`V2 ${platform.id}/${spec.language} scaffold composed from ${components.length || 'baseplate-only'} component(s)`);
+  return outDir;
+}
+
 
 function build(specPath, outOverride) {
   if (!fs.existsSync(specPath)) {
@@ -228,13 +442,26 @@ function build(specPath, outOverride) {
   for (const key of ['name', 'language']) {
     if (!spec[key]) fail(`Spec is missing required field "${key}".`);
   }
-  const SUPPORTED_LANGUAGES = ['node', 'php', 'dotnet', 'java'];
+  const schemaVersion = spec.schema_version || 1;
+  if (![1, 2].includes(schemaVersion)) fail(`Unsupported schema_version "${schemaVersion}".`);
+  if (schemaVersion === 2 && !spec.platform) fail('schema_version 2 requires "platform".');
+  const platform = loadPlatform(schemaVersion === 1 ? 'gp-api' : spec.platform);
+  const SUPPORTED_LANGUAGES = schemaVersion === 2
+    ? (platform.v2_supported_languages || platform.supported_languages)
+    : platform.supported_languages;
   if (!SUPPORTED_LANGUAGES.includes(spec.language)) {
-    fail(`Unsupported language "${spec.language}" — supported: ${SUPPORTED_LANGUAGES.join(', ')}.`);
+    fail(`Unsupported language "${spec.language}" for platform "${platform.id}" — supported: ${SUPPORTED_LANGUAGES.join(', ')}.`);
+  }
+  const integrationMode = spec.integration_mode || platform.default_integration_mode;
+  if (!platform.supported_integration_modes.includes(integrationMode)) {
+    fail(
+      `Unsupported integration_mode "${integrationMode}" for platform "${platform.id}" — ` +
+      `supported: ${platform.supported_integration_modes.join(', ')}.`
+    );
   }
 
-  const requested = [...(spec.tiles || []), ...(spec.bricks || [])];
-  if (requested.length === 0) {
+  const requested = [...(spec.tiles || []), ...(spec.bricks || []), ...(spec.studs || [])];
+  if (requested.length === 0 && schemaVersion === 1) {
     fail('Spec selects no tiles or bricks — nothing to compose.');
   }
 
@@ -242,6 +469,10 @@ function build(specPath, outOverride) {
   step(`Spec: ${path.relative(process.cwd(), specPath)} → project "${spec.name}"`);
 
   const components = resolveComponents(requested);
+  if (schemaVersion === 2) {
+    validateV2Compatibility(spec, platform, components);
+    return buildV2({ spec, platform, components, outOverride, root: ROOT });
+  }
   step(`Components (dependency order): ${components.map((c) => c.id).join(', ')}`);
 
   const scaffoldDir = path.join(ROOT, 'scaffold', spec.language);
@@ -404,4 +635,4 @@ if (require.main === module) {
   build(path.resolve(specArg), outOverride);
 }
 
-module.exports = { build, resolveComponents };
+module.exports = { build, resolveComponents, loadPlatform, validateV2Compatibility };

@@ -1,0 +1,6 @@
+name: Baseplate gp api dotnet
+platform: gp-api
+language: dotnet
+region: US
+persona: merchant
+components: ""

@@ -1,0 +1,6 @@
+name: Baseplate tapi php
+platform: tapi
+language: php
+region: US
+persona: integrated-partner
+components: ""

@@ -1,0 +1,1 @@
+gp-api-payment-lifecycle-php is a GP API PHP sample composed from: gp-api.payment.authorize,gp-api.payment.capture,gp-api.payment.refund,gp-api.payment.reverse,gp-api.payment.status,gp-api.token.verify.
