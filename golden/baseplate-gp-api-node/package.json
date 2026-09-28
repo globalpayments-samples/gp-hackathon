@@ -9,6 +9,6 @@
   },
   "dependencies": {
         "dotenv": "^16.4.5",
-        "globalpayments-api": "^1.4.6"
+        "globalpayments-api": "^3.10.13"
     }
 }

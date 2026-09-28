@@ -10,6 +10,8 @@ use GlobalPayments\Api\ServicesContainer;
 
 require_once __DIR__ . '/bricks/gp-api/php/payment-lifecycle.php';
 
+\Dotenv\Dotenv::createUnsafeImmutable(__DIR__)->safeLoad();
+
 $configRequired = ["GP_API_ENVIRONMENT","GP_APP_ID","GP_APP_KEY"];
 $routes = [];
 

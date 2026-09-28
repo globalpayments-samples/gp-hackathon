@@ -10,6 +10,8 @@ use GlobalPayments\Api\ServicesContainer;
 
 {{ IMPORTS }}
 
+\Dotenv\Dotenv::createUnsafeImmutable(__DIR__)->safeLoad();
+
 $configRequired = {{ CONFIG_ARRAY }};
 $routes = [];
 
