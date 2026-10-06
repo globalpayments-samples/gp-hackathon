@@ -1,0 +1,2 @@
+gp-api-sca-exemptions-node is a GP API sample composed from: gp-api.payment.sca-exemption.
+Credential-gated live calls use explicit fixed routes only.

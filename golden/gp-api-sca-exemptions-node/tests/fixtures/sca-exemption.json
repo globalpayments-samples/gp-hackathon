@@ -1,0 +1,8 @@
+{
+  "exemptCharge": {
+    "token": "single-use-token-from-hosted-fields",
+    "amount": "10.00",
+    "currency": "EUR",
+    "exemption": "low-value"
+  }
+}

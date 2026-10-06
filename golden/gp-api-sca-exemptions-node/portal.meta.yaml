@@ -1,0 +1,6 @@
+name: Gp api sca exemptions node
+platform: gp-api
+language: node
+region: EU
+persona: merchant
+components: "gp-api.payment.sca-exemption"

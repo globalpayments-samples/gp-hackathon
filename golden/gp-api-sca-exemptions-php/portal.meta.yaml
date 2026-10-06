@@ -1,0 +1,6 @@
+name: Gp api sca exemptions php
+platform: gp-api
+language: php
+region: EU
+persona: merchant
+components: "gp-api.payment.sca-exemption"
