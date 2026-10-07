@@ -1,5 +1,5 @@
 Project: Tapi integrated credit dotnet
 Platform: TAPI Integrated Payments
 Language: .NET
-Components: Credit authorization (brick), Credit capture (brick), Linked credit refund (brick), Credit sale (brick), Credit status (brick), Credit void (brick), Idempotency key (stud)
+Components: Credit capture (brick), Linked credit refund (brick), Credit status (brick), Credit void (brick), Idempotency key (stud), Credit authorization (brick), Credit sale (brick)
 Uses official TransactionApiConfig and environment-only credentials.

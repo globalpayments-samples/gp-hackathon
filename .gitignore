@@ -2,9 +2,9 @@ node_modules/
 output/
 .env
 
-# .NET build artifacts
-scaffold/dotnet/obj/
-scaffold/dotnet/bin/
+# .NET build artifacts (scaffold/, golden/, and test projects)
+obj/
+bin/
 
 # Java build artifacts
 scaffold/java/target/

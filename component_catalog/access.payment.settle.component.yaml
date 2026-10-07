@@ -1,7 +1,7 @@
 id: access.payment.settle
 layer: brick
 name: Settle Access payment
-description: Follow the settlement HAL link from the payment response
+description: Settle an Access payment by payment id
 platform: access
 integration_mode: rest
 supported_languages: [node]

@@ -7,12 +7,6 @@ var app = builder.Build();
 
 app.MapGet("/health", () => Results.Ok(new { status = "ok", platform = "tapi" }));
 
-app.MapPost("/api/credit/authorize", (JsonElement body) =>
-{
-    LiveBoundary.RequireCredentials(requiredConfig);
-    return Results.Ok(TapiCreditLifecycle.Authorize(body));
-});
-
 app.MapPost("/api/credit/capture", (JsonElement body) =>
 {
     LiveBoundary.RequireCredentials(requiredConfig);
@@ -25,12 +19,6 @@ app.MapPost("/api/credit/refund", (JsonElement body) =>
     return Results.Ok(TapiCreditLifecycle.Refund(body));
 });
 
-app.MapPost("/api/credit/sale", (JsonElement body) =>
-{
-    LiveBoundary.RequireCredentials(requiredConfig);
-    return Results.Ok(TapiCreditLifecycle.Sale(body));
-});
-
 app.MapPost("/api/credit/status", (JsonElement body) =>
 {
     LiveBoundary.RequireCredentials(requiredConfig);
@@ -41,6 +29,18 @@ app.MapPost("/api/credit/void", (JsonElement body) =>
 {
     LiveBoundary.RequireCredentials(requiredConfig);
     return Results.Ok(TapiCreditLifecycle.Void(body));
+});
+
+app.MapPost("/api/credit/authorize", (JsonElement body) =>
+{
+    LiveBoundary.RequireCredentials(requiredConfig);
+    return Results.Ok(TapiCreditLifecycle.Authorize(body));
+});
+
+app.MapPost("/api/credit/sale", (JsonElement body) =>
+{
+    LiveBoundary.RequireCredentials(requiredConfig);
+    return Results.Ok(TapiCreditLifecycle.Sale(body));
 });
 
 var port = System.Environment.GetEnvironmentVariable("PORT") ?? "3000";

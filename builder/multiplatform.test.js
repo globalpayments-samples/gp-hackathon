@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const test = require('node:test');
-const { build } = require('./build-project');
+const { build, resolveComponents } = require('./build-project');
 
 const ROOT = path.join(__dirname, '..');
 
@@ -128,5 +128,26 @@ test('unapproved schema v2 TAPI Java remains catalog-unsupported', () => {
     );
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('common components pinned to a platform are rejected elsewhere', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'gp-v2-common-'));
+  try {
+    const source = fs.readFileSync(path.join(ROOT, 'specs', 'baseplate-gp-api-node.yaml'), 'utf8');
+    const specPath = path.join(root, 'webhook-gp-api.yaml');
+    fs.writeFileSync(specPath, source.trimEnd() + '\nstuds: [common.webhook-receiver]\n');
+    assert.throws(
+      () => build(specPath, path.join(root, 'out')),
+      /"common\.webhook-receiver" belongs to platform "access", not "gp-api"/
+    );
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('TAPI sale and authorize pull in the idempotency stud on their own', () => {
+  for (const id of ['tapi.credit.sale', 'tapi.credit.authorize']) {
+    assert.ok(resolveComponents([id]).some((c) => c.id === 'tapi.idempotency-key'), id);
   }
 });

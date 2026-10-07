@@ -64,17 +64,17 @@ function requestBody(): array
     return is_array($decoded) ? $decoded : [];
 }
 
-addRoute('POST', '/api/credit/authorize', 'tapiAuthorize');
-
 addRoute('POST', '/api/credit/capture', 'tapiCapture');
 
 addRoute('POST', '/api/credit/refund', 'tapiRefund');
 
-addRoute('POST', '/api/credit/sale', 'tapiSale');
-
 addRoute('POST', '/api/credit/status', 'tapiStatus');
 
 addRoute('POST', '/api/credit/void', 'tapiVoid');
+
+addRoute('POST', '/api/credit/authorize', 'tapiAuthorize');
+
+addRoute('POST', '/api/credit/sale', 'tapiSale');
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET' && $path === '/health') {

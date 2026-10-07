@@ -4,6 +4,7 @@ name: Credit authorization
 description: Authorize an integrated credit payment
 platform: tapi
 integration_mode: server-sdk
+depends_on: [tapi.idempotency-key]
 supported_languages: [php, dotnet]
 region: [US, CA]
 test_strategy: [component, contract, live]
