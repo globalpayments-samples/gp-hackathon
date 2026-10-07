@@ -142,7 +142,8 @@ function validateV2Compatibility(spec, platform, components) {
     }
   }
   for (const component of components) {
-    if (component.platform && component.platform !== platform.id && !component.id.startsWith('common.')) {
+    // common.* components are cross-platform unless they pin a platform.
+    if (component.platform && component.platform !== platform.id) {
       fail(`Component "${component.id}" belongs to platform "${component.platform}", not "${platform.id}".`);
     }
     if (component.integration_mode && !platform.supported_integration_modes.includes(component.integration_mode)) {

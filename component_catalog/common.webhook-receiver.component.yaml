@@ -2,6 +2,8 @@ id: common.webhook-receiver
 layer: stud
 name: Webhook receiver
 description: Receive and log asynchronous platform event payloads
+# Access-only today: verifier reads ACCESS_WEBHOOK_SECRET. Drop when other platforms get a verifier.
+platform: access
 supported_languages: [node]
 test_strategy: [component, contract]
 config_required: [ACCESS_WEBHOOK_SECRET]
