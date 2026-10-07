@@ -32,7 +32,9 @@ function accessHeaders(mediaType) {
 function trustedHalUrl(href) {
   const base = configuredBaseUrl();
   const target = new URL(requireString(href, 'HAL link'), base);
-  const allowedPath = target.pathname.startsWith('/payments') || target.pathname.startsWith('/checkout-sessions');
+  const allowedPath = ['/payments', '/checkout-sessions'].some(
+    (prefix) => target.pathname === prefix || target.pathname.startsWith(prefix + '/'),
+  );
   if (target.origin !== base.origin || target.protocol !== base.protocol || !allowedPath) {
     throw Object.assign(new Error('Refusing HAL link outside configured Access origin/path'), { status: 502 });
   }

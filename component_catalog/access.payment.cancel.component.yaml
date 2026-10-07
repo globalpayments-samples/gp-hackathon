@@ -1,7 +1,7 @@
 id: access.payment.cancel
 layer: brick
 name: Cancel Access payment
-description: Follow the cancellation HAL link from the payment response
+description: Cancel an Access payment by payment id
 platform: access
 integration_mode: rest
 supported_languages: [node]

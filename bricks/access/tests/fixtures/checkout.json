@@ -5,8 +5,5 @@
     "currency": "GBP",
     "returnUrl": "https://example.test/return"
   },
-  "halLinks": {
-    "settle": { "href": "/payments/fixture/settle" },
-    "cancel": { "href": "/payments/fixture/cancel" }
-  }
+  "paymentId": "fixture-payment-1"
 }

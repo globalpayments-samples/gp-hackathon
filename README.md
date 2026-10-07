@@ -125,7 +125,7 @@ node builder/build-project.js specs/tapi-integrated-credit-dotnet.yaml
 
 The GP API payment lifecycle is generator-validated in Node.js, PHP, .NET, and Java.
 The Access Checkout anchor covers Checkout session creation, guest payment,
-HAL-managed settlement/cancel actions, events, and query-by-reference in Node.
+server-built settlement/cancel actions (by payment id), events, and query-by-reference in Node.
 The TAPI integrated-credit lifecycle is generator-validated in PHP and .NET. The
 .NET anchor uses the official `TransactionApiConfig` properties and integration-test
 idioms for sale, authorize, capture, void, linked refund, and reporting status.
