@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const test = require('node:test');
-const { build } = require('./build-project');
+const { build, resolveComponents } = require('./build-project');
 
 const ROOT = path.join(__dirname, '..');
 
@@ -128,5 +128,11 @@ test('unapproved schema v2 TAPI Java remains catalog-unsupported', () => {
     );
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('TAPI sale and authorize pull in the idempotency stud on their own', () => {
+  for (const id of ['tapi.credit.sale', 'tapi.credit.authorize']) {
+    assert.ok(resolveComponents([id]).some((c) => c.id === 'tapi.idempotency-key'), id);
   }
 });

@@ -1,1 +1,1 @@
-tapi-integrated-credit-php is a TAPI Integrated Payments PHP sample composed from: tapi.credit.authorize,tapi.credit.capture,tapi.credit.refund,tapi.credit.sale,tapi.credit.status,tapi.credit.void,tapi.idempotency-key.
+tapi-integrated-credit-php is a TAPI Integrated Payments PHP sample composed from: tapi.credit.capture,tapi.credit.refund,tapi.credit.status,tapi.credit.void,tapi.idempotency-key,tapi.credit.authorize,tapi.credit.sale.

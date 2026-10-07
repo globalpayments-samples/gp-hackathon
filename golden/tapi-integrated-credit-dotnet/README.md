@@ -6,13 +6,13 @@ TAPI Integrated Payments schema-v2 .NET sample generated from catalog manifests.
 
 | Component | Layer | Description |
 | --- | --- | --- |
-| tapi.credit.authorize | brick | Authorize an integrated credit payment |
 | tapi.credit.capture | brick | Capture an integrated credit authorization |
 | tapi.credit.refund | brick | Refund an integrated credit transaction using its prior reference |
-| tapi.credit.sale | brick | Submit an integrated credit sale |
 | tapi.credit.status | brick | Retrieve an integrated credit transaction by reference |
 | tapi.credit.void | brick | Void an unsettled integrated credit transaction |
 | tapi.idempotency-key | stud | Attach a deterministic caller-supplied correlation key to an integrated request |
+| tapi.credit.authorize | brick | Authorize an integrated credit payment |
+| tapi.credit.sale | brick | Submit an integrated credit sale |
 
 ## Configuration
 
