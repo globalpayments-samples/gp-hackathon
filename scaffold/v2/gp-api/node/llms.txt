@@ -1,0 +1,2 @@
+{{ PROJECT_NAME }} is a {{ PLATFORM_NAME }} sample composed from: {{ COMPONENT_IDS }}.
+Credential-gated live calls use explicit fixed routes only.

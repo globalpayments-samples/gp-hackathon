@@ -1,0 +1,6 @@
+name: Tapi integrated credit dotnet
+platform: tapi
+language: dotnet
+region: US
+persona: integrated-partner
+components: "tapi.credit.capture,tapi.credit.refund,tapi.credit.status,tapi.credit.void,tapi.idempotency-key,tapi.credit.authorize,tapi.credit.sale"

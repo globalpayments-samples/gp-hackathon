@@ -1,0 +1,10 @@
+schema_version: 2
+name: access-checkout-node
+platform: access
+language: node
+integration_mode: rest
+region: GB
+persona: enterprise-merchant
+tiles: [access.tile.checkout]
+studs: [access.checkout.create-session, common.webhook-receiver]
+bricks: [access.payment.authorize-checkout, access.payment.settle, access.payment.cancel, access.payment.query]

@@ -1,0 +1,8 @@
+{
+  "name": "globalpayments/{{ PROJECT_NAME }}",
+  "type": "project",
+  "require": {{ DEPENDENCIES_JSON }},
+  "scripts": {
+    "test": "php tests/contract.php"
+  }
+}

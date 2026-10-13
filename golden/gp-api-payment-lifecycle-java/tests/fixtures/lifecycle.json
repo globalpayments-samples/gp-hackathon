@@ -1,0 +1,11 @@
+{
+  "tokenPayment": {
+    "token": "single-use-token-from-hosted-fields",
+    "amount": "29.99",
+    "currency": "USD"
+  },
+  "followUp": {
+    "transactionId": "TRN_fixture_authorization",
+    "amount": "29.99"
+  }
+}

@@ -1,0 +1,5 @@
+Project: Baseplate gp api dotnet
+Platform: GP API
+Language: .NET
+Components: Baseplate only
+Contract tests are deterministic; live routes require environment credentials.

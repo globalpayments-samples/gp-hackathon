@@ -23,6 +23,19 @@ const ROOT = path.join(__dirname, '..');
 const SPECS_UNDER_TEST = [
   { spec: 'simple-checkout-node.yaml',   golden: 'simple-checkout-node',   required: true  },
   { spec: 'delayed-capture-node.yaml',   golden: 'delayed-capture-node',   required: false },
+  { spec: 'gp-api-payment-lifecycle-node.yaml', golden: 'gp-api-payment-lifecycle-node', required: true },
+  { spec: 'gp-api-payment-lifecycle-php.yaml', golden: 'gp-api-payment-lifecycle-php', required: true },
+  { spec: 'gp-api-payment-lifecycle-dotnet.yaml', golden: 'gp-api-payment-lifecycle-dotnet', required: true },
+  { spec: 'gp-api-payment-lifecycle-java.yaml', golden: 'gp-api-payment-lifecycle-java', required: true },
+  { spec: 'access-checkout-node.yaml', golden: 'access-checkout-node', required: true },
+  { spec: 'tapi-integrated-credit-php.yaml', golden: 'tapi-integrated-credit-php', required: true },
+  { spec: 'tapi-integrated-credit-dotnet.yaml', golden: 'tapi-integrated-credit-dotnet', required: true },
+  { spec: 'baseplate-gp-api-node.yaml', golden: 'baseplate-gp-api-node', required: true },
+  { spec: 'baseplate-gp-api-dotnet.yaml', golden: 'baseplate-gp-api-dotnet', required: true },
+  { spec: 'baseplate-gp-api-java.yaml', golden: 'baseplate-gp-api-java', required: true },
+  { spec: 'baseplate-access-node.yaml', golden: 'baseplate-access-node', required: true },
+  { spec: 'baseplate-tapi-php.yaml', golden: 'baseplate-tapi-php', required: true },
+  { spec: 'baseplate-tapi-dotnet.yaml', golden: 'baseplate-tapi-dotnet', required: true },
 ];
 
 function listFilesRecursive(dir, base = dir) {
@@ -30,7 +43,7 @@ function listFilesRecursive(dir, base = dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (entry.name === 'node_modules') continue;
+      if (['bin', 'node_modules', 'obj', 'target', 'vendor'].includes(entry.name)) continue;
       out.push(...listFilesRecursive(full, base));
     } else {
       out.push(path.relative(base, full));

@@ -1,0 +1,6 @@
+name: Baseplate tapi dotnet
+platform: tapi
+language: dotnet
+region: US
+persona: integrated-partner
+components: ""

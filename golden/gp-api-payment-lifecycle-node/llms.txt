@@ -1,0 +1,2 @@
+gp-api-payment-lifecycle-node is a GP API sample composed from: gp-api.payment.authorize,gp-api.payment.capture,gp-api.payment.refund,gp-api.payment.reverse,gp-api.payment.status,gp-api.tile.hosted-fields,gp-api.token.verify.
+Credential-gated live calls use explicit fixed routes only.

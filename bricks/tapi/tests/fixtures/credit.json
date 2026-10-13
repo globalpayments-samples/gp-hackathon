@@ -1,0 +1,15 @@
+{
+  "sale": {
+    "number": "4111111111111111",
+    "expMonth": "12",
+    "expYear": "2030",
+    "cvn": "123",
+    "amount": "29.99",
+    "currency": "USD",
+    "idempotencyKey": "fixture-idempotency-key"
+  },
+  "followUp": {
+    "transactionId": "TRN_fixture_tapi",
+    "amount": "29.99"
+  }
+}

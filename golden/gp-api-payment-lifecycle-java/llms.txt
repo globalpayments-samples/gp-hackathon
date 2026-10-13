@@ -1,0 +1,5 @@
+Project: Gp api payment lifecycle java
+Platform: GP API
+Language: Java
+Components: Authorize payment (brick), Capture payment (brick), Refund payment (brick), Reverse payment (brick), Get payment status (brick), Verify token (brick)
+Contract tests are deterministic; live routes require environment credentials.

@@ -1,0 +1,9 @@
+{
+  "checkoutSession": {
+    "reference": "order-10001",
+    "amount": "1099",
+    "currency": "GBP",
+    "returnUrl": "https://example.test/return"
+  },
+  "paymentId": "fixture-payment-1"
+}

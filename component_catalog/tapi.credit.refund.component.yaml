@@ -1,0 +1,24 @@
+id: tapi.credit.refund
+layer: brick
+name: Linked credit refund
+description: Refund an integrated credit transaction using its prior reference
+platform: tapi
+integration_mode: server-sdk
+supported_languages: [php, dotnet]
+region: [US, CA]
+test_strategy: [component, contract, live]
+config_required:
+  php: [TAPI_ACCOUNT_CREDENTIAL, TAPI_API_KEY, TAPI_API_SECRET, TAPI_REGION]
+  dotnet: [TAPI_ACCOUNT_CREDENTIAL, TAPI_API_SECRET, TAPI_REGION]
+files:
+  php: [bricks/tapi/php/credit-lifecycle.php]
+  dotnet: [bricks/tapi/dotnet/CreditLifecycle.cs]
+inserts:
+  php:
+    bricks/tapi/fragments/php/import-credit-lifecycle.php: IMPORTS
+    bricks/tapi/fragments/php/refund-route.php: ROUTE_HANDLERS
+  dotnet:
+    bricks/tapi/fragments/dotnet/refund-route.cs: ROUTE_HANDLERS
+test_fragments:
+  php: [bricks/tapi/tests/php/contract.php, bricks/tapi/tests/fixtures/credit.json]
+  dotnet: [bricks/tapi/tests/dotnet/ContractTests.cs, bricks/tapi/tests/fixtures/credit.json]

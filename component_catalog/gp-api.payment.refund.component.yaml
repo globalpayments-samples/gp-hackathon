@@ -1,0 +1,29 @@
+id: gp-api.payment.refund
+layer: brick
+name: Refund payment
+description: Refund a captured payment using its transaction reference
+platform: gp-api
+integration_mode: server-sdk
+supported_languages: [node, php, dotnet, java]
+test_strategy: [component, contract, live]
+config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT]
+files:
+  node: [bricks/gp-api/node/payment-lifecycle.js]
+  php: [bricks/gp-api/php/payment-lifecycle.php]
+  dotnet: [bricks/gp-api/dotnet/PaymentLifecycle.cs]
+  java: [bricks/gp-api/java/GpApiPaymentLifecycle.java]
+inserts:
+  node:
+    bricks/gp-api/fragments/node/refund-route.js: ROUTE_HANDLERS
+  php:
+    bricks/gp-api/fragments/php/import-payment-lifecycle.php: IMPORTS
+    bricks/gp-api/fragments/php/refund-route.php: ROUTE_HANDLERS
+  dotnet:
+    bricks/gp-api/fragments/dotnet/refund-route.cs: ROUTE_HANDLERS
+  java:
+    bricks/gp-api/fragments/java/refund-route.java: ROUTE_HANDLERS
+test_fragments:
+  node: [bricks/gp-api/tests/node/contract.js, bricks/gp-api/tests/fixtures/lifecycle.json]
+  php: [bricks/gp-api/tests/php/contract.php, bricks/gp-api/tests/fixtures/lifecycle.json]
+  dotnet: [bricks/gp-api/tests/dotnet/ContractTests.cs, bricks/gp-api/tests/fixtures/lifecycle.json]
+  java: [bricks/gp-api/tests/java/ContractTest.java, bricks/gp-api/tests/fixtures/lifecycle.json]

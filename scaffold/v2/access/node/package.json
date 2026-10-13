@@ -1,0 +1,11 @@
+{
+  "name": "{{ PROJECT_NAME }}",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test tests/*.js"
+  },
+  "dependencies": {{ DEPENDENCIES_JSON }}
+}

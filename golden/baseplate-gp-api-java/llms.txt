@@ -1,0 +1,5 @@
+Project: Baseplate gp api java
+Platform: GP API
+Language: Java
+Components: Baseplate only
+Contract tests are deterministic; live routes require environment credentials.

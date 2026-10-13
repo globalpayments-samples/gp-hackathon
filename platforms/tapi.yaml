@@ -1,0 +1,19 @@
+id: tapi
+display_name: TAPI Integrated Payments
+supported_languages: [php, dotnet]
+v2_supported_languages: [php, dotnet]
+supported_integration_modes: [server-sdk, direct-rest]
+default_integration_mode: server-sdk
+endpoints:
+  sandbox: https://api.pit.paygateway.com/transactions/
+dependencies:
+  php:
+    dependencies:
+      globalpayments/php-sdk: ^13.4
+      vlucas/phpdotenv: ^5.5
+  dotnet:
+    dependencies:
+      GlobalPayments.Api: 9.0.16
+config_required:
+  php: [TAPI_ACCOUNT_CREDENTIAL, TAPI_API_KEY, TAPI_API_SECRET, TAPI_REGION]
+  dotnet: [TAPI_ACCOUNT_CREDENTIAL, TAPI_API_SECRET, TAPI_REGION]

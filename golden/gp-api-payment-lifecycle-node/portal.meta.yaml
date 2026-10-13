@@ -1,0 +1,6 @@
+name: Gp api payment lifecycle node
+platform: gp-api
+language: node
+region: US
+persona: merchant
+components: "gp-api.payment.authorize,gp-api.payment.capture,gp-api.payment.refund,gp-api.payment.reverse,gp-api.payment.status,gp-api.tile.hosted-fields,gp-api.token.verify"

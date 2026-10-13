@@ -1,0 +1,19 @@
+id: common.webhook-receiver
+layer: stud
+name: Webhook receiver
+description: Receive and log asynchronous platform event payloads
+# Access-only today: verifier reads ACCESS_WEBHOOK_SECRET. Drop when other platforms get a verifier.
+platform: access
+supported_languages: [node]
+test_strategy: [component, contract]
+config_required: [ACCESS_WEBHOOK_SECRET]
+files:
+  node: [studs/common/access/node/webhook-verifier.js]
+  php: []
+inserts:
+  node:
+    studs/common/access/fragments/node/webhook-route.js: ROUTE_HANDLERS
+  php: {}
+test_fragments:
+  node: [bricks/access/tests/node/contract.js, bricks/access/tests/fixtures/checkout.json]
+  php: []

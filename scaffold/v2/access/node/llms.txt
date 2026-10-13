@@ -1,0 +1,2 @@
+{{ PROJECT_NAME }} is an Access Checkout sample composed from: {{ COMPONENT_IDS }}.
+It exposes fixed Checkout/payment/query/webhook routes and rejects off-origin HAL actions.

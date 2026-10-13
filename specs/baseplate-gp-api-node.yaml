@@ -1,0 +1,7 @@
+schema_version: 2
+name: baseplate-gp-api-node
+platform: gp-api
+language: node
+integration_mode: server-sdk
+region: US
+persona: merchant

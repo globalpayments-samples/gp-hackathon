@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gp api payment lifecycle node</title>
+  <link rel="stylesheet" href="/public/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <p class="eyebrow">GP API</p>
+    <h1>Gp api payment lifecycle node</h1>
+    <p>Explicit GP API payment lifecycle routes composed from catalog components.</p>
+    <section class="tile">
+      <h2>Hosted Fields lifecycle harness</h2>
+      <p>The browser should tokenize card data with GP API Hosted Fields and send only the token to the fixed payment routes.</p>
+      <pre>POST /api/payments/verify
+    POST /api/payments/authorize
+    POST /api/payments/capture
+    POST /api/payments/refund
+    POST /api/payments/reverse
+    POST /api/payments/status</pre>
+    </section>
+  </main>
+  <script src="/tiles/gp-api/node/hosted-fields-tile.js"></script>
+</body>
+</html>

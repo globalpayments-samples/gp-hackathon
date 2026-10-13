@@ -1,0 +1,5 @@
+Project: Baseplate tapi dotnet
+Platform: TAPI Integrated Payments
+Language: .NET
+Components: Baseplate only
+Uses official TransactionApiConfig and environment-only credentials.

@@ -1,0 +1,9 @@
+schema_version: 2
+name: gp-api-payment-lifecycle-node
+platform: gp-api
+language: node
+integration_mode: server-sdk
+region: US
+persona: merchant
+tiles: [gp-api.tile.hosted-fields]
+bricks: [gp-api.token.verify, gp-api.payment.authorize, gp-api.payment.capture, gp-api.payment.refund, gp-api.payment.reverse, gp-api.payment.status]

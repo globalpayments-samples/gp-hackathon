@@ -1,0 +1,8 @@
+schema_version: 2
+name: gp-api-payment-lifecycle-dotnet
+platform: gp-api
+language: dotnet
+integration_mode: server-sdk
+region: US
+persona: merchant
+bricks: [gp-api.token.verify, gp-api.payment.authorize, gp-api.payment.capture, gp-api.payment.refund, gp-api.payment.reverse, gp-api.payment.status]

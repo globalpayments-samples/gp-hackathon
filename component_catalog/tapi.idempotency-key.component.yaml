@@ -1,0 +1,22 @@
+id: tapi.idempotency-key
+layer: stud
+name: Idempotency key
+description: Attach a deterministic caller-supplied correlation key to an integrated request
+platform: tapi
+integration_mode: server-sdk
+supported_languages: [php, dotnet]
+region: [US, CA]
+test_strategy: [component, contract]
+config_required:
+  php: []
+  dotnet: []
+files:
+  php: [studs/common/access/tapi/php/idempotency.php]
+  dotnet: [studs/common/access/tapi/dotnet/RequestMetadata.cs]
+inserts:
+  php:
+    studs/common/access/tapi/fragments/php/import-idempotency.php: IMPORTS
+  dotnet: {}
+test_fragments:
+  php: [bricks/tapi/tests/php/contract.php, bricks/tapi/tests/fixtures/credit.json]
+  dotnet: [bricks/tapi/tests/dotnet/ContractTests.cs, bricks/tapi/tests/fixtures/credit.json]

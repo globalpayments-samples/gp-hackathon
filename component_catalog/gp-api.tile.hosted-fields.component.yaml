@@ -1,0 +1,20 @@
+id: gp-api.tile.hosted-fields
+layer: tile
+name: Hosted Fields
+description: Secure card-entry fields for GP API
+platform: gp-api
+integration_mode: web-sdk
+supported_languages: [node]
+test_strategy: [component, contract]
+config_required: []
+files:
+  node: [tiles/gp-api/node/hosted-fields-tile.js]
+  php: []
+inserts:
+  node:
+    tiles/gp-api/fragments/hosted-fields-markup.html: TILE_MARKUP
+    tiles/gp-api/fragments/hosted-fields-script.html: TILE_SCRIPTS
+  php: {}
+test_fragments:
+  node: [bricks/gp-api/tests/node/contract.js, bricks/gp-api/tests/fixtures/lifecycle.json]
+  php: [bricks/gp-api/tests/php/contract.php, bricks/gp-api/tests/fixtures/lifecycle.json]

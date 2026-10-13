@@ -1,0 +1,11 @@
+{
+  "name": "globalpayments/baseplate-tapi-php",
+  "type": "project",
+  "require": {
+        "globalpayments/php-sdk": "^13.4",
+        "vlucas/phpdotenv": "^5.5"
+    },
+  "scripts": {
+    "test": "php tests/contract.php"
+  }
+}

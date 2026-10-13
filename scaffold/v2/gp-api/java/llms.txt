@@ -1,0 +1,5 @@
+Project: {{ PROJECT_TITLE }}
+Platform: {{ PLATFORM_NAME }}
+Language: Java
+Components: {{ COMPONENT_SUMMARY }}
+Contract tests are deterministic; live routes require environment credentials.

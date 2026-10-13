@@ -1,0 +1,6 @@
+name: Baseplate gp api java
+platform: gp-api
+language: java
+region: US
+persona: merchant
+components: ""

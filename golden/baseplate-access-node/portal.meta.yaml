@@ -1,0 +1,6 @@
+name: Baseplate access node
+platform: access
+language: node
+region: GB
+persona: enterprise-merchant
+components: ""

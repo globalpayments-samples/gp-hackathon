@@ -1,0 +1,7 @@
+body { margin: 0; font-family: Arial, sans-serif; color: #1f1f1f; background: #f6f7ff; }
+.shell { max-width: 880px; margin: 48px auto; padding: 32px; background: #fff; border: 1px solid #d8dbff; border-radius: 18px; }
+.eyebrow { color: #262aff; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+label { display: block; margin: 12px 0; }
+input, select, button { font: inherit; padding: 10px; border-radius: 8px; border: 1px solid #bec2ff; }
+button { background: #262aff; color: #fff; border: 0; cursor: pointer; }
+pre { white-space: pre-wrap; background: #f0f1ff; padding: 16px; border-radius: 8px; }

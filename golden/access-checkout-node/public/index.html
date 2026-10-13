@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Access checkout node</title>
+  <link rel="stylesheet" href="/public/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <p class="eyebrow">Access Checkout</p>
+    <h1>Public Checkout page</h1>
+    <p>This tile models the browser flow: create a Checkout session, collect payment details with the Access Checkout client library, then submit the session result to fixed server routes.</p>
+    <section class="tile">
+      <h2>Checkout test tile</h2>
+      <form id="checkout-form">
+        <label>Reference <input name="reference" value="order-10001"></label>
+        <label>Amount <input name="amount" value="1099"></label>
+        <label>Currency <input name="currency" value="GBP"></label>
+        <label>Return URL <input name="returnUrl" value="https://example.test/return"></label>
+        <button type="submit">Create Checkout session</button>
+      </form>
+      <pre id="checkout-result">Ready.</pre>
+    </section>
+  </main>
+  <script src="/tiles/access/node/checkout-tile.js"></script>
+</body>
+</html>

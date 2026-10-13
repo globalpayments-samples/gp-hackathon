@@ -1,0 +1,6 @@
+name: {{ PROJECT_TITLE }}
+platform: {{ PLATFORM_ID }}
+language: {{ LANGUAGE }}
+region: {{ REGION }}
+persona: {{ PERSONA }}
+components: "{{ COMPONENT_IDS }}"

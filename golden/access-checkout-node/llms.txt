@@ -1,0 +1,2 @@
+access-checkout-node is an Access Checkout sample composed from: access.checkout.create-session,access.payment.authorize-checkout,access.payment.cancel,access.payment.query,access.payment.settle,access.tile.checkout,common.webhook-receiver.
+It exposes fixed Checkout/payment/query/webhook routes and rejects off-origin HAL actions.
