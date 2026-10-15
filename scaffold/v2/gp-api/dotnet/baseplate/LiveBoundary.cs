@@ -1,5 +1,7 @@
 namespace GeneratedSample;
 
+public sealed class MissingCredentialsException(string message) : InvalidOperationException(message);
+
 public static class LiveBoundary
 {
     public static string[] MissingCredentials(IEnumerable<string> required) =>
@@ -12,7 +14,7 @@ public static class LiveBoundary
         var missing = MissingCredentials(required);
         if (missing.Length > 0)
         {
-            throw new InvalidOperationException($"Live call blocked: missing {string.Join(", ", missing)}");
+            throw new MissingCredentialsException($"Live call blocked: missing {string.Join(", ", missing)}");
         }
     }
 }
