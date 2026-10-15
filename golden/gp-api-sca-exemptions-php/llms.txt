@@ -1,0 +1,1 @@
+gp-api-sca-exemptions-php is a GP API PHP sample composed from: gp-api.payment.sca-exemption.

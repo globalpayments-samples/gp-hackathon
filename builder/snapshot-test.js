@@ -27,6 +27,8 @@ const SPECS_UNDER_TEST = [
   { spec: 'gp-api-payment-lifecycle-php.yaml', golden: 'gp-api-payment-lifecycle-php', required: true },
   { spec: 'gp-api-payment-lifecycle-dotnet.yaml', golden: 'gp-api-payment-lifecycle-dotnet', required: true },
   { spec: 'gp-api-payment-lifecycle-java.yaml', golden: 'gp-api-payment-lifecycle-java', required: true },
+  { spec: 'gp-api-sca-exemptions-node.yaml', golden: 'gp-api-sca-exemptions-node', required: true },
+  { spec: 'gp-api-sca-exemptions-php.yaml', golden: 'gp-api-sca-exemptions-php', required: true },
   { spec: 'access-checkout-node.yaml', golden: 'access-checkout-node', required: true },
   { spec: 'tapi-integrated-credit-php.yaml', golden: 'tapi-integrated-credit-php', required: true },
   { spec: 'tapi-integrated-credit-dotnet.yaml', golden: 'tapi-integrated-credit-dotnet', required: true },

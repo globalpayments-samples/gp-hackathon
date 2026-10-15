@@ -1,0 +1,21 @@
+id: gp-api.payment.sca-exemption
+layer: brick
+name: Charge with SCA exemption
+description: Charge a tokenized card with an SCA exemption flagged in the authorization (low value, transaction risk analysis, trusted merchant or secure corporate payment)
+platform: gp-api
+integration_mode: server-sdk
+supported_languages: [node, php]
+test_strategy: [component, contract, live]
+config_required: [GP_APP_ID, GP_APP_KEY, GP_API_ENVIRONMENT, GP_COUNTRY]
+files:
+  node: [bricks/gp-api/node/sca-exemption.js]
+  php: [bricks/gp-api/php/sca-exemption.php]
+inserts:
+  node:
+    bricks/gp-api/fragments/node/exemption-charge-route.js: ROUTE_HANDLERS
+  php:
+    bricks/gp-api/fragments/php/import-sca-exemption.php: IMPORTS
+    bricks/gp-api/fragments/php/exemption-charge-route.php: ROUTE_HANDLERS
+test_fragments:
+  node: [bricks/gp-api/tests/node/sca-exemption-contract.js, bricks/gp-api/tests/fixtures/sca-exemption.json]
+  php: [bricks/gp-api/tests/php/sca-exemption-contract.php, bricks/gp-api/tests/fixtures/sca-exemption.json]

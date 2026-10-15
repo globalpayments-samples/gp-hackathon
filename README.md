@@ -156,6 +156,25 @@ explicitly instead of generating direct REST or an unapproved SDK sample.
 Each generated anchor includes `.env.example`, contract tests, Docker assets,
 `AGENTS.md`, `llms.txt`, and Developer Portal metadata.
 
+## SCA exemptions
+
+Charge a tokenized card with a PSD2 SCA exemption flagged in the authorization,
+with no 3D Secure authentication first. One route,
+`/api/payments/charge-with-exemption`, takes `token`, `amount`, `currency` and
+`exemption`: `low-value`, `transaction-risk-analysis`, `trusted-merchant` or
+`secure-corporate-payment`. The issuer decides whether the exemption applies;
+if it doesn't, expect a soft decline asking for authentication.
+
+```bash
+node builder/build-project.js specs/gp-api-sca-exemptions-node.yaml
+node builder/build-project.js specs/gp-api-sca-exemptions-php.yaml
+```
+
+`GP_COUNTRY` is required (a European country, for example `IE`) because SCA
+only applies to European merchants. Exemptions requested inside a 3D Secure
+authentication need a 3D Secure brick, which the builder does not have yet.
+SCA delegation is left out because it is not an authorization-message exemption.
+
 ## How composition works
 
 Each component ships a manifest (`component_catalog/<id>.component.yaml`)
