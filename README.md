@@ -20,14 +20,16 @@ A generated project's entry point is ~55 lines, and every one of them is signal.
 ## Platform support
 
 Schema-version-2 specs select an explicit platform profile. Version-1 specs remain
-supported and default to GP API, preserving existing generated output. The
-currently verified v2 anchors are GP API Node/PHP, Access Node, and TAPI PHP.
+supported and default to GP API, preserving existing generated output. The v2
+anchors are GP API Node/PHP/.NET/Java, Access Node, and TAPI PHP/.NET. `npm test`
+checks that each one builds deterministically and matches its golden output; the
+contract tests inside the generated projects are not run from this repo.
 
 | Platform | Integration modes | Supported sample languages |
 | -------- | ----------------- | -------------------------- |
 | GP API | server SDK, direct REST, web SDK | Node.js, PHP, .NET, Java |
 | Access Checkout | REST, web SDK | Node.js |
-| TAPI Integrated Payments | server SDK, direct REST | PHP |
+| TAPI Integrated Payments | server SDK, direct REST | PHP, .NET |
 
 The builder rejects cross-platform component IDs, unsupported languages, modes,
 and declared region mismatches before it writes an output directory. V2 samples
@@ -60,7 +62,7 @@ scaffold/dotnet/       .NET standalone-project template (ASP.NET Core Minimal AP
 scaffold/java/         Java standalone-project template (Jakarta EE Servlet + Cargo/Tomcat)
 builder/               build-project.js (deterministic generation) + snapshot-test.js
 specs/                 project specs — simple-checkout / delayed-capture × 4 languages
-golden/simple-checkout-node Hand-validated expected Builder output (determinism reference)
+golden/                expected Builder output that snapshot-test.js diffs against
 output/                generated projects land here (gitignored)
 ```
 
@@ -116,6 +118,7 @@ cd output/delayed-capture-java && cp ../../.env .env && mvn integration-test
 
 ```bash
 node builder/build-project.js specs/gp-api-payment-lifecycle-node.yaml
+node builder/build-project.js specs/gp-api-payment-lifecycle-php.yaml
 node builder/build-project.js specs/gp-api-payment-lifecycle-dotnet.yaml
 node builder/build-project.js specs/gp-api-payment-lifecycle-java.yaml
 node builder/build-project.js specs/access-checkout-node.yaml
