@@ -1,4 +1,4 @@
-FROM php:8.3-cli
+FROM php:8.3.36-cli
 WORKDIR /app
 COPY . .
 RUN curl -sS https://getcomposer.org/installer | php && php composer.phar install --no-dev

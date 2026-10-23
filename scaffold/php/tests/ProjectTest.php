@@ -51,7 +51,7 @@ class ProjectTest extends TestCase
         // Start built-in server on a random free port.
         self::$port = self::freePort();
         $cmd = sprintf(
-            'php -S 0.0.0.0:%d %s/router.php > /dev/null 2>&1 & echo $!',
+            'php -S 127.0.0.1:%d %s/router.php > /dev/null 2>&1 & echo $!',
             self::$port,
             escapeshellarg(__DIR__ . '/..')
         );

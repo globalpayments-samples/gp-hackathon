@@ -397,6 +397,7 @@ function buildV2({ spec, platform, components, outOverride, root }) {
     if (textExtensions.has(path.extname(rel)) || rel === '.env.example' || rel === 'Dockerfile') {
       fs.mkdirSync(path.dirname(dest), { recursive: true });
       fs.writeFileSync(dest, renderTemplate(fs.readFileSync(src, 'utf8'), fragmentsBySlot, values));
+      fs.chmodSync(dest, fs.statSync(src).mode & 0o777);
     } else {
       copyFile(src, dest);
     }
@@ -534,6 +535,7 @@ function build(specPath, outOverride) {
       const rendered = renderTemplate(fs.readFileSync(src, 'utf8'), fragmentsBySlot, values);
       fs.mkdirSync(path.dirname(dest), { recursive: true });
       fs.writeFileSync(dest, rendered);
+      fs.chmodSync(dest, fs.statSync(src).mode & 0o777);
     } else {
       copyFile(src, dest);
     }
@@ -600,7 +602,7 @@ function build(specPath, outOverride) {
     ],
     php: [
       '  composer install',
-      '  php -S 0.0.0.0:3000 router.php  # branded checkout on http://localhost:3000',
+      '  ./run.sh                         # branded checkout on http://localhost:3000',
       '  ./vendor/bin/phpunit tests/      # smoke tests (skip without credentials)',
     ],
     dotnet: [
