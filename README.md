@@ -77,7 +77,7 @@ cd output/simple-checkout-node && cp ../../.env .env && npm install && npm start
 
 # PHP
 node builder/build-project.js specs/simple-checkout-php.yaml
-cd output/simple-checkout-php && cp ../../.env .env && composer install && php -S 0.0.0.0:3000 router.php
+cd output/simple-checkout-php && cp ../../.env .env && composer install && ./run.sh
 
 # .NET
 node builder/build-project.js specs/simple-checkout-dotnet.yaml
@@ -103,7 +103,7 @@ cd output/delayed-capture-node && cp ../../.env .env && npm install && npm start
 
 # PHP
 node builder/build-project.js specs/delayed-capture-php.yaml
-cd output/delayed-capture-php && cp ../../.env .env && composer install && php -S 0.0.0.0:3000 router.php
+cd output/delayed-capture-php && cp ../../.env .env && composer install && ./run.sh
 
 # .NET
 node builder/build-project.js specs/delayed-capture-dotnet.yaml

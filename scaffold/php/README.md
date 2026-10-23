@@ -21,7 +21,7 @@ Part of the [gp-hackathon](../) multi-language component system.
 
 ## Requirements
 
-- PHP 8.1+
+- PHP 8.2.35+, 8.3.36+, 8.4.27+, or 8.5.12+
 - Composer
 - Global Payments GP API credentials — [developer.globalpayments.com](https://developer.globalpayments.com)
 
@@ -77,7 +77,7 @@ Or start manually:
 
 ```bash
 composer install
-php -S 0.0.0.0:3000 router.php
+./run.sh
 ```
 
 ---
@@ -226,7 +226,7 @@ Remove or comment out `GP_ACCOUNT_NAME` from `.env`. The SDK must auto-detect th
 account — setting it manually causes this error.
 
 **Port 3000 already in use**
-Set a different port: `PORT=8080 php -S 0.0.0.0:8080 router.php`
+Set a different port: `PORT=8080 ./run.sh`
 or edit `run.sh` to change the default.
 
 ---

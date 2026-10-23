@@ -10,7 +10,7 @@ declare(strict_types=1);
  *   2. Respond to GET /health directly (no app bootstrap needed).
  *   3. Route all other requests to index.php where component route handlers live.
  *
- * Usage: php -S 0.0.0.0:3000 router.php
+ * Usage: ./run.sh
  */
 
 $uri = strtok($_SERVER['REQUEST_URI'], '?');
