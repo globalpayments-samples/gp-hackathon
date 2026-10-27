@@ -32,6 +32,7 @@ const SPECS_UNDER_TEST = [
   { spec: 'access-checkout-node.yaml', golden: 'access-checkout-node', required: true },
   { spec: 'tapi-integrated-credit-php.yaml', golden: 'tapi-integrated-credit-php', required: true },
   { spec: 'tapi-integrated-credit-dotnet.yaml', golden: 'tapi-integrated-credit-dotnet', required: true },
+  { spec: 'tapi-ach-php.yaml', golden: 'tapi-ach-php', required: true },
   { spec: 'baseplate-gp-api-node.yaml', golden: 'baseplate-gp-api-node', required: true },
   { spec: 'baseplate-gp-api-dotnet.yaml', golden: 'baseplate-gp-api-dotnet', required: true },
   { spec: 'baseplate-gp-api-java.yaml', golden: 'baseplate-gp-api-java', required: true },
