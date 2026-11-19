@@ -1,0 +1,6 @@
+name: Tapi ach php
+platform: tapi
+language: php
+region: US
+persona: integrated-partner
+components: "tapi.ach.refund,tapi.ach.sale"

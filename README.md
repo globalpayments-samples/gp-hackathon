@@ -175,6 +175,33 @@ only applies to European merchants. Exemptions requested inside a 3D Secure
 authentication need a 3D Secure brick, which the builder does not have yet.
 SCA delegation is left out because it is not an authorization-message exemption.
 
+## TAPI ACH
+
+Debit a US bank account with an ACH check sale and refund it later against the
+original sale. Two routes, `/api/ach/sale` and `/api/ach/refund`. A sale takes
+`accountType` (`checking` or `savings`), `accountNumber`, `routingNumber` and
+`amount`, plus `checkNumber` and `entryClass` if you have them. `entryClass`
+is `WEB` unless you send `PPD`, `CCD` or `TEL`. A refund takes the
+`transactionId` of the sale, `accountType` and `amount`, and the same two
+optional fields.
+
+```bash
+node builder/build-project.js specs/tapi-ach-php.yaml
+```
+
+PHP only for now, and `TAPI_REGION` has to be `US` because the Canadian ACH
+fields are different. There is no default amount. The PHP SDK does not send a
+client transaction id on a TAPI sale (the reference id is generated for every
+request), so nothing ties a retried request to the first one and the sample has
+no idempotency key; de-duplicate on your side before retrying. The SDK also
+only sends the entry class when transaction data is attached and defaults a
+refund's account type to "0.00", so the brick sets both explicitly.
+
+It has not been run against the TAPI sandbox yet. The contract test checks
+offline, through the SDK's own request builders, that a sale goes to
+`checksales` and a refund to `checksales/{id}/checkrefunds` with the bank
+details and entry class in the request. It needs `composer install`.
+
 ## How composition works
 
 Each component ships a manifest (`component_catalog/<id>.component.yaml`)

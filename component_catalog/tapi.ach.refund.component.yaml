@@ -1,0 +1,19 @@
+id: tapi.ach.refund
+layer: brick
+name: Linked ACH refund
+description: Refund an ACH check sale using its prior transaction id
+platform: tapi
+integration_mode: server-sdk
+supported_languages: [php]
+region: [US]
+test_strategy: [component, contract]
+config_required:
+  php: [TAPI_ACCOUNT_CREDENTIAL, TAPI_API_KEY, TAPI_API_SECRET, TAPI_REGION]
+files:
+  php: [bricks/tapi/php/ach-lifecycle.php]
+inserts:
+  php:
+    bricks/tapi/fragments/php/import-ach-lifecycle.php: IMPORTS
+    bricks/tapi/fragments/php/ach-refund-route.php: ROUTE_HANDLERS
+test_fragments:
+  php: [bricks/tapi/tests/php/ach-contract.php, bricks/tapi/tests/fixtures/ach.json]
