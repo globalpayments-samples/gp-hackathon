@@ -21,7 +21,7 @@ Part of the [gp-hackathon](../) multi-language component system.
 
 ## Requirements
 
-- .NET 8 SDK
+- .NET 10 SDK
 - Global Payments GP API credentials — [developer.globalpayments.com](https://developer.globalpayments.com)
 
 ---
@@ -168,7 +168,7 @@ More test cards: [developer.globalpayments.com/resources/test-cards](https://dev
 ## Troubleshooting
 
 **`dotnet: command not found`**
-Install the .NET 8 SDK from [dotnet.microsoft.com/download](https://dotnet.microsoft.com/download).
+Install the .NET 10 SDK from [dotnet.microsoft.com/download](https://dotnet.microsoft.com/download).
 
 **"Missing required environment variables: GP_APP_ID, GP_APP_KEY"**
 Copy `.env.example` to `.env` and fill in your credentials. The server refuses
