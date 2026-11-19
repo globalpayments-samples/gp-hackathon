@@ -17,8 +17,13 @@ $uri = strtok($_SERVER['REQUEST_URI'], '?');
 $uri = rtrim($uri, '/') ?: '/';
 
 // Serve static files from public/ — maps /styles.css → public/styles.css.
-$publicFile = __DIR__ . '/public' . $uri;
-if (is_file($publicFile)) {
+// realpath() resolves any ../ so a request can never read files outside public/
+// (such as .env, composer.json or vendor/).
+$publicDir = realpath(__DIR__ . '/public');
+$publicFile = realpath(__DIR__ . '/public' . rawurldecode($uri));
+if ($publicDir !== false && $publicFile !== false
+    && str_starts_with($publicFile, $publicDir . DIRECTORY_SEPARATOR)
+    && is_file($publicFile)) {
     $ext = strtolower(pathinfo($publicFile, PATHINFO_EXTENSION));
     $mimeTypes = [
         'html' => 'text/html',
