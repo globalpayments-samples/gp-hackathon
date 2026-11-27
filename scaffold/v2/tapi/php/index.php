@@ -58,7 +58,11 @@ function requestBody(): array
 {
     $raw = file_get_contents('php://input');
     if ($raw === '' || $raw === false) return [];
-    $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+    try {
+        $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+    } catch (JsonException $error) {
+        throw new InvalidArgumentException('Request body must be valid JSON');
+    }
     return is_array($decoded) ? $decoded : [];
 }
 

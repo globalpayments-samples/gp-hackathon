@@ -47,7 +47,13 @@ public final class Main {
 
         try {
             String raw = readBody(exchange.getRequestBody());
-            respond(exchange, 200, handler.handle(raw.trim().isEmpty() ? new JSONObject() : new JSONObject(raw)));
+            JSONObject body;
+            try {
+                body = raw.trim().isEmpty() ? new JSONObject() : new JSONObject(raw);
+            } catch (org.json.JSONException error) {
+                throw new IllegalArgumentException("Request body must be valid JSON", error);
+            }
+            respond(exchange, 200, handler.handle(body));
         } catch (IllegalArgumentException error) {
             respond(exchange, 400, error(error.getMessage()));
         } catch (IllegalStateException error) {
