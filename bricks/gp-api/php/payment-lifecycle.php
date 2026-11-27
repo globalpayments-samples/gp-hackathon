@@ -42,20 +42,35 @@ function gpAuthorizePayment(array $body): array
 
 function gpCapturePayment(array $body): array
 {
-    return gpSerialize(Transaction::fromId(requiredString($body, 'transactionId'))->capture($body['amount'] ?? null)->execute());
+    return gpSerialize(Transaction::fromId(requiredString($body, 'transactionId'))
+        ->capture($body['amount'] ?? null)
+        ->withCurrency($body['currency'] ?? 'USD')
+        ->execute());
 }
 
 function gpRefundPayment(array $body): array
 {
-    return gpSerialize(Transaction::fromId(requiredString($body, 'transactionId'))->refund($body['amount'] ?? null)->execute());
+    return gpSerialize(Transaction::fromId(requiredString($body, 'transactionId'))
+        ->refund($body['amount'] ?? null)
+        ->withCurrency($body['currency'] ?? 'USD')
+        ->execute());
 }
 
 function gpReversePayment(array $body): array
 {
-    return gpSerialize(Transaction::fromId(requiredString($body, 'transactionId'))->reverse($body['amount'] ?? null)->execute());
+    return gpSerialize(Transaction::fromId(requiredString($body, 'transactionId'))
+        ->reverse($body['amount'] ?? null)
+        ->withCurrency($body['currency'] ?? 'USD')
+        ->execute());
 }
 
 function gpPaymentStatus(array $body): array
 {
-    return gpSerialize(ReportingService::transactionDetail(requiredString($body, 'transactionId'))->execute());
+    $summary = ReportingService::transactionDetail(requiredString($body, 'transactionId'))->execute();
+    return [
+        'transactionId' => $summary->transactionId ?? null,
+        'status' => $summary->transactionStatus ?? null,
+        'responseCode' => $summary->gatewayResponseCode ?? null,
+        'responseMessage' => $summary->gatewayResponseMessage ?? null,
+    ];
 }
