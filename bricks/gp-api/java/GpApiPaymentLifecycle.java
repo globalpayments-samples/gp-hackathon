@@ -41,7 +41,9 @@ public final class GpApiPaymentLifecycle {
         TransactionSummary summary = ReportingService.transactionDetail(requiredString(body, "transactionId")).execute();
         return new JSONObject()
             .put("transactionId", nullable(summary.getTransactionId()))
-            .put("status", nullable(summary.getStatus()));
+            .put("status", nullable(summary.getTransactionStatus()))
+            .put("responseCode", nullable(summary.getGatewayResponseCode()))
+            .put("responseMessage", nullable(summary.getGatewayResponseMessage()));
     }
 
     private static ManagementBuilder management(JSONObject body, String operation) {

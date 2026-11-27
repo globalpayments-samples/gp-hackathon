@@ -65,22 +65,37 @@ async function authorizePayment(body) {
 
 async function capturePayment(body) {
   configureGpApi();
-  return serialize(await transactionFromBody(body).capture(body.amount || undefined).execute());
+  return serialize(await transactionFromBody(body)
+    .capture(body.amount || undefined)
+    .withCurrency(body.currency || 'USD')
+    .execute());
 }
 
 async function refundPayment(body) {
   configureGpApi();
-  return serialize(await transactionFromBody(body).refund(body.amount || undefined).execute());
+  return serialize(await transactionFromBody(body)
+    .refund(body.amount || undefined)
+    .withCurrency(body.currency || 'USD')
+    .execute());
 }
 
 async function reversePayment(body) {
   configureGpApi();
-  return serialize(await transactionFromBody(body).reverse(body.amount || undefined).execute());
+  return serialize(await transactionFromBody(body)
+    .reverse(body.amount || undefined)
+    .withCurrency(body.currency || 'USD')
+    .execute());
 }
 
 async function paymentStatus(body) {
   configureGpApi();
-  return serialize(await ReportingService.transactionDetail(requireString(body.transactionId, 'transactionId')).execute());
+  const summary = await ReportingService.transactionDetail(requireString(body.transactionId, 'transactionId')).execute();
+  return {
+    transactionId: summary.transactionId ?? null,
+    status: summary.transactionStatus ?? null,
+    responseCode: summary.gatewayResponseCode ?? null,
+    responseMessage: summary.gatewayResponseMessage ?? null,
+  };
 }
 
 module.exports = {
