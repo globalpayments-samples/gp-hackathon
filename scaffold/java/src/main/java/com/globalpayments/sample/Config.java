@@ -16,7 +16,7 @@ import jakarta.servlet.ServletException;
 public class Config {
 
     public static void configure() throws ServletException {
-        Dotenv dotenv = Dotenv.load();
+        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
         String appId = dotenv.get("GP_APP_ID", "");
         String appKey = dotenv.get("GP_APP_KEY", "");
