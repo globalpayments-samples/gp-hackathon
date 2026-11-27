@@ -59,9 +59,22 @@ public final class Main {
             respond(exchange, 400, error(error.getMessage()));
         } catch (IllegalStateException error) {
             respond(exchange, 503, error(error.getMessage()));
+        } catch (com.global.api.entities.exceptions.GatewayException error) {
+            respond(exchange, 502, error(gatewayMessage(error)));
         } catch (Exception error) {
-            respond(exchange, 502, error(error.getMessage()));
+            error.printStackTrace();
+            respond(exchange, 502, error("Unexpected error"));
         }
+    }
+
+    // GP's own error code and message go back like they do in the other
+    // languages. Any other failure is only logged.
+    private static String gatewayMessage(com.global.api.entities.exceptions.GatewayException error) {
+        if (error.getResponseCode() != null && error.getLocalizedMessage() != null) {
+            return error.getLocalizedMessage();
+        }
+        error.printStackTrace();
+        return "Unexpected error";
     }
 
     private static JSONObject error(String message) {
