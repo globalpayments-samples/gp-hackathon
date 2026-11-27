@@ -184,6 +184,11 @@
           throw new Error(result.error.message);
         }
         renderResult(result);
+        if (result.responseCode !== 'SUCCESS') {
+          setStatus('Payment declined: ' + (result.status || result.responseCode), 'error');
+          flowEvent('error');
+          return;
+        }
         if (result.status === 'PREAUTHORIZED') {
           setStatus('Funds held. Capture when you are ready.', 'success');
           offerCapture(result.transactionId);
