@@ -30,8 +30,10 @@ public class ErrorHandler {
         // Anything else is logged here and answered with a generic message.
         String message;
         if (e instanceof GatewayException && ((GatewayException) e).getResponseCode() != null
-                && e.getLocalizedMessage() != null) {
-            message = e.getLocalizedMessage();
+                && e.getMessage() != null) {
+            // The SDK message starts with the HTTP status, the other languages show GP's code.
+            message = "Status Code: " + ((GatewayException) e).getResponseCode() + " - "
+                + e.getMessage().replaceFirst("^Status Code: \\d+ - ", "");
         } else {
             e.printStackTrace();
             message = "Unexpected error";

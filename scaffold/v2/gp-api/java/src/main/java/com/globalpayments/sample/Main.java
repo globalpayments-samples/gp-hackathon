@@ -70,8 +70,10 @@ public final class Main {
     // GP's own error code and message go back like they do in the other
     // languages. Any other failure is only logged.
     private static String gatewayMessage(com.global.api.entities.exceptions.GatewayException error) {
-        if (error.getResponseCode() != null && error.getLocalizedMessage() != null) {
-            return error.getLocalizedMessage();
+        if (error.getResponseCode() != null && error.getMessage() != null) {
+            // The SDK message starts with the HTTP status, the other languages show GP's code.
+            return "Status Code: " + error.getResponseCode() + " - "
+                + error.getMessage().replaceFirst("^Status Code: \\d+ - ", "");
         }
         error.printStackTrace();
         return "Unexpected error";
