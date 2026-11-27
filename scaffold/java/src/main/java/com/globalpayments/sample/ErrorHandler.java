@@ -25,13 +25,15 @@ public class ErrorHandler {
         int status = isSdkError ? 502 : 500;
         response.setStatus(status);
 
-        // SDK errors keep their message so the gateway's reason is visible.
+        // A GatewayException with GP's error code is GP's own answer, so its
+        // code and message go back like they do in the other languages.
         // Anything else is logged here and answered with a generic message.
         String message;
-        if (isSdkError) {
-            message = e.getMessage() != null ? e.getMessage() : "Unexpected error";
+        if (e instanceof GatewayException && ((GatewayException) e).getResponseCode() != null
+                && e.getLocalizedMessage() != null) {
+            message = e.getLocalizedMessage();
         } else {
-            System.err.println("Unexpected error: " + e);
+            e.printStackTrace();
             message = "Unexpected error";
         }
 
