@@ -16,7 +16,7 @@ import org.json.JSONObject;
  */
 public class TokenHelper {
 
-    private static final Dotenv dotenv = Dotenv.load();
+    private static final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
     public static JSONObject generateAccessToken() throws Exception {
         String appId  = dotenv.get("GP_APP_ID");

@@ -31,7 +31,14 @@ function missingVars(): array
 function configureGpApi(): void
 {
     $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
-    $dotenv->load();
+    $dotenv->safeLoad();
+
+    // Fall back to real environment variables when there is no .env file.
+    foreach (['GP_APP_ID', 'GP_APP_KEY', 'GP_API_ENVIRONMENT', 'GP_COUNTRY'] as $name) {
+        if (!isset($_ENV[$name]) && getenv($name) !== false) {
+            $_ENV[$name] = getenv($name);
+        }
+    }
 
     $missing = missingVars();
     if (!empty($missing)) {
